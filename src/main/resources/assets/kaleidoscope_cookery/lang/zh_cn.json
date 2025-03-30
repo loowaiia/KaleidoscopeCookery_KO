@@ -1,0 +1,6 @@
+{
+  "item_group.kaleidoscope_cookery.cookery_main.name": "森罗物语：烹燃心动",
+  "block.kaleidoscope_cookery.stove": "炉灶",
+  "entity.minecraft.villager.kaleidoscope_cookery.chef": "烹饪师",
+  "tooltip.kaleidoscope_cookery.stove": "厨房用具的热源方块，使用打火石点燃"
+}

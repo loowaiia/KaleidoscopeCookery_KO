@@ -1,0 +1,6 @@
+{
+  "item_group.kaleidoscope_cookery.cookery_main.name": "Kaleidoscope: Cookery",
+  "block.kaleidoscope_cookery.stove": "Stove",
+  "entity.minecraft.villager.kaleidoscope_cookery.chef": "Chef",
+  "tooltip.kaleidoscope_cookery.stove": "The heat source block of the kitchen utensils, lit with flint and steel"
+}
