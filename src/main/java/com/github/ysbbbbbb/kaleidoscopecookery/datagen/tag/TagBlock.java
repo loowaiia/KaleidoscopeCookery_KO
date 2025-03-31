@@ -18,6 +18,6 @@ public class TagBlock extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
-        this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.STOVE.get());
+        this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.STOVE.get(), ModBlocks.POT.get());
     }
 }

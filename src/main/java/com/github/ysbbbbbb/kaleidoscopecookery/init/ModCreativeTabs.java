@@ -15,5 +15,6 @@ public class ModCreativeTabs {
             .icon(() -> ModItems.STOVE.get().getDefaultInstance())
             .displayItems((par, output) -> {
                 output.accept(ModItems.STOVE.get());
+                output.accept(ModItems.POT.get());
             }).build());
 }

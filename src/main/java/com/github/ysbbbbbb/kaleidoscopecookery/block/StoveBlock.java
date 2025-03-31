@@ -14,7 +14,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -27,22 +29,22 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class BlockStove extends HorizontalDirectionalBlock {
-    public static final BooleanProperty LIT = BooleanProperty.create("lit");
+public class StoveBlock extends HorizontalDirectionalBlock {
+    public static final BooleanProperty LIT = BlockStateProperties.LIT;
     private static final int MAX_STOVE_LIT_TIME = 20 * 60 * 20;
 
-    public BlockStove() {
+    public StoveBlock() {
         super(Properties.of()
                 .mapColor(MapColor.STONE)
-                .instrument(NoteBlockInstrument.BASEDRUM)
                 .sound(SoundType.STONE)
                 .requiresCorrectToolForDrops()
                 .lightLevel(state -> state.getValue(LIT) ? 15 : 0)
@@ -91,7 +93,7 @@ public class BlockStove extends HorizontalDirectionalBlock {
     public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity entity) {
         if (pState.getValue(LIT) && !entity.isSteppingCarefully() && entity instanceof LivingEntity livingEntity
             && !EnchantmentHelper.hasFrostWalker(livingEntity)) {
-            entity.hurt(pLevel.damageSources().hotFloor(), 1.0F);
+            entity.hurt(pLevel.damageSources().hotFloor(), 0);
         }
         super.stepOn(pLevel, pPos, pState, entity);
     }
@@ -115,14 +117,30 @@ public class BlockStove extends HorizontalDirectionalBlock {
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult pHit) {
         ItemStack itemInHand = player.getItemInHand(hand);
-        if (!blockState.getValue(LIT) && itemInHand.is(TagItem.LIGHT_THE_STOVE)) {
+        // 点燃炉灶
+        if (!blockState.getValue(LIT) && itemInHand.is(TagItem.LIT_STOVE)) {
             level.setBlockAndUpdate(pos, blockState.setValue(LIT, true));
             level.playSound(player, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
             level.scheduleTick(pos, this, MAX_STOVE_LIT_TIME);
             itemInHand.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
             return InteractionResult.SUCCESS;
         }
+        // 熄灭
+        if (blockState.getValue(LIT) && itemInHand.is(TagItem.EXTINGUISH_STOVE)) {
+            level.setBlockAndUpdate(pos, blockState.setValue(LIT, false));
+            level.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.8F);
+            itemInHand.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+            return InteractionResult.SUCCESS;
+        }
         return super.use(blockState, level, pos, player, hand, pHit);
+    }
+
+    @Override
+    public void onProjectileHit(Level level, BlockState state, BlockHitResult pHit, Projectile projectile) {
+        BlockPos hitBlockPos = pHit.getBlockPos();
+        if (!level.isClientSide && projectile.isOnFire() && projectile.mayInteract(level, hitBlockPos) && !state.getValue(LIT)) {
+            level.setBlock(hitBlockPos, state.setValue(BlockStateProperties.LIT, true), Block.UPDATE_ALL_IMMEDIATE);
+        }
     }
 
     @Override
@@ -139,5 +157,11 @@ public class BlockStove extends HorizontalDirectionalBlock {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         pTooltip.add(Component.translatable("tooltip.kaleidoscope_cookery.stove").withStyle(ChatFormatting.GRAY));
+    }
+
+    @Override
+    @Nullable
+    public BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
+        return BlockPathTypes.DANGER_FIRE;
     }
 }

@@ -1,7 +1,8 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen.model;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.BlockStove;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.PotBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.StoveBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
@@ -16,10 +17,18 @@ public class BlockStateGenerator extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         horizontalBlock(ModBlocks.STOVE.get(), blockState -> {
-            if (blockState.getValue(BlockStove.LIT)) {
+            if (blockState.getValue(StoveBlock.LIT)) {
                 return new ModelFile.UncheckedModelFile(modLoc("block/stove_lit"));
             } else {
                 return new ModelFile.UncheckedModelFile(modLoc("block/stove"));
+            }
+        });
+
+        horizontalBlock(ModBlocks.POT.get(), blockState -> {
+            if (blockState.getValue(PotBlock.HAS_OIL)) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/pot_has_oil"));
+            } else {
+                return new ModelFile.UncheckedModelFile(modLoc("block/pot"));
             }
         });
     }

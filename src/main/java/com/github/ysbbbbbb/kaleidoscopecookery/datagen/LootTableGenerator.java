@@ -20,6 +20,7 @@ public class LootTableGenerator {
         @Override
         public void generate() {
             dropSelf(ModBlocks.STOVE.get());
+            dropSelf(ModBlocks.POT.get());
         }
 
         @Override

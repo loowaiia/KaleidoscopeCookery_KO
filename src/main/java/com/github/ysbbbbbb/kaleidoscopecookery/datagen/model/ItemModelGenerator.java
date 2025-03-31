@@ -13,5 +13,6 @@ public class ItemModelGenerator extends ItemModelProvider {
     @Override
     protected void registerModels() {
         withExistingParent("stove", modLoc("block/stove"));
+        withExistingParent("pot", modLoc("block/pot"));
     }
 }
