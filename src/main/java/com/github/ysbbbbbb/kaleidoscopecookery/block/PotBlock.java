@@ -1,22 +1,42 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.PotBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock {
     public static final BooleanProperty HAS_OIL = BooleanProperty.create("has_oil");
@@ -30,9 +50,77 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock 
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(HAS_OIL, false));
     }
 
+    @Nullable
+    @SuppressWarnings("all")
+    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(
+            BlockEntityType<A> pServerType, BlockEntityType<E> pClientType, BlockEntityTicker<? super E> pTicker) {
+        return pClientType == pServerType ? (BlockEntityTicker<A>) pTicker : null;
+    }
+
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand pHand, BlockHitResult pHit) {
+        ItemStack itemInHand = player.getItemInHand(pHand);
+        RandomSource random = level.random;
+        if (!state.getValue(HAS_OIL)) {
+            if (itemInHand.is(TagItem.OIL)) {
+                placeOil(state, level, pos, player, itemInHand, random);
+                return InteractionResult.SUCCESS;
+            }
+        } else if (level.getBlockEntity(pos) instanceof PotBlockEntity pot && !itemInHand.isEmpty()) {
+            cooking(level, pos, player, pot, itemInHand, random);
+            return InteractionResult.SUCCESS;
+        }
+        return super.use(state, level, pos, player, pHand, pHit);
+    }
+
+    private void cooking(Level level, BlockPos pos, Player player, PotBlockEntity pot, ItemStack itemInHand, RandomSource random) {
+        if (itemInHand.is(ModItems.KITCHEN_SHOVEL.get())) {
+            pot.onShovelHit(level, player, itemInHand);
+            level.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F,
+                    1F + (random.nextFloat() - random.nextFloat()) * 0.8F);
+        } else {
+            pot.addIngredient(itemInHand);
+        }
+    }
+
+    private void placeOil(BlockState pState, Level level, BlockPos pos, Player player, ItemStack itemInHand, RandomSource random) {
+        Optional<Boolean> value = level.getBlockState(pos.below()).getOptionalValue(BlockStateProperties.LIT);
+        if (value.isEmpty() || !value.get()) {
+            if (!level.isClientSide()) {
+                player.sendSystemMessage(Component.translatable("tip.kaleidoscope_cookery.pot.need_lit_stove").withStyle(ChatFormatting.GRAY));
+            }
+            return;
+        }
+        itemInHand.shrink(1);
+        level.setBlockAndUpdate(pos, pState.setValue(HAS_OIL, true));
+        level.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1F,
+                (random.nextFloat() - random.nextFloat()) * 0.8F);
+        for (int i = 0; i < 10; i++) {
+            level.addParticle(ParticleTypes.SMOKE,
+                    pos.getX() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
+                    pos.getY() + 0.25 + random.nextDouble() / 3,
+                    pos.getZ() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
+                    0, 0.05, 0);
+        }
+    }
+
+    @Override
+    @Nullable
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new PotBlockEntity(pPos, pState);
+    }
+
+    @Override
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        if (pLevel.isClientSide) {
+            return null;
+        }
+        if (!pState.getValue(HAS_OIL)) {
+            return null;
+        }
+        return createTickerHelper(pBlockEntityType, ModBlocks.POT_BE.get(),
+                (level, pos, state, pot) -> pot.tick());
     }
 
     @Override

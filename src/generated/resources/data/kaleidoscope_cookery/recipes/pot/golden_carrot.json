@@ -1,0 +1,25 @@
+{
+  "type": "kaleidoscope_cookery:pot",
+  "ingredients": [
+    {
+      "item": "minecraft:carrot"
+    },
+    {
+      "item": "minecraft:carrot"
+    },
+    {
+      "item": "minecraft:carrot"
+    },
+    {
+      "item": "minecraft:carrot"
+    },
+    {
+      "item": "kaleidoscope_cookery:salt"
+    }
+  ],
+  "result": {
+    "item": "minecraft:golden_carrot"
+  },
+  "stir_fry_count": 5,
+  "time": 200
+}

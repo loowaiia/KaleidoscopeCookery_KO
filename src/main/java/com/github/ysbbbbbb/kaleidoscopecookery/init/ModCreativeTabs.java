@@ -16,5 +16,12 @@ public class ModCreativeTabs {
             .displayItems((par, output) -> {
                 output.accept(ModItems.STOVE.get());
                 output.accept(ModItems.POT.get());
+                output.accept(ModItems.OIL.get());
+                output.accept(ModItems.KITCHEN_KNIFE.get());
+                output.accept(ModItems.KITCHEN_SHOVEL.get());
+                output.accept(ModItems.SPOON.get());
+                output.accept(ModItems.SALT.get());
+                output.accept(ModItems.SUSPICIOUS_STIR_FRY.get());
+                output.accept(ModItems.DARK_CUISINE.get());
             }).build());
 }

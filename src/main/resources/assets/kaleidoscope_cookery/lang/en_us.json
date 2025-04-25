@@ -2,6 +2,20 @@
   "item_group.kaleidoscope_cookery.cookery_main.name": "Kaleidoscope: Cookery",
   "block.kaleidoscope_cookery.stove": "Stove",
   "block.kaleidoscope_cookery.pot": "Pot",
+  "block.kaleidoscope_cookery.suspicious_stir_fry": "Suspicious Stir-Fry",
+  "block.kaleidoscope_cookery.dark_cuisine": "Dark Cuisine",
+  "item.kaleidoscope_cookery.oil": "Oil",
+  "item.kaleidoscope_cookery.kitchen_knife": "Kitchen Knife",
+  "item.kaleidoscope_cookery.kitchen_shovel": "Kitchen Shovel",
+  "item.kaleidoscope_cookery.spoon": "Spoon",
+  "item.kaleidoscope_cookery.salt": "Salt",
   "entity.minecraft.villager.kaleidoscope_cookery.chef": "Chef",
-  "tooltip.kaleidoscope_cookery.stove": "The heat source block of the kitchen utensils, lit with flint and steel"
+  "tooltip.kaleidoscope_cookery.stove": "The heat source block of the kitchen utensils, lit with flint and steel",
+  "tip.kaleidoscope_cookery.pot.need_oil": "Please put in the oil",
+  "tip.kaleidoscope_cookery.pot.need_lit_stove": "A stove that needs to be lit underneath",
+  "tip.kaleidoscope_cookery.pot.heat_the_oil": "The oil is being heated, please wait......",
+  "tip.kaleidoscope_cookery.pot.add_ingredient": "Add the ingredients, put them all in and start stir-frying with a Kitchen Shovel",
+  "tip.kaleidoscope_cookery.pot.need_stir_fry": "It needs to be stir-fried",
+  "tip.kaleidoscope_cookery.pot.done": "The stir-fry is done",
+  "tip.kaleidoscope_cookery.pot.fail": "It's burnt, you need to cook it again"
 }

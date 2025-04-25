@@ -14,5 +14,10 @@ public class ItemModelGenerator extends ItemModelProvider {
     protected void registerModels() {
         withExistingParent("stove", modLoc("block/stove"));
         withExistingParent("pot", modLoc("block/pot"));
+        withExistingParent("oil", "item/generated").texture("layer0", modLoc("item/oil"));
+        withExistingParent("kitchen_knife", "item/handheld").texture("layer0", modLoc("item/kitchen_knife"));
+        withExistingParent("kitchen_shovel", "item/handheld").texture("layer0", modLoc("item/kitchen_shovel"));
+        withExistingParent("spoon", "item/handheld").texture("layer0", modLoc("item/spoon"));
+        withExistingParent("salt", "item/generated").texture("layer0", mcLoc("item/sugar"));
     }
 }

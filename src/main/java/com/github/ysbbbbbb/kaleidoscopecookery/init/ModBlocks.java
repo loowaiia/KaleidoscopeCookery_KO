@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.FoodBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.PotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.StoveBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.PotBlockEntity;
@@ -16,6 +17,8 @@ public class ModBlocks {
 
     public static RegistryObject<Block> STOVE = BLOCKS.register("stove", StoveBlock::new);
     public static RegistryObject<Block> POT = BLOCKS.register("pot", PotBlock::new);
+    public static RegistryObject<Block> SUSPICIOUS_STIR_FRY = BLOCKS.register("suspicious_stir_fry", FoodBlock::new);
+    public static RegistryObject<Block> DARK_CUISINE = BLOCKS.register("dark_cuisine", FoodBlock::new);
 
     public static RegistryObject<BlockEntityType<PotBlockEntity>> POT_BE = BLOCK_ENTITIES.register("pot",
             () -> BlockEntityType.Builder.of(PotBlockEntity::new, POT.get()).build(null));
