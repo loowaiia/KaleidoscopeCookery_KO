@@ -5,9 +5,11 @@ import com.github.ysbbbbbb.kaleidoscopecookery.block.PotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.StoveBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.RegistryObject;
 
 public class BlockStateGenerator extends BlockStateProvider {
     public BlockStateGenerator(PackOutput output, ExistingFileHelper exFileHelper) {
@@ -33,5 +35,21 @@ public class BlockStateGenerator extends BlockStateProvider {
         });
 
         simpleBlock(ModBlocks.SUSPICIOUS_STIR_FRY.get(), new ModelFile.UncheckedModelFile(modLoc("block/suspicious_stir_fry")));
+
+        cookStool(ModBlocks.COOK_STOOL_OAK, "oak");
+        cookStool(ModBlocks.COOK_STOOL_SPRUCE, "spruce");
+        cookStool(ModBlocks.COOK_STOOL_ACACIA, "acacia");
+        cookStool(ModBlocks.COOK_STOOL_BAMBOO, "bamboo");
+        cookStool(ModBlocks.COOK_STOOL_BIRCH, "birch");
+        cookStool(ModBlocks.COOK_STOOL_CHERRY, "cherry");
+        cookStool(ModBlocks.COOK_STOOL_CRIMSON, "crimson");
+        cookStool(ModBlocks.COOK_STOOL_DARK_OAK, "dark_oak");
+        cookStool(ModBlocks.COOK_STOOL_JUNGLE, "jungle");
+        cookStool(ModBlocks.COOK_STOOL_MANGROVE, "mangrove");
+        cookStool(ModBlocks.COOK_STOOL_WARPED, "warped");
+    }
+
+    public void cookStool(RegistryObject<Block> block, String name) {
+        horizontalBlock(block.get(), new ModelFile.UncheckedModelFile(modLoc("block/cook_stool/" + name)));
     }
 }

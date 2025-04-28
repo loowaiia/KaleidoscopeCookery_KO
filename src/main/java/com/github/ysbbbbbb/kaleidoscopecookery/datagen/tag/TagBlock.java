@@ -17,7 +17,14 @@ public class TagBlock extends BlockTagsProvider {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider pProvider) {
+    protected void addTags(HolderLookup.Provider provider) {
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.STOVE.get(), ModBlocks.POT.get());
+        this.tag(BlockTags.MINEABLE_WITH_AXE).add(
+                ModBlocks.COOK_STOOL_OAK.get(), ModBlocks.COOK_STOOL_SPRUCE.get(),
+                ModBlocks.COOK_STOOL_ACACIA.get(), ModBlocks.COOK_STOOL_BAMBOO.get(),
+                ModBlocks.COOK_STOOL_BIRCH.get(), ModBlocks.COOK_STOOL_CHERRY.get(),
+                ModBlocks.COOK_STOOL_CRIMSON.get(), ModBlocks.COOK_STOOL_DARK_OAK.get(),
+                ModBlocks.COOK_STOOL_JUNGLE.get(), ModBlocks.COOK_STOOL_MANGROVE.get(),
+                ModBlocks.COOK_STOOL_WARPED.get());
     }
 }

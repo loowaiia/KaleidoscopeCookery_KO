@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "kaleidoscope_cookery:block/cook_stool/spruce",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "kaleidoscope_cookery:block/cook_stool/spruce"
+    },
+    "facing=south": {
+      "model": "kaleidoscope_cookery:block/cook_stool/spruce",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "kaleidoscope_cookery:block/cook_stool/spruce",
+      "y": 270
+    }
+  }
+}
