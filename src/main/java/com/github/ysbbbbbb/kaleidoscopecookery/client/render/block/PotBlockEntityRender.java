@@ -30,12 +30,14 @@ public class PotBlockEntityRender implements BlockEntityRenderer<PotBlockEntity>
         if (data.preSeed == -1L) {
             data.preSeed = pot.getSeed();
         }
-        if (data.preSeed != pot.getSeed() && time > 1100) {
+        if (data.preSeed != pot.getSeed()) {
             data.preSeed = pot.getSeed();
-            data.timestamp = System.currentTimeMillis();
-            data.randomHeights = new float[9];
-            for (int i = 0; i < 9; i++) {
-                data.randomHeights[i] = 0.25f + source.nextFloat() * 1;
+            if (time > 1000) {
+                data.timestamp = System.currentTimeMillis();
+                data.randomHeights = new float[9];
+                for (int i = 0; i < 9; i++) {
+                    data.randomHeights[i] = 0.25f + source.nextFloat() * 1;
+                }
             }
         }
 
@@ -47,25 +49,42 @@ public class PotBlockEntityRender implements BlockEntityRenderer<PotBlockEntity>
         poseStack.mulPose(Axis.YN.rotationDegrees(rotation));
         poseStack.mulPose(Axis.XN.rotationDegrees(90));
         poseStack.scale(0.5f, 0.5f, 0.5f);
-        for (int i = 0; i < pot.getContainerSize(); i++) {
-            ItemStack item = pot.getItem(i);
-            if (!item.isEmpty()) {
-                poseStack.pushPose();
 
-                int count = 90 + source.nextInt(90);
-                poseStack.mulPose(Axis.ZN.rotationDegrees(i * count));
-                if (time < 1000) {
-                    poseStack.translate(0, 0, data.randomHeights[i] * Mth.sin(Mth.PI * time / 1000f));
-                    poseStack.mulPose(Axis.YN.rotationDegrees(720f / 1000 * time));
+        // 炒菜阶段，或者炒完，但是需要碗才能装的菜，只渲染原材料
+        if (pot.getStatus() != PotBlockEntity.FINISHED || pot.isNeedBowl()) {
+            for (int i = 0; i < pot.getContainerSize(); i++) {
+                ItemStack item = pot.getItem(i);
+                if (!item.isEmpty()) {
+                    renderItem(pot, poseStack, buffer, packedOverlay, source, i, time, data, itemRenderer, item);
+                    poseStack.translate(0, 0, 0.025);
                 }
-                // 焦糊程度，菜变黑
-                int light = OverlayTexture.u(16 - pot.getBurntLevel());
-                itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, light, packedOverlay, poseStack, buffer, pot.getLevel(), 0);
-
-                poseStack.popPose();
-                poseStack.translate(0, 0, 0.025);
             }
         }
+
+        // 结束阶段，并且不需要碗的菜，直接渲染结果
+        if (pot.getStatus() == PotBlockEntity.FINISHED && !pot.isNeedBowl()) {
+            renderItem(pot, poseStack, buffer, packedOverlay, source, 0, time, data, itemRenderer, pot.getResult());
+        }
+
+        poseStack.popPose();
+    }
+
+    private void renderItem(PotBlockEntity pot, PoseStack poseStack, MultiBufferSource buffer,
+                            int packedOverlay, RandomSource source, int index,
+                            long time, PotBlockEntity.StirFryAnimationData data,
+                            ItemRenderer itemRenderer, ItemStack item) {
+        poseStack.pushPose();
+
+        int count = 90 + source.nextInt(90);
+        poseStack.mulPose(Axis.ZN.rotationDegrees(index * count));
+        if (time < 1000) {
+            poseStack.translate(0, 0, data.randomHeights[index] * Mth.sin(Mth.PI * time / 1000f));
+            poseStack.mulPose(Axis.YN.rotationDegrees(720f / 1000 * time));
+        }
+        // 焦糊程度，菜变黑
+        int light = OverlayTexture.u(16 - pot.getBurntLevel());
+        itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, light, packedOverlay, poseStack, buffer, pot.getLevel(), 0);
+
         poseStack.popPose();
     }
 }

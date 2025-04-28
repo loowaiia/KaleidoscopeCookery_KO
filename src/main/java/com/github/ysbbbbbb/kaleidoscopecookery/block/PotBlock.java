@@ -40,6 +40,7 @@ import java.util.Optional;
 
 public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock {
     public static final BooleanProperty HAS_OIL = BooleanProperty.create("has_oil");
+    public static final BooleanProperty SHOW_OIL = BooleanProperty.create("show_oil");
     public static final VoxelShape AABB = Block.box(2, 0, 2, 14, 4, 14);
 
     public PotBlock() {
@@ -47,7 +48,7 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock 
                 .mapColor(MapColor.METAL)
                 .sound(ModSoundType.POT).noOcclusion()
                 .strength(1.5F, 6.0F));
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(HAS_OIL, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(HAS_OIL, false).setValue(SHOW_OIL, false));
     }
 
     @Nullable
@@ -101,7 +102,7 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock 
             return;
         }
         itemInHand.shrink(1);
-        level.setBlockAndUpdate(pos, pState.setValue(HAS_OIL, true));
+        level.setBlockAndUpdate(pos, pState.setValue(HAS_OIL, true).setValue(SHOW_OIL, true));
         level.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1F,
                 (random.nextFloat() - random.nextFloat()) * 0.8F);
         for (int i = 0; i < 10; i++) {
@@ -140,7 +141,7 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock 
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(HAS_OIL, FACING);
+        builder.add(HAS_OIL, SHOW_OIL, FACING);
     }
 
     @Override

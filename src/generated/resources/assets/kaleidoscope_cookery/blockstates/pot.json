@@ -1,32 +1,62 @@
 {
   "variants": {
-    "facing=east,has_oil=false": {
+    "facing=east,has_oil=false,show_oil=false": {
       "model": "kaleidoscope_cookery:block/pot",
       "y": 90
     },
-    "facing=east,has_oil=true": {
+    "facing=east,has_oil=false,show_oil=true": {
+      "model": "kaleidoscope_cookery:block/pot",
+      "y": 90
+    },
+    "facing=east,has_oil=true,show_oil=false": {
+      "model": "kaleidoscope_cookery:block/pot",
+      "y": 90
+    },
+    "facing=east,has_oil=true,show_oil=true": {
       "model": "kaleidoscope_cookery:block/pot_has_oil",
       "y": 90
     },
-    "facing=north,has_oil=false": {
+    "facing=north,has_oil=false,show_oil=false": {
       "model": "kaleidoscope_cookery:block/pot"
     },
-    "facing=north,has_oil=true": {
+    "facing=north,has_oil=false,show_oil=true": {
+      "model": "kaleidoscope_cookery:block/pot"
+    },
+    "facing=north,has_oil=true,show_oil=false": {
+      "model": "kaleidoscope_cookery:block/pot"
+    },
+    "facing=north,has_oil=true,show_oil=true": {
       "model": "kaleidoscope_cookery:block/pot_has_oil"
     },
-    "facing=south,has_oil=false": {
+    "facing=south,has_oil=false,show_oil=false": {
       "model": "kaleidoscope_cookery:block/pot",
       "y": 180
     },
-    "facing=south,has_oil=true": {
+    "facing=south,has_oil=false,show_oil=true": {
+      "model": "kaleidoscope_cookery:block/pot",
+      "y": 180
+    },
+    "facing=south,has_oil=true,show_oil=false": {
+      "model": "kaleidoscope_cookery:block/pot",
+      "y": 180
+    },
+    "facing=south,has_oil=true,show_oil=true": {
       "model": "kaleidoscope_cookery:block/pot_has_oil",
       "y": 180
     },
-    "facing=west,has_oil=false": {
+    "facing=west,has_oil=false,show_oil=false": {
       "model": "kaleidoscope_cookery:block/pot",
       "y": 270
     },
-    "facing=west,has_oil=true": {
+    "facing=west,has_oil=false,show_oil=true": {
+      "model": "kaleidoscope_cookery:block/pot",
+      "y": 270
+    },
+    "facing=west,has_oil=true,show_oil=false": {
+      "model": "kaleidoscope_cookery:block/pot",
+      "y": 270
+    },
+    "facing=west,has_oil=true,show_oil=true": {
       "model": "kaleidoscope_cookery:block/pot_has_oil",
       "y": 270
     }

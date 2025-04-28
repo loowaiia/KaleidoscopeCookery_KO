@@ -39,6 +39,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 import static com.github.ysbbbbbb.kaleidoscopecookery.block.PotBlock.HAS_OIL;
+import static com.github.ysbbbbbb.kaleidoscopecookery.block.PotBlock.SHOW_OIL;
 
 public class PotBlockEntity extends BlockEntity implements Container {
     public static final IntRange INGREDIENT_TICK = IntRange.second(0, 30);
@@ -54,9 +55,11 @@ public class PotBlockEntity extends BlockEntity implements Container {
     private static final String NEED_BOWL = "NeedBowl";
     private static final String RECIPE_ID = "RecipeId";
     private static final String RESULT_TICK = "ResultTick";
+    private static final String RESULT_STACK = "ResultStack";
     private static final String BURNT_LEVEL = "BurntLevel";
 
     private NonNullList<ItemStack> items = NonNullList.withSize(PotRecipe.RECIPES_SIZE, ItemStack.EMPTY);
+    private ItemStack result = ItemStack.EMPTY;
     private int status = PUT_INGREDIENT;
     private int currentTick = 0;
     private @Nullable ResourceLocation recipeId;
@@ -109,11 +112,13 @@ public class PotBlockEntity extends BlockEntity implements Container {
                 RandomSource random = level.random;
                 level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1F,
                         (random.nextFloat() - random.nextFloat()) * 0.8F);
-                ItemStack result = getResult(this.level);
-                this.items.clear();
-                this.setItem(0, result);
+                this.result = getResult(this.level);
                 this.status = FINISHED;
-                this.refresh();
+                this.setChanged();
+                if (level != null) {
+                    BlockState state = level.getBlockState(worldPosition);
+                    level.setBlockAndUpdate(worldPosition, state.setValue(SHOW_OIL, false));
+                }
             }
         }
 
@@ -134,7 +139,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
             }
 
             // 如果超时了，那么随机产生木炭
-            if (this.getResultTick.after(this.currentTick)) {
+            if (this.getResultTick.after(this.currentTick) && this.level != null) {
                 onFinishedTimeout(level);
             }
         }
@@ -232,6 +237,9 @@ public class PotBlockEntity extends BlockEntity implements Container {
                 }
             }
         }
+        if (result.is(ModItems.SUSPICIOUS_STIR_FRY.get())) {
+            this.needBowl = true;
+        }
         return result;
     }
 
@@ -239,7 +247,6 @@ public class PotBlockEntity extends BlockEntity implements Container {
         if (this.status != FINISHED) {
             return;
         }
-        ItemStack result = this.getItem(0);
         if (this.needBowl) {
             if (player.getMainHandItem().is(Items.BOWL)) {
                 player.addItem(result);
@@ -301,6 +308,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
         this.currentTick = 0;
         this.recipeId = null;
         this.getResultTick = null;
+        this.result = ItemStack.EMPTY;
         this.stirFryCount = 0;
         this.needBowl = false;
         this.burntLevel = 0;
@@ -309,7 +317,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
         this.setChanged();
         if (level != null) {
             BlockState state = level.getBlockState(worldPosition);
-            level.setBlockAndUpdate(worldPosition, state.setValue(HAS_OIL, false));
+            level.setBlockAndUpdate(worldPosition, state.setValue(HAS_OIL, false).setValue(SHOW_OIL, false));
         }
     }
 
@@ -337,6 +345,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
         if (this.getResultTick != null) {
             tag.put(RESULT_TICK, this.getResultTick.serialize());
         }
+        tag.put(RESULT_STACK, this.result.serializeNBT());
     }
 
     @Override
@@ -356,6 +365,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
         if (tag.contains(RESULT_TICK)) {
             this.getResultTick = IntRange.deserialize(tag.getCompound(RESULT_TICK));
         }
+        this.result = ItemStack.of(tag.getCompound(RESULT_STACK));
     }
 
     @Override
@@ -447,6 +457,10 @@ public class PotBlockEntity extends BlockEntity implements Container {
 
     public boolean isNeedBowl() {
         return needBowl;
+    }
+
+    public ItemStack getResult() {
+        return result;
     }
 
     public static class StirFryAnimationData {

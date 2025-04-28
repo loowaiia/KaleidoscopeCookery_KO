@@ -25,7 +25,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         });
 
         horizontalBlock(ModBlocks.POT.get(), blockState -> {
-            if (blockState.getValue(PotBlock.HAS_OIL)) {
+            if (blockState.getValue(PotBlock.HAS_OIL) && blockState.getValue(PotBlock.SHOW_OIL)) {
                 return new ModelFile.UncheckedModelFile(modLoc("block/pot_has_oil"));
             } else {
                 return new ModelFile.UncheckedModelFile(modLoc("block/pot"));

@@ -18,5 +18,9 @@ public class ModRecipeProvider extends RecipeProvider {
         PotRecipeBuilder.builder().setTime(200).setStirFryCount(5).setNeedBowl(true)
                 .addInput(Items.CARROT, Items.CARROT, Items.CARROT, Items.CARROT)
                 .setResult(Items.GOLDEN_CARROT).save(consumer);
+
+        PotRecipeBuilder.builder().setTime(200).setStirFryCount(3).setNeedBowl(false)
+                .addInput(Items.BEEF)
+                .setResult(Items.COOKED_BEEF).save(consumer);
     }
 }
