@@ -3,19 +3,17 @@
   "block.kaleidoscope_cookery.stove": "炉灶",
   "block.kaleidoscope_cookery.pot": "炒锅",
   "block.kaleidoscope_cookery.suspicious_stir_fry": "迷之炒菜",
-  "block.kaleidoscope_cookery.dark_cuisine": "黑暗料理",
   "item.kaleidoscope_cookery.oil": "油脂",
   "item.kaleidoscope_cookery.kitchen_knife": "菜刀",
   "item.kaleidoscope_cookery.kitchen_shovel": "锅铲",
-  "item.kaleidoscope_cookery.spoon": "勺子",
   "item.kaleidoscope_cookery.salt": "食盐",
   "entity.minecraft.villager.kaleidoscope_cookery.chef": "烹饪师",
   "tooltip.kaleidoscope_cookery.stove": "厨房用具的热源方块，使用打火石点燃",
   "tip.kaleidoscope_cookery.pot.need_oil": "请放入油脂",
   "tip.kaleidoscope_cookery.pot.need_lit_stove": "下方需要点燃的炉灶",
-  "tip.kaleidoscope_cookery.pot.heat_the_oil": "正在热油，请稍等……",
   "tip.kaleidoscope_cookery.pot.add_ingredient": "请加入配菜，全部加入后用锅铲翻炒",
   "tip.kaleidoscope_cookery.pot.need_stir_fry": "需要多次翻炒",
   "tip.kaleidoscope_cookery.pot.done": "炒菜已熟，请盛出",
-  "tip.kaleidoscope_cookery.pot.fail": "炒糊了，请重头再来吧"
+  "tip.kaleidoscope_cookery.pot.need_bowl": "需要使用碗右击取出",
+  "tip.kaleidoscope_cookery.pot.need_kitchen_shovel": "需要使用锅铲潜行右键取出"
 }

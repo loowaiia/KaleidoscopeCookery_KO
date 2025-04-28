@@ -26,6 +26,7 @@ public class PotRecipeBuilder implements RecipeBuilder {
     private static final String NAME = "pot";
     private int time = 200;
     private int stirFryCount = 3;
+    private boolean needBowl = false;
     private List<Ingredient> ingredients = Lists.newArrayList();
     private ItemStack result = ItemStack.EMPTY;
 
@@ -40,6 +41,11 @@ public class PotRecipeBuilder implements RecipeBuilder {
 
     public PotRecipeBuilder setStirFryCount(int stirFryCount) {
         this.stirFryCount = stirFryCount;
+        return this;
+    }
+
+    public PotRecipeBuilder setNeedBowl(boolean needBowl) {
+        this.needBowl = needBowl;
         return this;
     }
 
@@ -95,20 +101,22 @@ public class PotRecipeBuilder implements RecipeBuilder {
 
     @Override
     public void save(Consumer<FinishedRecipe> recipeOutput, ResourceLocation id) {
-        recipeOutput.accept(new PotFinishedRecipe(id, this.time, this.stirFryCount, this.ingredients, this.result));
+        recipeOutput.accept(new PotFinishedRecipe(id, this.time, this.stirFryCount, this.needBowl, this.ingredients, this.result));
     }
 
     public class PotFinishedRecipe implements FinishedRecipe {
         private final ResourceLocation id;
         private final int time;
         private final int stirFryCount;
+        private final boolean needBowl;
         private final List<Ingredient> ingredients;
         private final ItemStack result;
 
-        public PotFinishedRecipe(ResourceLocation id, int time, int stirFryCount, List<Ingredient> ingredients, ItemStack result) {
+        public PotFinishedRecipe(ResourceLocation id, int time, int stirFryCount, boolean needBowl, List<Ingredient> ingredients, ItemStack result) {
             this.id = id;
             this.time = time;
             this.stirFryCount = stirFryCount;
+            this.needBowl = needBowl;
             this.ingredients = ingredients;
             this.result = result;
         }
@@ -116,8 +124,8 @@ public class PotRecipeBuilder implements RecipeBuilder {
         @Override
         public void serializeRecipeData(JsonObject json) {
             json.addProperty("time", this.time);
-
             json.addProperty("stir_fry_count", this.stirFryCount);
+            json.addProperty("need_bowl", this.needBowl);
 
             JsonArray ingredientsJson = new JsonArray();
             this.ingredients.stream().filter(i -> i != Ingredient.EMPTY).forEach(i -> ingredientsJson.add(i.toJson()));

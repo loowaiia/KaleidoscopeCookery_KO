@@ -1,3 +1,6 @@
 {
-  "parent": "kaleidoscope_cookery:block/suspicious_stir_fry"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "kaleidoscope_cookery:item/suspicious_stir_fry"
+  }
 }

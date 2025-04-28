@@ -32,7 +32,6 @@ public class BlockStateGenerator extends BlockStateProvider {
             }
         });
 
-        simpleBlockWithItem(ModBlocks.SUSPICIOUS_STIR_FRY.get(), new ModelFile.UncheckedModelFile(modLoc("block/suspicious_stir_fry")));
-        simpleBlockWithItem(ModBlocks.DARK_CUISINE.get(), new ModelFile.UncheckedModelFile(modLoc("block/dark_cuisine")));
+        simpleBlock(ModBlocks.SUSPICIOUS_STIR_FRY.get(), new ModelFile.UncheckedModelFile(modLoc("block/suspicious_stir_fry")));
     }
 }

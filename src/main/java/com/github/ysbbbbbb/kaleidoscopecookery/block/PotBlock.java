@@ -4,6 +4,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.PotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoundType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,7 +23,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -45,7 +45,7 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock 
     public PotBlock() {
         super(Properties.of()
                 .mapColor(MapColor.METAL)
-                .sound(SoundType.METAL).noOcclusion()
+                .sound(ModSoundType.POT).noOcclusion()
                 .strength(1.5F, 6.0F));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(HAS_OIL, false));
     }
@@ -59,6 +59,9 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock 
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand pHand, BlockHitResult pHit) {
+        if (pHand == InteractionHand.OFF_HAND) {
+            return super.use(state, level, pos, player, pHand, pHit);
+        }
         ItemStack itemInHand = player.getItemInHand(pHand);
         RandomSource random = level.random;
         if (!state.getValue(HAS_OIL)) {
@@ -66,7 +69,7 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock 
                 placeOil(state, level, pos, player, itemInHand, random);
                 return InteractionResult.SUCCESS;
             }
-        } else if (level.getBlockEntity(pos) instanceof PotBlockEntity pot && !itemInHand.isEmpty()) {
+        } else if (level.getBlockEntity(pos) instanceof PotBlockEntity pot) {
             cooking(level, pos, player, pot, itemInHand, random);
             return InteractionResult.SUCCESS;
         }
@@ -75,11 +78,17 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock 
 
     private void cooking(Level level, BlockPos pos, Player player, PotBlockEntity pot, ItemStack itemInHand, RandomSource random) {
         if (itemInHand.is(ModItems.KITCHEN_SHOVEL.get())) {
+            BlockState blockState = level.getBlockState(pos.below());
+            if (!blockState.hasProperty(BlockStateProperties.LIT) || !blockState.getValue(BlockStateProperties.LIT)) {
+                return;
+            }
             pot.onShovelHit(level, player, itemInHand);
             level.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F,
                     1F + (random.nextFloat() - random.nextFloat()) * 0.8F);
+        } else if (pot.getStatus() == PotBlockEntity.FINISHED) {
+            pot.takeOut(player);
         } else {
-            pot.addIngredient(itemInHand);
+            pot.addIngredient(itemInHand, player);
         }
     }
 

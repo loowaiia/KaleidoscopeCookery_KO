@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoundType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,14 +41,13 @@ import java.util.List;
 
 public class StoveBlock extends HorizontalDirectionalBlock {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
-    private static final int MAX_STOVE_LIT_TIME = 20 * 60 * 20;
 
     public StoveBlock() {
         super(Properties.of()
                 .mapColor(MapColor.STONE)
                 .sound(SoundType.STONE)
                 .requiresCorrectToolForDrops()
-                .lightLevel(state -> state.getValue(LIT) ? 15 : 0)
+                .lightLevel(state -> state.getValue(LIT) ? 13 : 0)
                 .randomTicks()
                 .strength(1.5F, 6.0F));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(LIT, false));
@@ -85,7 +85,8 @@ public class StoveBlock extends HorizontalDirectionalBlock {
     @Override
     public void randomTick(BlockState blockState, ServerLevel level, BlockPos pos, RandomSource random) {
         if (blockState.getValue(LIT) && level.isRainingAt(pos.above())) {
-            this.tick(blockState, level, pos, random);
+            level.setBlockAndUpdate(pos, blockState.setValue(LIT, false));
+            level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
     }
 
@@ -107,21 +108,12 @@ public class StoveBlock extends HorizontalDirectionalBlock {
     }
 
     @Override
-    public void tick(BlockState blockState, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (blockState.getValue(LIT)) {
-            level.setBlockAndUpdate(pos, blockState.setValue(LIT, false));
-            level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
-        }
-    }
-
-    @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult pHit) {
         ItemStack itemInHand = player.getItemInHand(hand);
         // 点燃炉灶
         if (!blockState.getValue(LIT) && itemInHand.is(TagItem.LIT_STOVE)) {
             level.setBlockAndUpdate(pos, blockState.setValue(LIT, true));
             level.playSound(player, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
-            level.scheduleTick(pos, this, MAX_STOVE_LIT_TIME);
             itemInHand.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
             return InteractionResult.SUCCESS;
         }

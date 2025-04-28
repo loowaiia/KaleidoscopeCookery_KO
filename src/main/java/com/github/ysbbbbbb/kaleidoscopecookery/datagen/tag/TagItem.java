@@ -33,6 +33,8 @@ public class TagItem extends ItemTagsProvider {
         tag(LIT_STOVE).add(Items.FLINT_AND_STEEL, Items.FIRE_CHARGE);
         tag(EXTINGUISH_STOVE).addTag(ItemTags.SHOVELS);
         tag(OIL).add(ModItems.OIL.get());
-        tag(POT_INGREDIENT).add(Items.SLIME_BALL).add(ModItems.SALT.get());
+        tag(POT_INGREDIENT).add(Items.SLIME_BALL);
+        tag(ItemTags.SHOVELS).add(ModItems.KITCHEN_SHOVEL.get());
+        tag(ItemTags.SWORDS).add(ModItems.KITCHEN_KNIFE.get());
     }
 }

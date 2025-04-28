@@ -20,13 +20,15 @@ public class PotRecipe implements Recipe<PotBlockEntity> {
     private final ResourceLocation id;
     private final int time;
     private final int stirFryCount;
+    private final boolean needBowl;
     private final NonNullList<Ingredient> ingredients;
     private final ItemStack result;
 
-    public PotRecipe(ResourceLocation id, int time, int stirFryCount, List<Ingredient> ingredients, ItemStack result) {
+    public PotRecipe(ResourceLocation id, int time, int stirFryCount, boolean needBowl, List<Ingredient> ingredients, ItemStack result) {
         this.id = id;
         this.time = time;
         this.stirFryCount = stirFryCount;
+        this.needBowl = needBowl;
         this.ingredients = NonNullList.of(Ingredient.EMPTY, fillInputs(ingredients));
         this.result = result;
     }
@@ -52,6 +54,10 @@ public class PotRecipe implements Recipe<PotBlockEntity> {
 
     public int getStirFryCount() {
         return stirFryCount;
+    }
+
+    public boolean isNeedBowl() {
+        return needBowl;
     }
 
     @Override

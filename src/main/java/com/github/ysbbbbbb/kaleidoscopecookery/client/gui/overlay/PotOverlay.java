@@ -59,33 +59,20 @@ public class PotOverlay implements IGuiOverlay {
             drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.need_lit_stove"), x, y, ChatFormatting.RED.getColor());
             return;
         }
-
         if (!blockState.getValue(PotBlock.HAS_OIL)) {
             drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.need_oil"), x, y, ChatFormatting.AQUA.getColor());
         } else {
             int status = pot.getStatus();
-            int tick = pot.getCurrentTick();
-
-            if (status == PotBlockEntity.HEAT_THE_OIL) {
-                if (tick >= PotBlockEntity.INGREDIENT_TICK.start()) {
-                    drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.add_ingredient"), x, y, ChatFormatting.RED.getColor());
-                } else {
-                    drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.heat_the_oil"), x, y, ChatFormatting.GRAY.getColor());
-                }
+            if (status == PotBlockEntity.PUT_INGREDIENT) {
+                drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.add_ingredient"), x, y, ChatFormatting.RED.getColor());
                 return;
             }
-
-            if (status == PotBlockEntity.COOKING && pot.getCookingTick() != null) {
-                if (pot.getCookingTick().contains(tick)) {
-                    drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.done"), x, y, ChatFormatting.RED.getColor());
-                } else {
-                    drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.need_stir_fry"), x, y, ChatFormatting.GRAY.getColor());
-                }
+            if (status == PotBlockEntity.COOKING) {
+                drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.need_stir_fry"), x, y, ChatFormatting.GRAY.getColor());
                 return;
             }
-
-            if (status == PotBlockEntity.FAIL) {
-                drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.fail"), x, y, ChatFormatting.AQUA.getColor());
+            if (status == PotBlockEntity.FINISHED) {
+                drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.done"), x, y, ChatFormatting.RED.getColor());
             }
         }
     }

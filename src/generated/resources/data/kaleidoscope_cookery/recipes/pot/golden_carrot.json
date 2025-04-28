@@ -12,11 +12,9 @@
     },
     {
       "item": "minecraft:carrot"
-    },
-    {
-      "item": "kaleidoscope_cookery:salt"
     }
   ],
+  "need_bowl": true,
   "result": {
     "item": "minecraft:golden_carrot"
   },
