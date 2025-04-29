@@ -10,8 +10,8 @@ import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
-public class ItemKitchenShovel extends ShovelItem {
-    public ItemKitchenShovel() {
+public class KitchenShovelItem extends ShovelItem {
+    public KitchenShovelItem() {
         super(Tiers.IRON, 0, -3.0F, new Properties());
     }
 

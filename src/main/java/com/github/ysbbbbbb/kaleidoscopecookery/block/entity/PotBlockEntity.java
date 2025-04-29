@@ -34,6 +34,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -278,9 +279,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
 
         if (this.needBowl) {
             if (player.getMainHandItem().is(Items.BOWL)) {
-                player.addItem(finallyResult);
-                player.level().playSound(null, this.worldPosition, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2f,
-                        ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7f + 1.0f) * 2.0f);
+                ItemHandlerHelper.giveItemToPlayer(player, finallyResult);
                 player.getMainHandItem().shrink(1);
                 this.reset();
             } else {
@@ -293,9 +292,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
         } else {
             if (player.getMainHandItem().is(ModItems.KITCHEN_SHOVEL.get())) {
                 if (player.isSecondaryUseActive()) {
-                    player.addItem(finallyResult);
-                    player.level().playSound(null, this.worldPosition, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2f,
-                            ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7f + 1.0f) * 2.0f);
+                    ItemHandlerHelper.giveItemToPlayer(player, finallyResult);
                     this.reset();
                 }
             } else {
@@ -317,7 +314,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
                 ItemStack stack = this.items.get(i);
                 if (!stack.isEmpty()) {
                     this.items.set(i, ItemStack.EMPTY);
-                    player.addItem(stack);
+                    ItemHandlerHelper.giveItemToPlayer(player, stack);
                     player.hurt(player.level().damageSources().inFire(), 1);
                     return;
                 }

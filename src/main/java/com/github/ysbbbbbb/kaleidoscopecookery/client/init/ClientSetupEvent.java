@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.client.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.gui.overlay.PotOverlay;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.render.block.FruitBasketBlockEntityRender;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.block.PotBlockEntityRender;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -23,6 +24,7 @@ public class ClientSetupEvent {
     @SubscribeEvent
     public static void onEntityRenderers(EntityRenderersEvent.RegisterRenderers evt) {
         BlockEntityRenderers.register(ModBlocks.POT_BE.get(), PotBlockEntityRender::new);
+        BlockEntityRenderers.register(ModBlocks.FRUIT_BASKET_BE.get(), FruitBasketBlockEntityRender::new);
     }
 
     @SubscribeEvent

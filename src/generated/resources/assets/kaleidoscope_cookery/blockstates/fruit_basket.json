@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "kaleidoscope_cookery:block/fruit_basket",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "kaleidoscope_cookery:block/fruit_basket"
+    },
+    "facing=south": {
+      "model": "kaleidoscope_cookery:block/fruit_basket",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "kaleidoscope_cookery:block/fruit_basket",
+      "y": 270
+    }
+  }
+}

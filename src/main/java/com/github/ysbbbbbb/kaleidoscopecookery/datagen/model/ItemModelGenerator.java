@@ -19,6 +19,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent("kitchen_shovel", "item/handheld").texture("layer0", modLoc("item/kitchen_shovel"));
         withExistingParent("suspicious_stir_fry", "item/generated").texture("layer0", modLoc("item/suspicious_stir_fry"));
         withExistingParent("dark_cuisine", "item/generated").texture("layer0", modLoc("item/dark_cuisine"));
+        withExistingParent("fruit_basket", modLoc("block/fruit_basket"));
         withExistingParent("cook_stool_oak", modLoc("block/cook_stool/oak"));
         withExistingParent("cook_stool_spruce", modLoc("block/cook_stool/spruce"));
         withExistingParent("cook_stool_acacia", modLoc("block/cook_stool/acacia"));

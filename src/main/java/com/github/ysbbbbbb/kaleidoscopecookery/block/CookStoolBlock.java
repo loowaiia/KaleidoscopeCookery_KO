@@ -27,11 +27,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class CookStool extends HorizontalDirectionalBlock {
+public class CookStoolBlock extends HorizontalDirectionalBlock {
     public static final VoxelShape NORTH_SOUTH = Block.box(2, 0, 3, 14, 7, 13);
     public static final VoxelShape EAST_WEST = Block.box(3, 0, 2, 13, 7, 14);
 
-    public CookStool() {
+    public CookStoolBlock() {
         super(BlockBehaviour.Properties.of()
                 .mapColor(MapColor.WOOD)
                 .instrument(NoteBlockInstrument.BASS)

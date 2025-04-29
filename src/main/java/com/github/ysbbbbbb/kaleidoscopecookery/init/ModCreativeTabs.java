@@ -32,5 +32,6 @@ public class ModCreativeTabs {
                 output.accept(ModItems.COOK_STOOL_JUNGLE.get());
                 output.accept(ModItems.COOK_STOOL_MANGROVE.get());
                 output.accept(ModItems.COOK_STOOL_WARPED.get());
+                output.accept(ModItems.FRUIT_BASKET.get());
             }).build());
 }
