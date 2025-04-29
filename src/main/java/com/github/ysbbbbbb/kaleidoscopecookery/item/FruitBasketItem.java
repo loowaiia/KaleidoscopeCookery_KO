@@ -31,4 +31,9 @@ public class FruitBasketItem extends BlockItem {
         }
         return Optional.empty();
     }
+
+    @Override
+    public boolean canFitInsideContainerItems() {
+        return false;
+    }
 }

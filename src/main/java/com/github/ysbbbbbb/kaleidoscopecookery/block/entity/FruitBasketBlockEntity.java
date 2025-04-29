@@ -27,6 +27,9 @@ public class FruitBasketBlockEntity extends BlockEntity {
     }
 
     public void putOn(ItemStack stack) {
+        if (!stack.getItem().canFitInsideContainerItems()) {
+            return;
+        }
         ItemStack reminder = ItemHandlerHelper.insertItemStacked(this.items, stack.copy(), false);
         if (stack.getCount() != reminder.getCount()) {
             stack.shrink(stack.getCount() - reminder.getCount());

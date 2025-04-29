@@ -21,6 +21,7 @@ public class RightClickEvent {
         if (player.isSecondaryUseActive() && hand == InteractionHand.MAIN_HAND && !level.isClientSide
             && level.getBlockEntity(pos) instanceof FruitBasketBlockEntity fruitBasketBlock) {
             fruitBasketBlock.takeOut(player);
+            event.setCanceled(true);
         }
     }
 }

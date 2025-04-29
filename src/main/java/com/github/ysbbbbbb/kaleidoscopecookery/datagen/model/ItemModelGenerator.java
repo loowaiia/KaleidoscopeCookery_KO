@@ -2,7 +2,11 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen.model;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.client.model.generators.loaders.SeparateTransformsModelBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class ItemModelGenerator extends ItemModelProvider {
@@ -19,7 +23,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent("kitchen_shovel", "item/handheld").texture("layer0", modLoc("item/kitchen_shovel"));
         withExistingParent("suspicious_stir_fry", "item/generated").texture("layer0", modLoc("item/suspicious_stir_fry"));
         withExistingParent("dark_cuisine", "item/generated").texture("layer0", modLoc("item/dark_cuisine"));
-        withExistingParent("fruit_basket", modLoc("block/fruit_basket"));
+
         withExistingParent("cook_stool_oak", modLoc("block/cook_stool/oak"));
         withExistingParent("cook_stool_spruce", modLoc("block/cook_stool/spruce"));
         withExistingParent("cook_stool_acacia", modLoc("block/cook_stool/acacia"));
@@ -31,5 +35,18 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent("cook_stool_jungle", modLoc("block/cook_stool/jungle"));
         withExistingParent("cook_stool_mangrove", modLoc("block/cook_stool/mangrove"));
         withExistingParent("cook_stool_warped", modLoc("block/cook_stool/warped"));
+
+        ItemModelBuilder fruitBasketFull = new ItemModelBuilder(modLoc("fruit_basket"), this.existingFileHelper)
+                .parent(new ModelFile.UncheckedModelFile(modLoc("item/fruit_basket_full")));
+        ItemModelBuilder fruitBasketItem = new ItemModelBuilder(modLoc("fruit_basket"), this.existingFileHelper)
+                .parent(new ModelFile.UncheckedModelFile("item/generated"))
+                .texture("layer0", modLoc("item/fruit_basket"));
+        ItemModelBuilder fruitBasketBlock = new ItemModelBuilder(modLoc("fruit_basket"), this.existingFileHelper)
+                .parent(new ModelFile.UncheckedModelFile(modLoc("block/fruit_basket")));
+        getBuilder("fruit_basket").customLoader(SeparateTransformsModelBuilder::begin).base(fruitBasketFull)
+                .perspective(ItemDisplayContext.GROUND, fruitBasketBlock)
+                .perspective(ItemDisplayContext.GUI, fruitBasketItem)
+                .perspective(ItemDisplayContext.FIXED, fruitBasketItem)
+                .perspective(ItemDisplayContext.GROUND, fruitBasketItem);
     }
 }

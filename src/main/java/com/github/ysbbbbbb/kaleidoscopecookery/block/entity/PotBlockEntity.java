@@ -8,6 +8,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.recipe.PotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.IntRange;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -35,6 +36,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -95,7 +97,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
             this.refresh();
         }
 
-        if (this.currentTick % 10 == 0) {
+        if (this.currentTick % 25 == 0) {
             // 模拟油炸声音
             level.playSound(null, this.worldPosition, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 1f, 1f);
         }
@@ -109,9 +111,9 @@ public class PotBlockEntity extends BlockEntity implements Container {
             if (this.currentTick % 10 == 0 && this.level instanceof ServerLevel serverLevel) {
                 serverLevel.sendParticles(ParticleTypes.POOF,
                         worldPosition.getX() + 0.5 + random.nextDouble() / 5 * (random.nextBoolean() ? 1 : -1),
-                        worldPosition.getY() + 0.25 + random.nextDouble() / 3,
+                        worldPosition.getY() + 0.1 + random.nextDouble() / 3,
                         worldPosition.getZ() + 0.5 + random.nextDouble() / 5 * (random.nextBoolean() ? 1 : -1),
-                        1, 0, 0, 0, 0.05);
+                        1, 0, 0, 0, 0);
             }
             return;
         }

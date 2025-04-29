@@ -24,19 +24,26 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class FruitBasketBlock extends HorizontalDirectionalBlock implements EntityBlock {
-    public static final VoxelShape NORTH_SOUTH = Block.box(1, 0, 2, 15, 8, 14);
-    public static final VoxelShape EAST_WEST = Block.box(2, 0, 1, 14, 8, 15);
+    public static final VoxelShape NORTH_SOUTH = Shapes.join(
+            Block.box(1, 0, 2, 15, 8, 14),
+            Block.box(2, 1, 3, 14, 8, 13),
+            BooleanOp.ONLY_FIRST);
+    public static final VoxelShape EAST_WEST = Shapes.join(
+            Block.box(2, 0, 1, 14, 8, 15),
+            Block.box(3, 1, 2, 13, 8, 14),
+            BooleanOp.ONLY_FIRST);
 
     public FruitBasketBlock() {
         super(BlockBehaviour.Properties.of()
                 .mapColor(MapColor.WOOD)
                 .instrument(NoteBlockInstrument.BASS)
-                .strength(2.0F, 3.0F)
                 .sound(SoundType.BAMBOO));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH));
     }
