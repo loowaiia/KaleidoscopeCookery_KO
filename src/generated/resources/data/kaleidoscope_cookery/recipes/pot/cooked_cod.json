@@ -1,0 +1,14 @@
+{
+  "type": "kaleidoscope_cookery:pot",
+  "ingredients": [
+    {
+      "item": "minecraft:cod"
+    }
+  ],
+  "need_bowl": false,
+  "result": {
+    "item": "minecraft:cooked_cod"
+  },
+  "stir_fry_count": 3,
+  "time": 200
+}

@@ -80,6 +80,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
         if (this.level == null) {
             return;
         }
+        RandomSource random = level.random;
 
         // 下方没有点燃属性？不更新
         Optional<Boolean> value = level.getBlockState(worldPosition.below()).getOptionalValue(BlockStateProperties.LIT);
@@ -99,6 +100,13 @@ public class PotBlockEntity extends BlockEntity implements Container {
             if (INGREDIENT_TICK.after(currentTick)) {
                 onPreparationTimeout(this.level);
             }
+            if (this.currentTick % 10 == 0 && this.level instanceof ServerLevel serverLevel) {
+                serverLevel.sendParticles(ParticleTypes.POOF,
+                        worldPosition.getX() + 0.5 + random.nextDouble() / 5 * (random.nextBoolean() ? 1 : -1),
+                        worldPosition.getY() + 0.25 + random.nextDouble() / 3,
+                        worldPosition.getZ() + 0.5 + random.nextDouble() / 5 * (random.nextBoolean() ? 1 : -1),
+                        1, 0, 0, 0, 0.05);
+            }
             return;
         }
 
@@ -109,7 +117,6 @@ public class PotBlockEntity extends BlockEntity implements Container {
         // 炒菜阶段
         if (this.status == COOKING) {
             if (this.currentTick > this.getResultTick.start()) {
-                RandomSource random = level.random;
                 level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1F,
                         (random.nextFloat() - random.nextFloat()) * 0.8F);
                 this.result = getResult(this.level);
@@ -124,18 +131,29 @@ public class PotBlockEntity extends BlockEntity implements Container {
 
         // 出结果阶段
         if (this.status == FINISHED) {
-            // 如果开始超时，那么菜慢慢变黑
-            this.burntLevel = (this.currentTick - this.getResultTick.start()) / 35;
-            this.burntLevel = Mth.clamp(this.burntLevel, 0, 16);
+            int time = this.currentTick - this.getResultTick.start();
+            // 前 20 秒白烟
+            if (time < 20 * 20) {
+                if (this.currentTick % 10 == 0 && this.level instanceof ServerLevel serverLevel) {
+                    serverLevel.sendParticles(ParticleTypes.POOF,
+                            worldPosition.getX() + 0.5,
+                            worldPosition.getY() + 0.25 + random.nextDouble() / 2,
+                            worldPosition.getZ() + 0.5,
+                            1, 0, 0, 0, 0);
+                }
+            } else {
+                // 如果开始超时，那么菜慢慢变黑
+                this.burntLevel = (time - 20 * 20) / 25;
+                this.burntLevel = Mth.clamp(this.burntLevel, 0, 16);
 
-            // 依据过头情况，粒子数量逐渐增加
-            if (this.currentTick % 2 == 0 && this.level instanceof ServerLevel serverLevel && this.burntLevel >= 2) {
-                RandomSource random = level.random;
-                serverLevel.sendParticles(ParticleTypes.SMOKE,
-                        worldPosition.getX() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
-                        worldPosition.getY() + 0.25 + random.nextDouble() / 3,
-                        worldPosition.getZ() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
-                        this.burntLevel / 2, 0, 0, 0, 0.05);
+                // 依据过头情况，粒子数量逐渐增加
+                if (this.currentTick % 2 == 0 && this.level instanceof ServerLevel serverLevel && this.burntLevel >= 2) {
+                    serverLevel.sendParticles(ParticleTypes.SMOKE,
+                            worldPosition.getX() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
+                            worldPosition.getY() + 0.25 + random.nextDouble() / 3,
+                            worldPosition.getZ() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
+                            this.burntLevel / 2, 0, 0, 0, 0.05);
+                }
             }
 
             // 如果超时了，那么随机产生木炭
@@ -214,12 +232,12 @@ public class PotBlockEntity extends BlockEntity implements Container {
             this.recipeId = recipe.getId();
             this.needBowl = recipe.isNeedBowl();
             int time = recipe.getTime() / 20;
-            // 最后给 30 秒时间来取出成品
-            this.getResultTick = IntRange.second(time, time + 30);
+            // 最后给 20 秒时间来取出成品，20 秒取出黑暗料理
+            this.getResultTick = IntRange.second(time, time + 40);
         }, () -> {
             // 不符合，进入迷之炒菜阶段
             this.recipeId = null;
-            this.getResultTick = IntRange.second(10, 40);
+            this.getResultTick = IntRange.second(10, 50);
         });
         this.status = COOKING;
         this.currentTick = 0;
@@ -247,9 +265,22 @@ public class PotBlockEntity extends BlockEntity implements Container {
         if (this.status != FINISHED) {
             return;
         }
+        if (this.getResultTick == null) {
+            return;
+        }
+
+        // 超时取出的是黑暗料理
+        ItemStack finallyResult = this.getResult(level);
+        int time = this.currentTick - this.getResultTick.start();
+        if (time > 20 * 20) {
+            finallyResult = new ItemStack(ModItems.DARK_CUISINE.get());
+        }
+
         if (this.needBowl) {
             if (player.getMainHandItem().is(Items.BOWL)) {
-                player.addItem(result);
+                player.addItem(finallyResult);
+                player.level().playSound(null, this.worldPosition, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2f,
+                        ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7f + 1.0f) * 2.0f);
                 player.getMainHandItem().shrink(1);
                 this.reset();
             } else {
@@ -262,7 +293,9 @@ public class PotBlockEntity extends BlockEntity implements Container {
         } else {
             if (player.getMainHandItem().is(ModItems.KITCHEN_SHOVEL.get())) {
                 if (player.isSecondaryUseActive()) {
-                    player.addItem(result);
+                    player.addItem(finallyResult);
+                    player.level().playSound(null, this.worldPosition, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2f,
+                            ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7f + 1.0f) * 2.0f);
                     this.reset();
                 }
             } else {
@@ -299,6 +332,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
             if (item.isEmpty()) {
                 this.setItem(i, itemStack.copyWithCount(1));
                 itemStack.shrink(1);
+                player.level().playSound(null, this.worldPosition, SoundEvents.LANTERN_PLACE, SoundSource.BLOCKS, 1.0F, 0.5F);
                 return;
             }
         }

@@ -21,8 +21,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
-import java.util.Optional;
-
 public class PotOverlay implements IGuiOverlay {
     @Override
     public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
@@ -54,14 +52,8 @@ public class PotOverlay implements IGuiOverlay {
         int x = screenWidth / 2 - 120;
         int y = screenHeight / 2 - 10;
 
-        Optional<Boolean> value = level.getBlockState(blockPos.below()).getOptionalValue(BlockStateProperties.LIT);
-        if (value.isEmpty() || !value.get()) {
-            drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.need_lit_stove"), x, y, ChatFormatting.RED.getColor());
-            return;
-        }
-        if (!blockState.getValue(PotBlock.HAS_OIL)) {
-            drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.need_oil"), x, y, ChatFormatting.AQUA.getColor());
-        } else {
+        BlockState belowState = level.getBlockState(blockPos.below());
+        if (blockState.getValue(PotBlock.HAS_OIL) && belowState.hasProperty(BlockStateProperties.LIT) && belowState.getValue(BlockStateProperties.LIT)) {
             int status = pot.getStatus();
             if (status == PotBlockEntity.PUT_INGREDIENT) {
                 drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.add_ingredient"), x, y, ChatFormatting.RED.getColor());

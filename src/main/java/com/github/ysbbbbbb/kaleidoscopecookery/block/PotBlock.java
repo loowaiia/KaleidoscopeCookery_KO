@@ -5,11 +5,13 @@ import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoundType;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -36,8 +38,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
 public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock {
     public static final BooleanProperty HAS_OIL = BooleanProperty.create("has_oil");
     public static final BooleanProperty SHOW_OIL = BooleanProperty.create("show_oil");
@@ -63,44 +63,60 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock 
         if (pHand == InteractionHand.OFF_HAND) {
             return super.use(state, level, pos, player, pHand, pHit);
         }
+
+        // 判断热源
+        BlockState belowState = level.getBlockState(pos.below());
+        if (!belowState.hasProperty(BlockStateProperties.LIT) || !belowState.getValue(BlockStateProperties.LIT)) {
+            sendBarMessage(player, Component.translatable("tip.kaleidoscope_cookery.pot.need_lit_stove"));
+            return InteractionResult.FAIL;
+        }
+
         ItemStack itemInHand = player.getItemInHand(pHand);
         RandomSource random = level.random;
+
+        // 放油
         if (!state.getValue(HAS_OIL)) {
             if (itemInHand.is(TagItem.OIL)) {
                 placeOil(state, level, pos, player, itemInHand, random);
                 return InteractionResult.SUCCESS;
+            } else {
+                sendBarMessage(player, Component.translatable("tip.kaleidoscope_cookery.pot.need_oil"));
+                return InteractionResult.FAIL;
             }
-        } else if (level.getBlockEntity(pos) instanceof PotBlockEntity pot) {
+        }
+
+        // 炒菜等内容
+        if (level.getBlockEntity(pos) instanceof PotBlockEntity pot) {
             cooking(level, pos, player, pot, itemInHand, random);
             return InteractionResult.SUCCESS;
         }
+
         return super.use(state, level, pos, player, pHand, pHit);
+    }
+
+    private void sendBarMessage(Player player, MutableComponent message) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.connection.send(new ClientboundSetActionBarTextPacket(message));
+        }
     }
 
     private void cooking(Level level, BlockPos pos, Player player, PotBlockEntity pot, ItemStack itemInHand, RandomSource random) {
         if (itemInHand.is(ModItems.KITCHEN_SHOVEL.get())) {
-            BlockState blockState = level.getBlockState(pos.below());
-            if (!blockState.hasProperty(BlockStateProperties.LIT) || !blockState.getValue(BlockStateProperties.LIT)) {
-                return;
-            }
             pot.onShovelHit(level, player, itemInHand);
             level.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F,
                     1F + (random.nextFloat() - random.nextFloat()) * 0.8F);
-        } else if (pot.getStatus() == PotBlockEntity.FINISHED) {
-            pot.takeOut(player);
-        } else {
-            pot.addIngredient(itemInHand, player);
+            return;
         }
+
+        if (pot.getStatus() == PotBlockEntity.FINISHED) {
+            pot.takeOut(player);
+            return;
+        }
+
+        pot.addIngredient(itemInHand, player);
     }
 
     private void placeOil(BlockState pState, Level level, BlockPos pos, Player player, ItemStack itemInHand, RandomSource random) {
-        Optional<Boolean> value = level.getBlockState(pos.below()).getOptionalValue(BlockStateProperties.LIT);
-        if (value.isEmpty() || !value.get()) {
-            if (!level.isClientSide()) {
-                player.sendSystemMessage(Component.translatable("tip.kaleidoscope_cookery.pot.need_lit_stove").withStyle(ChatFormatting.GRAY));
-            }
-            return;
-        }
         itemInHand.shrink(1);
         level.setBlockAndUpdate(pos, pState.setValue(HAS_OIL, true).setValue(SHOW_OIL, true));
         level.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1F,

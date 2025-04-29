@@ -35,6 +35,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         });
 
         simpleBlock(ModBlocks.SUSPICIOUS_STIR_FRY.get(), new ModelFile.UncheckedModelFile(modLoc("block/suspicious_stir_fry")));
+        simpleBlock(ModBlocks.DARK_CUISINE.get(), new ModelFile.UncheckedModelFile(modLoc("block/dark_cuisine")));
 
         cookStool(ModBlocks.COOK_STOOL_OAK, "oak");
         cookStool(ModBlocks.COOK_STOOL_SPRUCE, "spruce");

@@ -1,7 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoundType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,6 +18,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -102,7 +102,8 @@ public class StoveBlock extends HorizontalDirectionalBlock {
     @Override
     public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
         if (pState.getValue(LIT) && pLevel.isWaterAt(pPos.above()) && pLevel instanceof ServerLevel serverLevel) {
-            this.tick(pState, serverLevel, pPos, pLevel.getRandom());
+            serverLevel.setBlockAndUpdate(pPos, pState.setValue(LIT, false));
+            serverLevel.playSound(null, pPos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
         return super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
     }
@@ -113,8 +114,13 @@ public class StoveBlock extends HorizontalDirectionalBlock {
         // 点燃炉灶
         if (!blockState.getValue(LIT) && itemInHand.is(TagItem.LIT_STOVE)) {
             level.setBlockAndUpdate(pos, blockState.setValue(LIT, true));
-            level.playSound(player, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
-            itemInHand.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+            if (itemInHand.is(Items.FIRE_CHARGE)) {
+                level.playSound(player, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
+                itemInHand.shrink(1);
+            } else {
+                level.playSound(player, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
+                itemInHand.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+            }
             return InteractionResult.SUCCESS;
         }
         // 熄灭

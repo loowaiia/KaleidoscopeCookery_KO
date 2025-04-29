@@ -20,6 +20,7 @@ public class ModCreativeTabs {
                 output.accept(ModItems.KITCHEN_KNIFE.get());
                 output.accept(ModItems.KITCHEN_SHOVEL.get());
                 output.accept(ModItems.SUSPICIOUS_STIR_FRY.get());
+                output.accept(ModItems.DARK_CUISINE.get());
                 output.accept(ModItems.COOK_STOOL_OAK.get());
                 output.accept(ModItems.COOK_STOOL_SPRUCE.get());
                 output.accept(ModItems.COOK_STOOL_ACACIA.get());

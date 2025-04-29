@@ -19,6 +19,7 @@ public class ModBlocks {
     public static RegistryObject<Block> STOVE = BLOCKS.register("stove", StoveBlock::new);
     public static RegistryObject<Block> POT = BLOCKS.register("pot", PotBlock::new);
     public static RegistryObject<Block> SUSPICIOUS_STIR_FRY = BLOCKS.register("suspicious_stir_fry", FoodBlock::new);
+    public static RegistryObject<Block> DARK_CUISINE = BLOCKS.register("dark_cuisine", FoodBlock::new);
 
     public static RegistryObject<Block> COOK_STOOL_OAK = BLOCKS.register("cook_stool_oak", CookStool::new);
     public static RegistryObject<Block> COOK_STOOL_SPRUCE = BLOCKS.register("cook_stool_spruce", CookStool::new);
