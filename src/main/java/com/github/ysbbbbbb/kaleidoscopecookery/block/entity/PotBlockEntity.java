@@ -95,6 +95,11 @@ public class PotBlockEntity extends BlockEntity implements Container {
             this.refresh();
         }
 
+        if (this.currentTick % 10 == 0) {
+            // 模拟油炸声音
+            level.playSound(null, this.worldPosition, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 1f, 1f);
+        }
+
         // 放素材阶段
         if (this.status == PUT_INGREDIENT) {
             // 有菜，且炒菜时间超过了
@@ -212,6 +217,16 @@ public class PotBlockEntity extends BlockEntity implements Container {
         if (!player.level().isClientSide) {
             this.seed = System.currentTimeMillis();
             this.refresh();
+        }
+
+        // 每次翻炒给点粒子效果
+        if (this.level instanceof ServerLevel serverLevel) {
+            RandomSource random = serverLevel.random;
+            serverLevel.sendParticles(ParticleTypes.POOF,
+                    worldPosition.getX() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
+                    worldPosition.getY() + 0.25 + random.nextDouble() / 3,
+                    worldPosition.getZ() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
+                    1, 0, 0, 0, 0.05);
         }
 
         // 起锅烧油，放入食材阶段

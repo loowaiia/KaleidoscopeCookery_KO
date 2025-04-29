@@ -43,7 +43,7 @@ public class FruitBasketBlock extends HorizontalDirectionalBlock implements Enti
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (level.isClientSide || hand == InteractionHand.OFF_HAND) {
+        if (hand == InteractionHand.OFF_HAND) {
             return InteractionResult.PASS;
         }
         if (level.getBlockEntity(pos) instanceof FruitBasketBlockEntity blockEntity) {
