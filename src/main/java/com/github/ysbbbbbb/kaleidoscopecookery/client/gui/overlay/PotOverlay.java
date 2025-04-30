@@ -51,6 +51,9 @@ public class PotOverlay implements IGuiOverlay {
         Font font = Minecraft.getInstance().font;
         int x = screenWidth / 2;
         int y = screenHeight - 72;
+        if (minecraft.gui.overlayMessageTime > 0) {
+            y = y - 12;
+        }
 
         BlockState belowState = level.getBlockState(blockPos.below());
         if (blockState.getValue(PotBlock.HAS_OIL) && belowState.hasProperty(BlockStateProperties.LIT) && belowState.getValue(BlockStateProperties.LIT)) {

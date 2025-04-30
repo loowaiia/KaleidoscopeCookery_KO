@@ -9,7 +9,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.recipe.PotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.IntRange;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -37,7 +36,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.items.ItemHandlerHelper;
-import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -98,9 +96,9 @@ public class PotBlockEntity extends BlockEntity implements Container {
             this.refresh();
         }
 
-        if (this.currentTick % 25 == 0) {
+        if (this.currentTick % 20 == 0) {
             // 模拟油炸声音
-            level.playSound(null, this.worldPosition, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 1f, 1f);
+            level.playSound(null, this.worldPosition, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 0.5f + random.nextFloat() / 0.5f, 0.8f + random.nextFloat() / 0.5f);
         }
 
         // 放素材阶段
@@ -146,7 +144,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
                 if (this.currentTick % 10 == 0 && this.level instanceof ServerLevel serverLevel) {
                     serverLevel.sendParticles(ModParticles.COOKING.get(),
                             worldPosition.getX() + 0.5,
-                            worldPosition.getY() + 0.25 + random.nextDouble() / 2,
+                            worldPosition.getY() + 0.1 + random.nextDouble() / 2,
                             worldPosition.getZ() + 0.5,
                             1, 0, 0, 0, 0);
                 }
@@ -208,9 +206,9 @@ public class PotBlockEntity extends BlockEntity implements Container {
         level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1F,
                 (random.nextFloat() - random.nextFloat()) * 0.8F);
         if (this.level instanceof ServerLevel serverLevel) {
-            serverLevel.sendParticles(ParticleTypes.POOF,
+            serverLevel.sendParticles(ModParticles.COOKING.get(),
                     worldPosition.getX() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
-                    worldPosition.getY() + 0.25 + random.nextDouble() / 3,
+                    worldPosition.getY() + 0.1 + random.nextDouble() / 3,
                     worldPosition.getZ() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
                     8, 0, 0, 0, 0.05);
         }
@@ -225,9 +223,9 @@ public class PotBlockEntity extends BlockEntity implements Container {
         // 每次翻炒给点粒子效果
         if (this.level instanceof ServerLevel serverLevel) {
             RandomSource random = serverLevel.random;
-            serverLevel.sendParticles(ParticleTypes.POOF,
+            serverLevel.sendParticles(ModParticles.COOKING.get(),
                     worldPosition.getX() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
-                    worldPosition.getY() + 0.25 + random.nextDouble() / 3,
+                    worldPosition.getY() + 0.1 + random.nextDouble() / 3,
                     worldPosition.getZ() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
                     1, 0, 0, 0, 0.05);
         }
