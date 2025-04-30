@@ -41,10 +41,12 @@ public class ItemModelGenerator extends ItemModelProvider {
                 .parent(new ModelFile.UncheckedModelFile(modLoc("item/fruit_basket_full")));
         ItemModelBuilder fruitBasketItem = new ItemModelBuilder(modLoc("fruit_basket"), this.existingFileHelper)
                 .parent(new ModelFile.UncheckedModelFile("item/generated"))
-                .texture("layer0", modLoc("item/fruit_basket")).guiLight(BlockModel.GuiLight.FRONT);
+                .texture("layer0", modLoc("item/fruit_basket"));
         ItemModelBuilder fruitBasketBlock = new ItemModelBuilder(modLoc("fruit_basket"), this.existingFileHelper)
                 .parent(new ModelFile.UncheckedModelFile(modLoc("block/fruit_basket")));
-        getBuilder("fruit_basket").customLoader(SeparateTransformsModelBuilder::begin).base(fruitBasketFull)
+        getBuilder("fruit_basket")
+                .guiLight(BlockModel.GuiLight.FRONT)
+                .customLoader(SeparateTransformsModelBuilder::begin).base(fruitBasketFull)
                 .perspective(ItemDisplayContext.GROUND, fruitBasketBlock)
                 .perspective(ItemDisplayContext.GUI, fruitBasketItem)
                 .perspective(ItemDisplayContext.FIXED, fruitBasketItem)

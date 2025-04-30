@@ -24,9 +24,9 @@
   "tooltip.kaleidoscope_cookery.item_container.empty": "空无一物",
   "tip.kaleidoscope_cookery.pot.need_oil": "缺少油脂",
   "tip.kaleidoscope_cookery.pot.need_lit_stove": "缺少必要的热源",
-  "tip.kaleidoscope_cookery.pot.add_ingredient": "加入配菜！",
-  "tip.kaleidoscope_cookery.pot.need_stir_fry": "等待翻炒！",
-  "tip.kaleidoscope_cookery.pot.done": "烹饪完成，料理已就绪！",
-  "tip.kaleidoscope_cookery.pot.need_bowl": "请掏出碗来盛取！",
-  "tip.kaleidoscope_cookery.pot.need_kitchen_shovel": "请用锅铲潜行盛取！"
+  "tip.kaleidoscope_cookery.pot.add_ingredient": "加入配菜中...",
+  "tip.kaleidoscope_cookery.pot.need_stir_fry": "等待翻炒中...",
+  "tip.kaleidoscope_cookery.pot.done": "烹饪完成，料理已就绪!",
+  "tip.kaleidoscope_cookery.pot.need_bowl": "请掏出碗来盛取!",
+  "tip.kaleidoscope_cookery.pot.need_kitchen_shovel": "请用锅铲潜行盛取!"
 }

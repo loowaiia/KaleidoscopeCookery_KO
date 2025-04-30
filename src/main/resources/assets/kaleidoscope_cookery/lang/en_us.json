@@ -24,9 +24,9 @@
   "tooltip.kaleidoscope_cookery.item_container.empty": "Empty",
   "tip.kaleidoscope_cookery.pot.need_oil": "Lack of the oil",
   "tip.kaleidoscope_cookery.pot.need_lit_stove": "Lack of the necessary heat source",
-  "tip.kaleidoscope_cookery.pot.add_ingredient": "Add to the ingredients!",
-  "tip.kaleidoscope_cookery.pot.need_stir_fry": "Waiting for the stir-fry!",
+  "tip.kaleidoscope_cookery.pot.add_ingredient": "Add to the ingredients...",
+  "tip.kaleidoscope_cookery.pot.need_stir_fry": "Waiting for the stir-fry...",
   "tip.kaleidoscope_cookery.pot.done": "The cooking is complete and the dish is ready!",
-  "tip.kaleidoscope_cookery.pot.need_bowl": "Need to right click on the bowl to take it out",
-  "tip.kaleidoscope_cookery.pot.need_kitchen_shovel": "Need sneak and right click with a kitchen shovel to take it out"
+  "tip.kaleidoscope_cookery.pot.need_bowl": "Need to right click on the bowl to take it out!",
+  "tip.kaleidoscope_cookery.pot.need_kitchen_shovel": "Need sneak and right click with a kitchen shovel to take it out!"
 }
