@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen.model;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
@@ -40,7 +41,7 @@ public class ItemModelGenerator extends ItemModelProvider {
                 .parent(new ModelFile.UncheckedModelFile(modLoc("item/fruit_basket_full")));
         ItemModelBuilder fruitBasketItem = new ItemModelBuilder(modLoc("fruit_basket"), this.existingFileHelper)
                 .parent(new ModelFile.UncheckedModelFile("item/generated"))
-                .texture("layer0", modLoc("item/fruit_basket"));
+                .texture("layer0", modLoc("item/fruit_basket")).guiLight(BlockModel.GuiLight.FRONT);
         ItemModelBuilder fruitBasketBlock = new ItemModelBuilder(modLoc("fruit_basket"), this.existingFileHelper)
                 .parent(new ModelFile.UncheckedModelFile(modLoc("block/fruit_basket")));
         getBuilder("fruit_basket").customLoader(SeparateTransformsModelBuilder::begin).base(fruitBasketFull)

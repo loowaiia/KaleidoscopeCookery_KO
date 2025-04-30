@@ -79,7 +79,7 @@ public class PotBlockEntityRender implements BlockEntityRenderer<PotBlockEntity>
         poseStack.mulPose(Axis.ZN.rotationDegrees(index * count));
         if (time < 1000) {
             poseStack.translate(0, 0, data.randomHeights[index] * Mth.sin(Mth.PI * time / 1000f));
-            poseStack.mulPose(Axis.YN.rotationDegrees(720f / 1000 * time));
+            poseStack.mulPose(Axis.XN.rotationDegrees(720f / 1000 * time));
         }
         // 焦糊程度，菜变黑
         int light = OverlayTexture.u(16 - pot.getBurntLevel());

@@ -49,18 +49,18 @@ public class PotOverlay implements IGuiOverlay {
             return;
         }
         Font font = Minecraft.getInstance().font;
-        int x = screenWidth / 2 - 120;
-        int y = screenHeight / 2 - 10;
+        int x = screenWidth / 2;
+        int y = screenHeight - 72;
 
         BlockState belowState = level.getBlockState(blockPos.below());
         if (blockState.getValue(PotBlock.HAS_OIL) && belowState.hasProperty(BlockStateProperties.LIT) && belowState.getValue(BlockStateProperties.LIT)) {
             int status = pot.getStatus();
             if (status == PotBlockEntity.PUT_INGREDIENT) {
-                drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.add_ingredient"), x, y, ChatFormatting.RED.getColor());
+                drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.add_ingredient"), x, y, 0xFFFFFF);
                 return;
             }
             if (status == PotBlockEntity.COOKING) {
-                drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.need_stir_fry"), x, y, ChatFormatting.GRAY.getColor());
+                drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.need_stir_fry"), x, y, 0xFFFFFF);
                 return;
             }
             if (status == PotBlockEntity.FINISHED) {

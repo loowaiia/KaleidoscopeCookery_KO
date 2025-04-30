@@ -4,6 +4,9 @@ import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.FruitBasketBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.PotBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.food.DarkCuisineBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.food.SuspiciousStirFryBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -16,8 +19,8 @@ public class ModBlocks {
 
     public static RegistryObject<Block> STOVE = BLOCKS.register("stove", StoveBlock::new);
     public static RegistryObject<Block> POT = BLOCKS.register("pot", PotBlock::new);
-    public static RegistryObject<Block> SUSPICIOUS_STIR_FRY = BLOCKS.register("suspicious_stir_fry", FoodBlock::new);
-    public static RegistryObject<Block> DARK_CUISINE = BLOCKS.register("dark_cuisine", FoodBlock::new);
+    public static RegistryObject<Block> SUSPICIOUS_STIR_FRY = BLOCKS.register("suspicious_stir_fry", SuspiciousStirFryBlock::new);
+    public static RegistryObject<Block> DARK_CUISINE = BLOCKS.register("dark_cuisine", DarkCuisineBlock::new);
     public static RegistryObject<Block> FRUIT_BASKET = BLOCKS.register("fruit_basket", FruitBasketBlock::new);
 
     public static RegistryObject<Block> COOK_STOOL_OAK = BLOCKS.register("cook_stool_oak", CookStoolBlock::new);

@@ -26,6 +26,7 @@ public class KaleidoscopeCookery {
         ModVillager.VILLAGER_PROFESSION.register(modEventBus);
         ModCreativeTabs.TABS.register(modEventBus);
         ModSounds.SOUND_EVENTS.register(modEventBus);
+        ModParticles.PARTICLES.register(modEventBus);
         ModRecipes.RECIPE_SERIALIZERS.register(modEventBus);
     }
 }

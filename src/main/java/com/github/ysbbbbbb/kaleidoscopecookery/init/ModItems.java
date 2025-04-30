@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.BowlFoodBlockItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.FruitBasketItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenKnifeItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenShovelItem;
@@ -18,8 +19,8 @@ public final class ModItems {
     public static RegistryObject<Item> OIL = ITEMS.register("oil", () -> new Item(new Item.Properties()));
     public static RegistryObject<Item> KITCHEN_KNIFE = ITEMS.register("kitchen_knife", KitchenKnifeItem::new);
     public static RegistryObject<Item> KITCHEN_SHOVEL = ITEMS.register("kitchen_shovel", KitchenShovelItem::new);
-    public static RegistryObject<Item> SUSPICIOUS_STIR_FRY = ITEMS.register("suspicious_stir_fry", () -> new BlockItem(ModBlocks.SUSPICIOUS_STIR_FRY.get(), new Item.Properties().food(ModFoods.SUSPICIOUS_STIR_FRY)));
-    public static RegistryObject<Item> DARK_CUISINE = ITEMS.register("dark_cuisine", () -> new BlockItem(ModBlocks.DARK_CUISINE.get(), new Item.Properties().food(ModFoods.DARK_CUISINE)));
+    public static RegistryObject<Item> SUSPICIOUS_STIR_FRY = ITEMS.register("suspicious_stir_fry", () -> new BowlFoodBlockItem(ModBlocks.SUSPICIOUS_STIR_FRY.get(), ModFoods.SUSPICIOUS_STIR_FRY));
+    public static RegistryObject<Item> DARK_CUISINE = ITEMS.register("dark_cuisine", () -> new BowlFoodBlockItem(ModBlocks.DARK_CUISINE.get(), ModFoods.DARK_CUISINE));
     public static RegistryObject<Item> FRUIT_BASKET = ITEMS.register("fruit_basket", FruitBasketItem::new);
 
     public static RegistryObject<Item> COOK_STOOL_OAK = ITEMS.register("cook_stool_oak", () -> new BlockItem(ModBlocks.COOK_STOOL_OAK.get(), new Item.Properties()));

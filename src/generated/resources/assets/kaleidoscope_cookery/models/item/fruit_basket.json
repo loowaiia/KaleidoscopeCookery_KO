@@ -6,18 +6,21 @@
   "perspectives": {
     "fixed": {
       "parent": "minecraft:item/generated",
+      "gui_light": "front",
       "textures": {
         "layer0": "kaleidoscope_cookery:item/fruit_basket"
       }
     },
     "ground": {
       "parent": "minecraft:item/generated",
+      "gui_light": "front",
       "textures": {
         "layer0": "kaleidoscope_cookery:item/fruit_basket"
       }
     },
     "gui": {
       "parent": "minecraft:item/generated",
+      "gui_light": "front",
       "textures": {
         "layer0": "kaleidoscope_cookery:item/fruit_basket"
       }

@@ -3,7 +3,7 @@
 	"texture_size": [32, 32],
 	"textures": {
 		"1": "kaleidoscope_cookery:block/fruit_basket",
-		"particle": "kaleidoscope_cookery:block/fruit_basket"
+		"particle": "minecraft:block/oak_planks"
 	},
 	"elements": [
 		{

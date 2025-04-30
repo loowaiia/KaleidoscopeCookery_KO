@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.block.entity;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModParticles;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.recipe.PotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.IntRange;
@@ -109,7 +110,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
                 onPreparationTimeout(this.level);
             }
             if (this.currentTick % 10 == 0 && this.level instanceof ServerLevel serverLevel) {
-                serverLevel.sendParticles(ParticleTypes.POOF,
+                serverLevel.sendParticles(ModParticles.COOKING.get(),
                         worldPosition.getX() + 0.5 + random.nextDouble() / 5 * (random.nextBoolean() ? 1 : -1),
                         worldPosition.getY() + 0.1 + random.nextDouble() / 3,
                         worldPosition.getZ() + 0.5 + random.nextDouble() / 5 * (random.nextBoolean() ? 1 : -1),
@@ -143,7 +144,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
             // 前 20 秒白烟
             if (time < 20 * 20) {
                 if (this.currentTick % 10 == 0 && this.level instanceof ServerLevel serverLevel) {
-                    serverLevel.sendParticles(ParticleTypes.POOF,
+                    serverLevel.sendParticles(ModParticles.COOKING.get(),
                             worldPosition.getX() + 0.5,
                             worldPosition.getY() + 0.25 + random.nextDouble() / 2,
                             worldPosition.getZ() + 0.5,

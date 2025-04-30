@@ -1,4 +1,4 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.block;
+package com.github.ysbbbbbb.kaleidoscopecookery.block.food;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;

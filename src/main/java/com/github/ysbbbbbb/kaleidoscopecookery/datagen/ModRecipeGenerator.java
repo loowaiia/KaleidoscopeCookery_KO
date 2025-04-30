@@ -8,8 +8,8 @@ import net.minecraft.world.item.Items;
 
 import java.util.function.Consumer;
 
-public class ModRecipeProvider extends RecipeProvider {
-    public ModRecipeProvider(DataGenerator generator) {
+public class ModRecipeGenerator extends RecipeProvider {
+    public ModRecipeGenerator(DataGenerator generator) {
         super(generator.getPackOutput());
     }
 
