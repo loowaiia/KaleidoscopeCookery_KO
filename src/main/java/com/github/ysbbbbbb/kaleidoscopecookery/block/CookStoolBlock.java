@@ -1,6 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.entity.EntitySit;
+import com.github.ysbbbbbb.kaleidoscopecookery.entity.SitEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -43,9 +43,9 @@ public class CookStoolBlock extends HorizontalDirectionalBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        List<EntitySit> entities = level.getEntitiesOfClass(EntitySit.class, new AABB(pos));
+        List<SitEntity> entities = level.getEntitiesOfClass(SitEntity.class, new AABB(pos));
         if (entities.isEmpty()) {
-            EntitySit entitySit = new EntitySit(level, pos);
+            SitEntity entitySit = new SitEntity(level, pos);
             entitySit.setYRot(state.getValue(FACING).toYRot());
             level.addFreshEntity(entitySit);
             player.startRiding(entitySit, true);
@@ -55,7 +55,7 @@ public class CookStoolBlock extends HorizontalDirectionalBlock {
 
     @Override
     public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
-        level.getEntitiesOfClass(EntitySit.class, new AABB(pos)).forEach(Entity::discard);
+        level.getEntitiesOfClass(SitEntity.class, new AABB(pos)).forEach(Entity::discard);
     }
 
     @Override

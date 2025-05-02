@@ -21,6 +21,8 @@ public class ModCreativeTabs {
                 output.accept(ModItems.KITCHEN_SHOVEL.get());
                 output.accept(ModItems.SUSPICIOUS_STIR_FRY.get());
                 output.accept(ModItems.DARK_CUISINE.get());
+                output.accept(ModItems.FRIED_EGG.get());
+                output.accept(ModItems.SLIME_BALL_MEAL.get());
                 output.accept(ModItems.COOK_STOOL_OAK.get());
                 output.accept(ModItems.COOK_STOOL_SPRUCE.get());
                 output.accept(ModItems.COOK_STOOL_ACACIA.get());
@@ -33,5 +35,6 @@ public class ModCreativeTabs {
                 output.accept(ModItems.COOK_STOOL_MANGROVE.get());
                 output.accept(ModItems.COOK_STOOL_WARPED.get());
                 output.accept(ModItems.FRUIT_BASKET.get());
+                output.accept(ModItems.SCARECROW.get());
             }).build());
 }

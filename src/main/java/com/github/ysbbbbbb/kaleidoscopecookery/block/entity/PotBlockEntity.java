@@ -326,7 +326,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
             return;
         }
         if (itemStack.isEmpty()) {
-            for (int i = 0; i < this.items.size(); i++) {
+            for (int i = this.items.size() - 1; i >= 0; i--) {
                 ItemStack stack = this.items.get(i);
                 if (!stack.isEmpty()) {
                     this.items.set(i, ItemStack.EMPTY);

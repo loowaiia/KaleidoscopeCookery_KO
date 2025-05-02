@@ -1,7 +1,10 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.init;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.client.render.entity.EntitySitRenderer;
-import com.github.ysbbbbbb.kaleidoscopecookery.entity.EntitySit;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.model.ScarecrowModel;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.render.entity.ScarecrowRender;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.render.entity.SitRenderer;
+import com.github.ysbbbbbb.kaleidoscopecookery.entity.ScarecrowEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.entity.SitEntity;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -12,6 +15,12 @@ import net.minecraftforge.fml.common.Mod;
 public class ModEntitiesRender {
     @SubscribeEvent
     public static void onEntityRenderers(EntityRenderersEvent.RegisterRenderers evt) {
-        EntityRenderers.register(EntitySit.TYPE, EntitySitRenderer::new);
+        EntityRenderers.register(SitEntity.TYPE, SitRenderer::new);
+        EntityRenderers.register(ScarecrowEntity.TYPE, ScarecrowRender::new);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(ScarecrowModel.LAYER_LOCATION, ScarecrowModel::createBodyLayer);
     }
 }

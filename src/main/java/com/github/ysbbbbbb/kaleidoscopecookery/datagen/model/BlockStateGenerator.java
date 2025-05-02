@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen.model;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.PotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.StoveBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.food.SlimeBallMealBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
@@ -31,6 +32,19 @@ public class BlockStateGenerator extends BlockStateProvider {
                 return new ModelFile.UncheckedModelFile(modLoc("block/pot_has_oil"));
             } else {
                 return new ModelFile.UncheckedModelFile(modLoc("block/pot"));
+            }
+        });
+
+        horizontalBlock(ModBlocks.SLIME_BALL_MEAL.get(), blockState -> {
+            int bites = blockState.getValue(SlimeBallMealBlock.BITES);
+            if (bites <= 0) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/slime_ball_meal/slime_ball_meal_0"));
+            } else if (bites == 1) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/slime_ball_meal/slime_ball_meal_1"));
+            } else if (bites == 2) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/slime_ball_meal/slime_ball_meal_2"));
+            } else {
+                return new ModelFile.UncheckedModelFile(modLoc("block/slime_ball_meal/slime_ball_meal_3"));
             }
         });
 

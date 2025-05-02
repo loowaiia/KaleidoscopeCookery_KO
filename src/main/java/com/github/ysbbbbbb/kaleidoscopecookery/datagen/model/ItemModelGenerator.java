@@ -1,14 +1,20 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen.model;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.loaders.SeparateTransformsModelBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.Objects;
 
 public class ItemModelGenerator extends ItemModelProvider {
     public ItemModelGenerator(PackOutput output, ExistingFileHelper existingFileHelper) {
@@ -19,11 +25,16 @@ public class ItemModelGenerator extends ItemModelProvider {
     protected void registerModels() {
         withExistingParent("stove", modLoc("block/stove"));
         withExistingParent("pot", modLoc("block/pot"));
-        withExistingParent("oil", "item/generated").texture("layer0", modLoc("item/oil"));
-        withExistingParent("kitchen_knife", "item/handheld").texture("layer0", modLoc("item/kitchen_knife"));
-        withExistingParent("kitchen_shovel", "item/handheld").texture("layer0", modLoc("item/kitchen_shovel"));
-        withExistingParent("suspicious_stir_fry", "item/generated").texture("layer0", modLoc("item/suspicious_stir_fry"));
-        withExistingParent("dark_cuisine", "item/generated").texture("layer0", modLoc("item/dark_cuisine"));
+
+        handheldItem(ModItems.KITCHEN_KNIFE.get());
+        handheldItem(ModItems.KITCHEN_SHOVEL.get());
+
+        basicItem(ModItems.OIL.get());
+        basicItem(ModItems.SUSPICIOUS_STIR_FRY.get());
+        basicItem(ModItems.DARK_CUISINE.get());
+        basicItem(ModItems.FRIED_EGG.get());
+        basicItem(ModItems.SLIME_BALL_MEAL.get());
+        basicItem(ModItems.SCARECROW.get());
 
         withExistingParent("cook_stool_oak", modLoc("block/cook_stool/oak"));
         withExistingParent("cook_stool_spruce", modLoc("block/cook_stool/spruce"));
@@ -51,5 +62,15 @@ public class ItemModelGenerator extends ItemModelProvider {
                 .perspective(ItemDisplayContext.GUI, fruitBasketItem)
                 .perspective(ItemDisplayContext.FIXED, fruitBasketItem)
                 .perspective(ItemDisplayContext.GROUND, fruitBasketItem);
+    }
+
+    public ItemModelBuilder handheldItem(Item item) {
+        return basicItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)));
+    }
+
+    public ItemModelBuilder handheldItem(ResourceLocation item) {
+        return getBuilder(item.toString())
+                .parent(new ModelFile.UncheckedModelFile("item/handheld"))
+                .texture("layer0", new ResourceLocation(item.getNamespace(), "item/" + item.getPath()));
     }
 }

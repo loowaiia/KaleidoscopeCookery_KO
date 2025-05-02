@@ -11,19 +11,19 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 
-public class EntitySit extends Entity {
-    public static final EntityType<EntitySit> TYPE = EntityType.Builder.<EntitySit>of(EntitySit::new, MobCategory.MISC)
+public class SitEntity extends Entity {
+    public static final EntityType<SitEntity> TYPE = EntityType.Builder.<SitEntity>of(SitEntity::new, MobCategory.MISC)
             .sized(0.5f, 0.1f)
             .clientTrackingRange(10)
             .noSave().noSummon()
             .build("sit");
     private int passengerTick = 0;
 
-    public EntitySit(EntityType<?> entityTypeIn, Level worldIn) {
+    public SitEntity(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
-    public EntitySit(Level worldIn, BlockPos pos) {
+    public SitEntity(Level worldIn, BlockPos pos) {
         this(TYPE, worldIn);
         this.setPos(pos.getX() + 0.5, pos.getY() + 0.4375, pos.getZ() + 0.5);
     }

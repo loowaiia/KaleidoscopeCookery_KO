@@ -1,10 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
-import com.github.ysbbbbbb.kaleidoscopecookery.item.BowlFoodBlockItem;
-import com.github.ysbbbbbb.kaleidoscopecookery.item.FruitBasketItem;
-import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenKnifeItem;
-import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenShovelItem;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.*;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
@@ -22,6 +19,7 @@ public final class ModItems {
     public static RegistryObject<Item> SUSPICIOUS_STIR_FRY = ITEMS.register("suspicious_stir_fry", () -> new BowlFoodBlockItem(ModBlocks.SUSPICIOUS_STIR_FRY.get(), ModFoods.SUSPICIOUS_STIR_FRY));
     public static RegistryObject<Item> DARK_CUISINE = ITEMS.register("dark_cuisine", () -> new BowlFoodBlockItem(ModBlocks.DARK_CUISINE.get(), ModFoods.DARK_CUISINE));
     public static RegistryObject<Item> FRUIT_BASKET = ITEMS.register("fruit_basket", FruitBasketItem::new);
+    public static RegistryObject<Item> SCARECROW = ITEMS.register("scarecrow", ScarecrowItem::new);
 
     public static RegistryObject<Item> COOK_STOOL_OAK = ITEMS.register("cook_stool_oak", () -> new BlockItem(ModBlocks.COOK_STOOL_OAK.get(), new Item.Properties()));
     public static RegistryObject<Item> COOK_STOOL_SPRUCE = ITEMS.register("cook_stool_spruce", () -> new BlockItem(ModBlocks.COOK_STOOL_SPRUCE.get(), new Item.Properties()));
@@ -34,4 +32,7 @@ public final class ModItems {
     public static RegistryObject<Item> COOK_STOOL_JUNGLE = ITEMS.register("cook_stool_jungle", () -> new BlockItem(ModBlocks.COOK_STOOL_JUNGLE.get(), new Item.Properties()));
     public static RegistryObject<Item> COOK_STOOL_MANGROVE = ITEMS.register("cook_stool_mangrove", () -> new BlockItem(ModBlocks.COOK_STOOL_MANGROVE.get(), new Item.Properties()));
     public static RegistryObject<Item> COOK_STOOL_WARPED = ITEMS.register("cook_stool_warped", () -> new BlockItem(ModBlocks.COOK_STOOL_WARPED.get(), new Item.Properties()));
+
+    public static RegistryObject<Item> FRIED_EGG = ITEMS.register("fried_egg", () -> new Item(new Item.Properties().food(ModFoods.FRIED_EGG)));
+    public static RegistryObject<Item> SLIME_BALL_MEAL = ITEMS.register("slime_ball_meal", () -> new BowlFoodBlockItem(ModBlocks.SLIME_BALL_MEAL.get(), ModFoods.SLIME_BALL_MEAL_ITEM));
 }

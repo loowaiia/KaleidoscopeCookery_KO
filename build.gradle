@@ -73,6 +73,12 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
@@ -82,7 +88,7 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge-api:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:${jei_version}")
 
-    runtimeOnly fg.deobf("maven.modrinth:touhou-little-maid:1.2.1-forge,1.20.1")
+    implementation fg.deobf('curse.maven:touhou-little-maid-355044:6440955-sources-6482784')
 }
 
 tasks.named('processResources', ProcessResources).configure {
@@ -118,4 +124,11 @@ tasks.named('jar', Jar).configure {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
 }
