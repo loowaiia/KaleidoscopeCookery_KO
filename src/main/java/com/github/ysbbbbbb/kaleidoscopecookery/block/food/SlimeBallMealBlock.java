@@ -62,7 +62,7 @@ public class SlimeBallMealBlock extends FoodBlock {
     }
 
     private InteractionResult eat(LevelAccessor level, BlockPos pos, BlockState state, Player player) {
-        if (!player.canEat(false)) {
+        if (!player.canEat(SLIME_BALL_MEAL_BLOCK.canAlwaysEat())) {
             return InteractionResult.PASS;
         }
         player.getFoodData().eat(SLIME_BALL_MEAL_BLOCK.getNutrition(), SLIME_BALL_MEAL_BLOCK.getSaturationModifier());

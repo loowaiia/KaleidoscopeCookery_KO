@@ -88,7 +88,7 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge-api:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:${jei_version}")
 
-    implementation fg.deobf('curse.maven:touhou-little-maid-355044:6440955-sources-6482784')
+    runtimeOnly fg.deobf('curse.maven:touhou-little-maid-355044:6440955-sources-6482784')
 }
 
 tasks.named('processResources', ProcessResources).configure {
