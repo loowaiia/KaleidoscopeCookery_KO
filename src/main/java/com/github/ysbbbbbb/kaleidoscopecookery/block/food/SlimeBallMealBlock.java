@@ -46,6 +46,7 @@ public class SlimeBallMealBlock extends FoodBlock {
         if (bites >= MAX_BITES) {
             level.removeBlock(pos, false);
             level.gameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+            level.playSound(null, pos, SoundEvents.WOOD_BREAK, SoundSource.PLAYERS);
             ItemHandlerHelper.giveItemToPlayer(player, Items.BOWL.getDefaultInstance());
             return InteractionResult.SUCCESS;
         }

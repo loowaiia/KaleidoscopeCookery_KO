@@ -5,6 +5,10 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -13,16 +17,17 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.animal.ShoulderRidingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LanternBlock;
+import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -39,14 +44,19 @@ public class ScarecrowEntity extends LivingEntity {
             .clientTrackingRange(10)
             .build("scarecrow");
 
+    private static final EntityDataAccessor<CompoundTag> DATA_SHOULDER = SynchedEntityData.defineId(ScarecrowEntity.class, EntityDataSerializers.COMPOUND_TAG);
     private static final Predicate<Entity> RIDABLE_MINECARTS = e -> e instanceof AbstractMinecart minecart && minecart.canBeRidden();
+    private static final Predicate<Entity> SHOULDER_RIDING_ENTITY = e -> e instanceof ShoulderRidingEntity entity && !entity.isOrderedToSit() && entity.canSitOnShoulder();
     private static final String HAND_ITEMS_TAG = "HandItems";
     private static final String ARMOR_ITEMS_TAG = "ArmorItems";
+    private static final String SHOULDER_ENTITY_TAG = "ShoulderEntity";
 
     private final NonNullList<ItemStack> handItems = NonNullList.withSize(2, ItemStack.EMPTY);
     private final NonNullList<ItemStack> armorItems = NonNullList.withSize(4, ItemStack.EMPTY);
 
     public long lastHit;
+    private int cooldown;
+    private long timeEntitySatOnShoulder;
 
     public ScarecrowEntity(EntityType<ScarecrowEntity> type, Level level) {
         super(type, level);
@@ -61,6 +71,15 @@ public class ScarecrowEntity extends LivingEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
+        this.entityData.define(DATA_SHOULDER, new CompoundTag());
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.cooldown > 0) {
+            this.cooldown--;
+        }
     }
 
     @Override
@@ -78,49 +97,106 @@ public class ScarecrowEntity extends LivingEntity {
         if (hand == InteractionHand.OFF_HAND) {
             return InteractionResult.PASS;
         }
-
+        if (this.cooldown > 0) {
+            return InteractionResult.PASS;
+        }
         if (isClickHand(vec3)) {
-            if (itemInHand.isEmpty()) {
-                ItemStack mainhand = this.getItemInHand(InteractionHand.MAIN_HAND);
-                ItemStack offhand = this.getItemInHand(InteractionHand.OFF_HAND);
-                if (!mainhand.isEmpty()) {
-                    this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
-                    ItemHandlerHelper.giveItemToPlayer(player, mainhand);
-                    return InteractionResult.SUCCESS;
-                }
-                if (!offhand.isEmpty()) {
-                    this.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
-                    ItemHandlerHelper.giveItemToPlayer(player, offhand);
-                    return InteractionResult.SUCCESS;
-                }
-                return InteractionResult.PASS;
-            } else {
-                if (itemInHand.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof LanternBlock) {
-                    swapHand(InteractionHand.OFF_HAND, player, itemInHand);
-                    return InteractionResult.SUCCESS;
-                }
-                if (itemInHand.getItem() instanceof TieredItem) {
-                    swapHand(InteractionHand.MAIN_HAND, player, itemInHand);
-                    return InteractionResult.SUCCESS;
-                }
+            return handleHandItems(player, itemInHand);
+        }
+        if (isClickHead(vec3)) {
+            return handleHeadItems(player, itemInHand);
+        }
+        return InteractionResult.PASS;
+    }
+
+    private InteractionResult handleHeadItems(Player player, ItemStack itemInHand) {
+        this.cooldown = 5;
+        ItemStack headItem = this.getItemBySlot(EquipmentSlot.HEAD);
+        if (itemInHand.isEmpty() && !headItem.isEmpty()) {
+            this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
+            ItemHandlerHelper.giveItemToPlayer(player, headItem);
+            return InteractionResult.SUCCESS;
+        }
+
+        if (!(itemInHand.getItem() instanceof BlockItem blockItem) || !(blockItem.getBlock() instanceof SkullBlock skullBlock)) {
+            return InteractionResult.PASS;
+        }
+
+        if (player.getAbilities().instabuild && headItem.isEmpty()) {
+            this.setItemSlot(EquipmentSlot.HEAD, itemInHand.copyWithCount(1));
+            this.level().playSound(null, this.blockPosition(), SoundEvents.ITEM_FRAME_ADD_ITEM, this.getSoundSource());
+            return InteractionResult.SUCCESS;
+        }
+        if (!itemInHand.isEmpty() && itemInHand.getCount() > 1) {
+            if (headItem.isEmpty()) {
+                this.setItemSlot(EquipmentSlot.HEAD, itemInHand.split(1));
+                this.level().playSound(null, this.blockPosition(), SoundEvents.ITEM_FRAME_ADD_ITEM, this.getSoundSource());
+                return InteractionResult.SUCCESS;
+            }
+            return InteractionResult.PASS;
+        }
+        this.setItemSlot(EquipmentSlot.HEAD, itemInHand);
+        this.level().playSound(null, this.blockPosition(), SoundEvents.ITEM_FRAME_ADD_ITEM, this.getSoundSource());
+        player.setItemInHand(InteractionHand.MAIN_HAND, headItem);
+        return InteractionResult.SUCCESS;
+    }
+
+    private InteractionResult handleHandItems(Player player, ItemStack itemInHand) {
+        this.cooldown = 5;
+        if (itemInHand.isEmpty()) {
+            ItemStack mainhand = this.getItemInHand(InteractionHand.MAIN_HAND);
+            ItemStack offhand = this.getItemInHand(InteractionHand.OFF_HAND);
+            if (!mainhand.isEmpty()) {
+                this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+                ItemHandlerHelper.giveItemToPlayer(player, mainhand);
+                return InteractionResult.SUCCESS;
+            }
+            if (!offhand.isEmpty()) {
+                this.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
+                ItemHandlerHelper.giveItemToPlayer(player, offhand);
+                return InteractionResult.SUCCESS;
+            }
+            return InteractionResult.PASS;
+        }
+        if (itemInHand.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof LanternBlock) {
+            if (swapHand(InteractionHand.OFF_HAND, player, itemInHand)) {
+                this.level().playSound(null, this.blockPosition(), SoundEvents.LANTERN_PLACE, this.getSoundSource());
+                return InteractionResult.SUCCESS;
+            }
+        }
+        if (itemInHand.getItem().canBeDepleted()) {
+            if (swapHand(InteractionHand.MAIN_HAND, player, itemInHand)) {
+                this.level().playSound(null, this.blockPosition(), SoundEvents.ITEM_FRAME_ADD_ITEM, this.getSoundSource());
+                return InteractionResult.SUCCESS;
             }
         }
         return InteractionResult.PASS;
     }
 
-    private void swapHand(InteractionHand hand, Player player, ItemStack itemInHand) {
+    private boolean swapHand(InteractionHand hand, Player player, ItemStack itemInHand) {
         ItemStack scarecrowStack = this.getItemInHand(hand);
-        if (scarecrowStack.isEmpty()) {
-            this.setItemInHand(hand, itemInHand.split(1));
-        } else {
-            ItemHandlerHelper.giveItemToPlayer(player, scarecrowStack);
-            this.setItemInHand(hand, itemInHand.split(1));
+        if (player.getAbilities().instabuild && scarecrowStack.isEmpty() && !itemInHand.isEmpty()) {
+            this.setItemInHand(hand, itemInHand.copyWithCount(1));
+            return true;
         }
+        if (!itemInHand.isEmpty() && itemInHand.getCount() > 1) {
+            if (scarecrowStack.isEmpty()) {
+                this.setItemInHand(hand, itemInHand.split(1));
+                return true;
+            }
+            return false;
+        }
+        this.setItemInHand(hand, itemInHand);
+        player.setItemInHand(InteractionHand.MAIN_HAND, scarecrowStack);
+        return true;
     }
 
-    @Nullable
     private boolean isClickHand(Vec3 vector) {
         return 17 / 16.0 <= vector.y && vector.y <= 27 / 17.0;
+    }
+
+    private boolean isClickHead(Vec3 vector) {
+        return 27 / 17.0 < vector.y;
     }
 
     @Override
@@ -161,8 +237,12 @@ public class ScarecrowEntity extends LivingEntity {
         long gameTime = this.level().getGameTime();
         if (gameTime - this.lastHit > 5) {
             this.level().playSound(null, this.blockPosition(), SoundEvents.ARMOR_STAND_HIT, this.getSoundSource(), 0.3F, 1.0F);
+            this.level().broadcastEntityEvent(this, (byte) 32);
             this.gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
             this.lastHit = gameTime;
+            if (!this.getShoulderEntity().isEmpty()) {
+                this.removeEntitiesOnShoulder();
+            }
         } else {
             this.brokenByPlayer(source);
             this.showBreakingParticles();
@@ -170,6 +250,17 @@ public class ScarecrowEntity extends LivingEntity {
         }
 
         return true;
+    }
+
+    @Override
+    public void handleEntityEvent(byte id) {
+        if (id == 32) {
+            if (this.level().isClientSide) {
+                this.lastHit = this.level().getGameTime();
+            }
+        } else {
+            super.handleEntityEvent(id);
+        }
     }
 
     private void brokenByPlayer(DamageSource source) {
@@ -218,20 +309,66 @@ public class ScarecrowEntity extends LivingEntity {
         }
     }
 
+    private boolean setEntityOnShoulder(CompoundTag tag) {
+        if (this.canEntityOnShoulder()) {
+            this.setShoulderEntity(tag);
+            this.timeEntitySatOnShoulder = this.level().getGameTime();
+            return true;
+        }
+        return false;
+    }
+
+    private void removeEntitiesOnShoulder() {
+        if (this.timeEntitySatOnShoulder + 20 < this.level().getGameTime()) {
+            this.respawnEntityOnShoulder(this.getShoulderEntity());
+            this.setShoulderEntity(new CompoundTag());
+        }
+    }
+
+    private void respawnEntityOnShoulder(CompoundTag tag) {
+        if (this.level() instanceof ServerLevel serverLevel && !tag.isEmpty()) {
+            EntityType.create(tag, this.level()).ifPresent(entity -> {
+                entity.setPos(this.getX(), this.getY() + 1.675, this.getZ());
+                serverLevel.addWithUUID(entity);
+            });
+        }
+    }
+
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         tag.put(HAND_ITEMS_TAG, (new ItemStackHandler(this.handItems)).serializeNBT());
         tag.put(ARMOR_ITEMS_TAG, (new ItemStackHandler(this.armorItems)).serializeNBT());
+        if (!this.getShoulderEntity().isEmpty()) {
+            tag.put(SHOULDER_ENTITY_TAG, this.getShoulderEntity());
+        }
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (tag.contains(HAND_ITEMS_TAG)) {
-            (new ItemStackHandler(this.handItems)).deserializeNBT(tag.getCompound(HAND_ITEMS_TAG));
+            ItemStackHandler handler = new ItemStackHandler();
+            handler.deserializeNBT(tag.getCompound(HAND_ITEMS_TAG));
+            for (int i = 0; i < this.handItems.size(); ++i) {
+                ItemStack stack = handler.getStackInSlot(i);
+                if (!stack.isEmpty()) {
+                    this.handItems.set(i, stack);
+                }
+            }
         }
         if (tag.contains(ARMOR_ITEMS_TAG)) {
-            (new ItemStackHandler(this.armorItems)).deserializeNBT(tag.getCompound(ARMOR_ITEMS_TAG));
+            ItemStackHandler handler = new ItemStackHandler();
+            handler.deserializeNBT(tag.getCompound(ARMOR_ITEMS_TAG));
+            for (int i = 0; i < this.armorItems.size(); ++i) {
+                ItemStack stack = handler.getStackInSlot(i);
+                if (!stack.isEmpty()) {
+                    this.armorItems.set(i, stack);
+                }
+            }
+        }
+
+        if (tag.contains(SHOULDER_ENTITY_TAG, Tag.TAG_COMPOUND)) {
+            this.setShoulderEntity(tag.getCompound(SHOULDER_ENTITY_TAG));
         }
     }
 
@@ -256,6 +393,9 @@ public class ScarecrowEntity extends LivingEntity {
 
     @Override
     public void kill() {
+        if (!this.getShoulderEntity().isEmpty()) {
+            this.removeEntitiesOnShoulder();
+        }
         this.remove(Entity.RemovalReason.KILLED);
         this.gameEvent(GameEvent.ENTITY_DIE);
     }
@@ -275,8 +415,38 @@ public class ScarecrowEntity extends LivingEntity {
         for (Entity entity : list) {
             if (this.distanceToSqr(entity) <= 0.2) {
                 entity.push(this);
+                return;
             }
         }
+
+        if (this.canEntityOnShoulder()) {
+            list = this.level().getEntities(this, this.getBoundingBox().inflate(2), SHOULDER_RIDING_ENTITY);
+            for (Entity entity : list) {
+                if (this.distanceToSqr(entity) <= 1.5 && entity instanceof ShoulderRidingEntity shoulderEntity
+                    && setEntityOnShoulder(shoulderEntity)) {
+                    return;
+                }
+            }
+        }
+    }
+
+    private boolean setEntityOnShoulder(ShoulderRidingEntity entity) {
+        CompoundTag tag = new CompoundTag();
+        String id = entity.getEncodeId();
+        if (id == null) {
+            return false;
+        }
+        tag.putString("id", id);
+        entity.saveWithoutId(tag);
+        if (this.setEntityOnShoulder(tag)) {
+            entity.discard();
+            return true;
+        }
+        return false;
+    }
+
+    private boolean canEntityOnShoulder() {
+        return !this.isPassenger() && this.onGround() && !this.isInWater() && !this.isInPowderSnow && this.getShoulderEntity().isEmpty();
     }
 
     @Override
@@ -353,5 +523,13 @@ public class ScarecrowEntity extends LivingEntity {
     @Override
     public ItemStack getPickResult() {
         return new ItemStack(ModItems.SCARECROW.get());
+    }
+
+    public CompoundTag getShoulderEntity() {
+        return this.entityData.get(DATA_SHOULDER);
+    }
+
+    public void setShoulderEntity(CompoundTag tag) {
+        this.entityData.set(DATA_SHOULDER, tag);
     }
 }

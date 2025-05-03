@@ -65,7 +65,7 @@ public class ItemModelGenerator extends ItemModelProvider {
     }
 
     public ItemModelBuilder handheldItem(Item item) {
-        return basicItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)));
+        return handheldItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)));
     }
 
     public ItemModelBuilder handheldItem(ResourceLocation item) {
