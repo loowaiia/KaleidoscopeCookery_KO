@@ -23,6 +23,7 @@ public class ModCreativeTabs {
                 output.accept(ModItems.DARK_CUISINE.get());
                 output.accept(ModItems.FRIED_EGG.get());
                 output.accept(ModItems.SLIME_BALL_MEAL.get());
+                output.accept(ModItems.CHOPPING_BOARD.get());
                 output.accept(ModItems.COOK_STOOL_OAK.get());
                 output.accept(ModItems.COOK_STOOL_SPRUCE.get());
                 output.accept(ModItems.COOK_STOOL_ACACIA.get());
