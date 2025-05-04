@@ -49,6 +49,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         });
 
         horizontalBlock(ModBlocks.FRUIT_BASKET.get(), new ModelFile.UncheckedModelFile(modLoc("block/fruit_basket")));
+        horizontalBlock(ModBlocks.CHOPPING_BOARD.get(), new ModelFile.UncheckedModelFile(modLoc("block/chopping_board")));
 
         simpleBlock(ModBlocks.SUSPICIOUS_STIR_FRY.get(), new ModelFile.UncheckedModelFile(modLoc("block/suspicious_stir_fry")));
         simpleBlock(ModBlocks.DARK_CUISINE.get(), new ModelFile.UncheckedModelFile(modLoc("block/dark_cuisine")));

@@ -89,6 +89,11 @@ public class PotRecipe implements Recipe<PotBlockEntity> {
         return ModRecipes.POT_RECIPE;
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     private Ingredient[] fillInputs(List<Ingredient> inputs) {
         Ingredient[] newInputs = new Ingredient[RECIPES_SIZE];
         for (int i = 0; i < RECIPES_SIZE; i++) {

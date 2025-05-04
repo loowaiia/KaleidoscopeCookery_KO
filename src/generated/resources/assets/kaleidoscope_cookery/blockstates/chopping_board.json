@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "kaleidoscope_cookery:block/chopping_board",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "kaleidoscope_cookery:block/chopping_board"
+    },
+    "facing=south": {
+      "model": "kaleidoscope_cookery:block/chopping_board",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "kaleidoscope_cookery:block/chopping_board",
+      "y": 270
+    }
+  }
+}

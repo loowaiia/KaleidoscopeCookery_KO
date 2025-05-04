@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.*;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.ChoppingBoardBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.FruitBasketBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.PotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.DarkCuisineBlock;
@@ -23,6 +24,7 @@ public class ModBlocks {
     public static RegistryObject<Block> DARK_CUISINE = BLOCKS.register("dark_cuisine", DarkCuisineBlock::new);
     public static RegistryObject<Block> SLIME_BALL_MEAL = BLOCKS.register("slime_ball_meal", SlimeBallMealBlock::new);
     public static RegistryObject<Block> FRUIT_BASKET = BLOCKS.register("fruit_basket", FruitBasketBlock::new);
+    public static RegistryObject<Block> CHOPPING_BOARD = BLOCKS.register("chopping_board", ChoppingBoardBlock::new);
 
     public static RegistryObject<Block> COOK_STOOL_OAK = BLOCKS.register("cook_stool_oak", CookStoolBlock::new);
     public static RegistryObject<Block> COOK_STOOL_SPRUCE = BLOCKS.register("cook_stool_spruce", CookStoolBlock::new);
@@ -40,4 +42,6 @@ public class ModBlocks {
             () -> BlockEntityType.Builder.of(PotBlockEntity::new, POT.get()).build(null));
     public static RegistryObject<BlockEntityType<FruitBasketBlockEntity>> FRUIT_BASKET_BE = BLOCK_ENTITIES.register("fruit_basket",
             () -> BlockEntityType.Builder.of(FruitBasketBlockEntity::new, FRUIT_BASKET.get()).build(null));
+    public static RegistryObject<BlockEntityType<ChoppingBoardBlockEntity>> CHOPPING_BOARD_BE = BLOCK_ENTITIES.register("chopping_board",
+            () -> BlockEntityType.Builder.of(ChoppingBoardBlockEntity::new, CHOPPING_BOARD.get()).build(null));
 }

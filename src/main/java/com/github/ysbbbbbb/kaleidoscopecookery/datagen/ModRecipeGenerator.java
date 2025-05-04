@@ -1,11 +1,14 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder.ChoppingBoardBuilder;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder.PotRecipeBuilder;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -41,6 +44,9 @@ public class ModRecipeGenerator extends RecipeProvider {
         addSameItemRecipe(Items.SLIME_BALL, 7, ModItems.SLIME_BALL_MEAL.get().getDefaultInstance(), true, consumer);
         addSameItemRecipe(Items.SLIME_BALL, 8, new ItemStack(ModItems.SLIME_BALL_MEAL.get(), 2), true, consumer);
         addSameItemRecipe(Items.SLIME_BALL, 9, new ItemStack(ModItems.SLIME_BALL_MEAL.get(), 2), true, consumer);
+
+        ChoppingBoardBuilder.builder().setIngredient(Items.MUTTON).setResult(Items.COOKED_MUTTON, 3)
+                .setCutCount(4).setModelId(modLoc("mutton")).save(consumer);
     }
 
     private void addSingleItemRecipe(Item inputItem, Item outputItem, Consumer<FinishedRecipe> consumer) {
@@ -78,5 +84,9 @@ public class ModRecipeGenerator extends RecipeProvider {
         ItemLike[] items = new ItemLike[count];
         Arrays.fill(items, itemLike);
         return items;
+    }
+
+    public ResourceLocation modLoc(String path) {
+        return new ResourceLocation(KaleidoscopeCookery.MOD_ID, path);
     }
 }

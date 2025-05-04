@@ -23,6 +23,7 @@ public class LootTableGenerator {
             dropSelf(ModBlocks.POT.get());
             dropSelf(ModBlocks.SUSPICIOUS_STIR_FRY.get());
             dropSelf(ModBlocks.DARK_CUISINE.get());
+            dropSelf(ModBlocks.CHOPPING_BOARD.get());
             dropSelf(ModBlocks.COOK_STOOL_OAK.get());
             dropSelf(ModBlocks.COOK_STOOL_SPRUCE.get());
             dropSelf(ModBlocks.COOK_STOOL_ACACIA.get());
