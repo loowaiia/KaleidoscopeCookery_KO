@@ -46,18 +46,18 @@
       "y": 270
     },
     "bites=3,facing=east": {
-      "model": "kaleidoscope_cookery:block/slime_ball_meal/slime_ball_meal_3",
+      "model": "kaleidoscope_cookery:block/plate",
       "y": 90
     },
     "bites=3,facing=north": {
-      "model": "kaleidoscope_cookery:block/slime_ball_meal/slime_ball_meal_3"
+      "model": "kaleidoscope_cookery:block/plate"
     },
     "bites=3,facing=south": {
-      "model": "kaleidoscope_cookery:block/slime_ball_meal/slime_ball_meal_3",
+      "model": "kaleidoscope_cookery:block/plate",
       "y": 180
     },
     "bites=3,facing=west": {
-      "model": "kaleidoscope_cookery:block/slime_ball_meal/slime_ball_meal_3",
+      "model": "kaleidoscope_cookery:block/plate",
       "y": 270
     }
   }

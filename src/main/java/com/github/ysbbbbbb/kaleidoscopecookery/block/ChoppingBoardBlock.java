@@ -49,7 +49,7 @@ public class ChoppingBoardBlock extends HorizontalDirectionalBlock implements En
             if (choppingBoard.onCut(player)) {
                 return InteractionResult.SUCCESS;
             }
-            if (choppingBoard.onTakeOut()) {
+            if (choppingBoard.onTakeOut(player)) {
                 return InteractionResult.SUCCESS;
             }
             if (mainHandItem.is(ModItems.KITCHEN_KNIFE.get()) && player.getOffhandItem().isEmpty()) {

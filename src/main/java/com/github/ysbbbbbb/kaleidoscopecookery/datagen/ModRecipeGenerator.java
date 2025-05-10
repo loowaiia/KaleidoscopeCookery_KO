@@ -5,14 +5,17 @@ import com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder.ChoppingBoardBuil
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder.PotRecipeBuilder;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -24,6 +27,80 @@ public class ModRecipeGenerator extends RecipeProvider {
 
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModItems.STOVE.get())
+                .pattern("###")
+                .pattern("#F#")
+                .pattern("###")
+                .define('#', Tags.Items.COBBLESTONE)
+                .define('F', Items.CAMPFIRE)
+                .unlockedBy("has_campfire", has(Items.CAMPFIRE))
+                .save(consumer, "kaleidoscope_cookery:stove_campfire");
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModItems.STOVE.get())
+                .pattern("###")
+                .pattern("#F#")
+                .pattern("###")
+                .define('#', Tags.Items.COBBLESTONE)
+                .define('F', Items.SOUL_CAMPFIRE)
+                .unlockedBy("has_soul_campfire", has(Items.SOUL_CAMPFIRE))
+                .save(consumer, "kaleidoscope_cookery:stove_soul_campfire");
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.FRUIT_BASKET.get())
+                .pattern(" S ")
+                .pattern("#C#")
+                .pattern("###")
+                .define('S', Items.STICK)
+                .define('#', ItemTags.PLANKS)
+                .define('C', Items.CHEST)
+                .unlockedBy("has_chest", has(Items.CHEST))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.SCARECROW.get())
+                .pattern(" P ")
+                .pattern("#H#")
+                .pattern(" # ")
+                .define('P', Items.PUMPKIN)
+                .define('#', Items.STICK)
+                .define('H', Items.HAY_BLOCK)
+                .unlockedBy("has_pumpkin", has(Items.PUMPKIN))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModItems.POT.get())
+                .pattern("###")
+                .pattern("###")
+                .pattern(" # ")
+                .define('#', Tags.Items.INGOTS_IRON)
+                .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.KITCHEN_KNIFE.get())
+                .pattern("##")
+                .pattern("#S")
+                .define('#', Tags.Items.INGOTS_IRON)
+                .define('S', Items.STICK)
+                .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.KITCHEN_SHOVEL.get())
+                .pattern("#")
+                .pattern("S")
+                .define('#', Tags.Items.INGOTS_IRON)
+                .define('S', Items.STICK)
+                .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
+                .save(consumer);
+
+        addCookStool(ModItems.COOK_STOOL_OAK, Blocks.OAK_PLANKS).save(consumer);
+        addCookStool(ModItems.COOK_STOOL_SPRUCE, Blocks.SPRUCE_PLANKS).save(consumer);
+        addCookStool(ModItems.COOK_STOOL_ACACIA, Blocks.ACACIA_PLANKS).save(consumer);
+        addCookStool(ModItems.COOK_STOOL_BAMBOO, Blocks.BAMBOO_BLOCK).save(consumer);
+        addCookStool(ModItems.COOK_STOOL_BIRCH, Blocks.BIRCH_PLANKS).save(consumer);
+        addCookStool(ModItems.COOK_STOOL_CHERRY, Blocks.CHERRY_PLANKS).save(consumer);
+        addCookStool(ModItems.COOK_STOOL_CRIMSON, Blocks.CRIMSON_PLANKS).save(consumer);
+        addCookStool(ModItems.COOK_STOOL_DARK_OAK, Blocks.DARK_OAK_PLANKS).save(consumer);
+        addCookStool(ModItems.COOK_STOOL_JUNGLE, Blocks.JUNGLE_PLANKS).save(consumer);
+        addCookStool(ModItems.COOK_STOOL_MANGROVE, Blocks.MANGROVE_PLANKS).save(consumer);
+        addCookStool(ModItems.COOK_STOOL_WARPED, Blocks.WARPED_PLANKS).save(consumer);
+
         PotRecipeBuilder.builder().addInput(Items.POTATO).setResult(Items.BAKED_POTATO).save(consumer);
         PotRecipeBuilder.builder().addInput(Items.KELP).setResult(Items.DRIED_KELP).save(consumer);
         PotRecipeBuilder.builder().addInput(Items.CHORUS_FRUIT).setResult(Items.POPPED_CHORUS_FRUIT).save(consumer);
@@ -37,6 +114,11 @@ public class ModRecipeGenerator extends RecipeProvider {
 
         addSingleItemRecipe(Items.EGG, ModItems.FRIED_EGG.get(), consumer);
         addSingleItemRecipe(Items.TURTLE_EGG, ModItems.FRIED_EGG.get(), consumer);
+
+        PotRecipeBuilder.builder().addInput(ModItems.FRIED_EGG.get(), ModItems.FRIED_EGG.get(), ModItems.TOMATO.get(), ModItems.TOMATO.get())
+                .setNeedBowl(true).setResult(ModItems.SCRAMBLE_EGG_WITH_TOMATOES.get()).save(consumer);
+        PotRecipeBuilder.builder().addInput(Items.HONEY_BOTTLE, Items.SUGAR, Items.COOKIE, Items.COOKIE, Items.COOKIE)
+                .setNeedBowl(true).setResult(ModItems.CARAMEL_HONEY_COOKIE_FRAGMENTS.get()).save(consumer);
 
         addSameItemRecipe(Items.SLIME_BALL, 4, ModItems.SLIME_BALL_MEAL.get().getDefaultInstance(), true, consumer);
         addSameItemRecipe(Items.SLIME_BALL, 5, ModItems.SLIME_BALL_MEAL.get().getDefaultInstance(), true, consumer);
@@ -84,6 +166,15 @@ public class ModRecipeGenerator extends RecipeProvider {
         ItemLike[] items = new ItemLike[count];
         Arrays.fill(items, itemLike);
         return items;
+    }
+
+    private ShapedRecipeBuilder addCookStool(RegistryObject<Item> result, Block wood) {
+        return ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, result.get())
+                .pattern("   ")
+                .pattern("###")
+                .pattern("# #")
+                .define('#', wood)
+                .unlockedBy("has_wood", has(wood));
     }
 
     public ResourceLocation modLoc(String path) {

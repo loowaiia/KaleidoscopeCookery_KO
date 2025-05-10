@@ -7,6 +7,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -27,15 +28,16 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
-import static com.github.ysbbbbbb.kaleidoscopecookery.init.ModFoods.SLIME_BALL_MEAL_BLOCK;
-
-public class SlimeBallMealBlock extends FoodBlock {
+public class FoodBiteBlock extends FoodBlock {
     public static final int MAX_BITES = 3;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty BITES = IntegerProperty.create("bites", 0, 3);
 
-    public SlimeBallMealBlock() {
+    private final FoodProperties foodProperties;
+
+    public FoodBiteBlock(FoodProperties foodProperties) {
         super();
+        this.foodProperties = foodProperties;
         this.registerDefaultState(this.stateDefinition.any().setValue(BITES, 0).setValue(FACING, Direction.SOUTH));
     }
 
@@ -62,10 +64,10 @@ public class SlimeBallMealBlock extends FoodBlock {
     }
 
     private InteractionResult eat(LevelAccessor level, BlockPos pos, BlockState state, Player player) {
-        if (!player.canEat(SLIME_BALL_MEAL_BLOCK.canAlwaysEat())) {
+        if (!player.canEat(foodProperties.canAlwaysEat())) {
             return InteractionResult.PASS;
         }
-        player.getFoodData().eat(SLIME_BALL_MEAL_BLOCK.getNutrition(), SLIME_BALL_MEAL_BLOCK.getSaturationModifier());
+        player.getFoodData().eat(foodProperties.getNutrition(), foodProperties.getSaturationModifier());
         level.playSound(null, pos, SoundEvents.GENERIC_EAT, SoundSource.PLAYERS, 0.5F, level.getRandom().nextFloat() * 0.1F + 0.9F);
         int bites = state.getValue(BITES);
         level.gameEvent(player, GameEvent.EAT, pos);

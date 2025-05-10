@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 
 public class KitchenShovelItem extends ShovelItem {
     public KitchenShovelItem() {
-        super(Tiers.IRON, 0, -3.0F, new Properties());
+        super(Tiers.IRON, -1, -2.0F, new Properties());
     }
 
     @Override

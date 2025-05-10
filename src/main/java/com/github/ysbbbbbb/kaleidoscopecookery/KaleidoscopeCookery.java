@@ -28,5 +28,6 @@ public class KaleidoscopeCookery {
         ModSounds.SOUND_EVENTS.register(modEventBus);
         ModParticles.PARTICLES.register(modEventBus);
         ModRecipes.RECIPE_SERIALIZERS.register(modEventBus);
+        ModLootModifier.GLOBAL_LOOT_MODIFIER_SERIALIZER.register(modEventBus);
     }
 }

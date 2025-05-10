@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "minecraft:stick"
+    },
+    "H": {
+      "item": "minecraft:hay_block"
+    },
+    "P": {
+      "item": "minecraft:pumpkin"
+    }
+  },
+  "pattern": [
+    " P ",
+    "#H#",
+    " # "
+  ],
+  "result": {
+    "item": "kaleidoscope_cookery:scarecrow"
+  },
+  "show_notification": true
+}

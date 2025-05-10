@@ -3,7 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen.model;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.PotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.StoveBlock;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.food.SlimeBallMealBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
@@ -35,18 +35,8 @@ public class BlockStateGenerator extends BlockStateProvider {
             }
         });
 
-        horizontalBlock(ModBlocks.SLIME_BALL_MEAL.get(), blockState -> {
-            int bites = blockState.getValue(SlimeBallMealBlock.BITES);
-            if (bites <= 0) {
-                return new ModelFile.UncheckedModelFile(modLoc("block/slime_ball_meal/slime_ball_meal_0"));
-            } else if (bites == 1) {
-                return new ModelFile.UncheckedModelFile(modLoc("block/slime_ball_meal/slime_ball_meal_1"));
-            } else if (bites == 2) {
-                return new ModelFile.UncheckedModelFile(modLoc("block/slime_ball_meal/slime_ball_meal_2"));
-            } else {
-                return new ModelFile.UncheckedModelFile(modLoc("block/slime_ball_meal/slime_ball_meal_3"));
-            }
-        });
+        addFoodBiteBlock(ModBlocks.SLIME_BALL_MEAL, "slime_ball_meal");
+        addFoodBiteBlock(ModBlocks.CARAMEL_HONEY_COOKIE_FRAGMENTS, "caramel_honey_cookie_fragments");
 
         horizontalBlock(ModBlocks.FRUIT_BASKET.get(), new ModelFile.UncheckedModelFile(modLoc("block/fruit_basket")));
         horizontalBlock(ModBlocks.CHOPPING_BOARD.get(), new ModelFile.UncheckedModelFile(modLoc("block/chopping_board")));
@@ -69,5 +59,15 @@ public class BlockStateGenerator extends BlockStateProvider {
 
     public void cookStool(RegistryObject<Block> block, String name) {
         horizontalBlock(block.get(), new ModelFile.UncheckedModelFile(modLoc("block/cook_stool/" + name)));
+    }
+
+    public void addFoodBiteBlock(RegistryObject<Block> block, String name) {
+        horizontalBlock(block.get(), blockState -> {
+            int bites = blockState.getValue(FoodBiteBlock.BITES);
+            if (bites >= FoodBiteBlock.MAX_BITES) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/plate"));
+            }
+            return new ModelFile.UncheckedModelFile(modLoc("block/%s/%s_%d".formatted(name, name, bites)));
+        });
     }
 }

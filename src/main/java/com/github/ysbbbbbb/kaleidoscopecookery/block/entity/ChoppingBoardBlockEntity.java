@@ -22,12 +22,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class ChoppingBoardBlockEntity extends BlockEntity {
     private static final String MODEL_ID = "ModelId";
+    private static final String CURRENT_CUT_STACK = "CurrentCutStack";
     private static final String RESULT_ITEM = "ResultItem";
     private static final String MAX_CUT_COUNT = "MaxCutCount";
     private static final String CURRENT_CUT_COUNT = "CurrentCutCount";
@@ -41,6 +43,7 @@ public class ChoppingBoardBlockEntity extends BlockEntity {
     private @Nullable ResourceLocation modelId = null;
     private int maxCutCount = 0;
     private int currentCutCount = 0;
+    private ItemStack currentCutStack = ItemStack.EMPTY;
     private ItemStack result = ItemStack.EMPTY;
 
     public ChoppingBoardBlockEntity(BlockPos pos, BlockState blockState) {
@@ -61,8 +64,8 @@ public class ChoppingBoardBlockEntity extends BlockEntity {
             this.modelId = recipe.getModelId();
             this.maxCutCount = recipe.getCutCount();
             this.currentCutCount = 0;
+            this.currentCutStack = stack.split(1);
             this.result = recipe.assemble(container, this.level.registryAccess());
-            stack.shrink(1);
             this.refresh();
             level.playSound(null, this.worldPosition,
                     SoundEvents.WOOD_PLACE,
@@ -107,9 +110,23 @@ public class ChoppingBoardBlockEntity extends BlockEntity {
         }
     }
 
-    public boolean onTakeOut() {
+    public boolean onTakeOut(Player player) {
         if (this.level == null) {
             return false;
+        }
+        if (player.isSecondaryUseActive() && this.currentCutCount == 0 && !this.currentCutStack.isEmpty()) {
+            ItemHandlerHelper.giveItemToPlayer(player, this.currentCutStack);
+            this.modelId = null;
+            this.result = ItemStack.EMPTY;
+            this.currentCutStack = ItemStack.EMPTY;
+            this.currentCutCount = 0;
+            this.maxCutCount = 0;
+            this.refresh();
+            level.playSound(null, this.worldPosition,
+                    SoundEvents.ITEM_FRAME_REMOVE_ITEM,
+                    SoundSource.BLOCKS,
+                    1, 1.2f + level.random.nextFloat() * 0.2f);
+            return true;
         }
         if (this.result.isEmpty()) {
             return false;
@@ -127,6 +144,7 @@ public class ChoppingBoardBlockEntity extends BlockEntity {
         this.level.addFreshEntity(entityItem);
         this.modelId = null;
         this.result = ItemStack.EMPTY;
+        this.currentCutStack = ItemStack.EMPTY;
         this.currentCutCount = 0;
         this.maxCutCount = 0;
         this.refresh();
@@ -153,6 +171,7 @@ public class ChoppingBoardBlockEntity extends BlockEntity {
         }
         tag.putInt(MAX_CUT_COUNT, this.maxCutCount);
         tag.putInt(CURRENT_CUT_COUNT, this.currentCutCount);
+        tag.put(CURRENT_CUT_STACK, this.currentCutStack.serializeNBT());
         tag.put(RESULT_ITEM, this.result.serializeNBT());
     }
 
@@ -164,6 +183,9 @@ public class ChoppingBoardBlockEntity extends BlockEntity {
         }
         this.maxCutCount = tag.getInt(MAX_CUT_COUNT);
         this.currentCutCount = tag.getInt(CURRENT_CUT_COUNT);
+        if (tag.contains(CURRENT_CUT_STACK)) {
+            this.currentCutStack = ItemStack.of(tag.getCompound(CURRENT_CUT_STACK));
+        }
         if (tag.contains(RESULT_ITEM)) {
             this.result = ItemStack.of(tag.getCompound(RESULT_ITEM));
         }
@@ -191,5 +213,9 @@ public class ChoppingBoardBlockEntity extends BlockEntity {
 
     public int getCurrentCutCount() {
         return currentCutCount;
+    }
+
+    public ItemStack getCurrentCutStack() {
+        return currentCutStack;
     }
 }
