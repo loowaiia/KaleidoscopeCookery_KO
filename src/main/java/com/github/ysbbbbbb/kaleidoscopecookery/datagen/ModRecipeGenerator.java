@@ -117,8 +117,8 @@ public class ModRecipeGenerator extends RecipeProvider {
 
         PotRecipeBuilder.builder().addInput(ModItems.FRIED_EGG.get(), ModItems.FRIED_EGG.get(), ModItems.TOMATO.get(), ModItems.TOMATO.get())
                 .setNeedBowl(true).setResult(ModItems.SCRAMBLE_EGG_WITH_TOMATOES.get()).save(consumer);
-        PotRecipeBuilder.builder().addInput(Items.HONEY_BOTTLE, Items.SUGAR, Items.COOKIE, Items.COOKIE, Items.COOKIE)
-                .setNeedBowl(true).setResult(ModItems.CARAMEL_HONEY_COOKIE_FRAGMENTS.get()).save(consumer);
+        PotRecipeBuilder.builder().addInput(Items.HONEY_BOTTLE, Items.SUGAR, Items.PUMPKIN_PIE, Items.PUMPKIN_PIE, Items.PUMPKIN_PIE)
+                .setNeedBowl(true).setResult(ModItems.FONDANT_PIE.get()).save(consumer);
 
         addSameItemRecipe(Items.SLIME_BALL, 4, ModItems.SLIME_BALL_MEAL.get().getDefaultInstance(), true, consumer);
         addSameItemRecipe(Items.SLIME_BALL, 5, ModItems.SLIME_BALL_MEAL.get().getDefaultInstance(), true, consumer);

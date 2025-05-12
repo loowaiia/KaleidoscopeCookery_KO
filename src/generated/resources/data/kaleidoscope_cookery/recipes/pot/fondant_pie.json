@@ -8,18 +8,18 @@
       "item": "minecraft:sugar"
     },
     {
-      "item": "minecraft:cookie"
+      "item": "minecraft:pumpkin_pie"
     },
     {
-      "item": "minecraft:cookie"
+      "item": "minecraft:pumpkin_pie"
     },
     {
-      "item": "minecraft:cookie"
+      "item": "minecraft:pumpkin_pie"
     }
   ],
   "need_bowl": true,
   "result": {
-    "item": "kaleidoscope_cookery:caramel_honey_cookie_fragments"
+    "item": "kaleidoscope_cookery:fondant_pie"
   },
   "stir_fry_count": 3,
   "time": 200

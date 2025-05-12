@@ -23,7 +23,7 @@ public class ModBlocks {
     public static RegistryObject<Block> SUSPICIOUS_STIR_FRY = BLOCKS.register("suspicious_stir_fry", SuspiciousStirFryBlock::new);
     public static RegistryObject<Block> DARK_CUISINE = BLOCKS.register("dark_cuisine", DarkCuisineBlock::new);
     public static RegistryObject<Block> SLIME_BALL_MEAL = BLOCKS.register("slime_ball_meal", () -> new FoodBiteBlock(ModFoods.SLIME_BALL_MEAL_BLOCK));
-    public static RegistryObject<Block> CARAMEL_HONEY_COOKIE_FRAGMENTS = BLOCKS.register("caramel_honey_cookie_fragments", () -> new FoodBiteBlock(ModFoods.CARAMEL_HONEY_COOKIE_FRAGMENTS_BLOCK));
+    public static RegistryObject<Block> FONDANT_PIE = BLOCKS.register("fondant_pie", () -> new FoodBiteBlock(ModFoods.FONDANT_PIE_BLOCK));
     public static RegistryObject<Block> FRUIT_BASKET = BLOCKS.register("fruit_basket", FruitBasketBlock::new);
     public static RegistryObject<Block> CHOPPING_BOARD = BLOCKS.register("chopping_board", ChoppingBoardBlock::new);
 

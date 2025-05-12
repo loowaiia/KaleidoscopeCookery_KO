@@ -37,6 +37,6 @@ public final class ModItems {
     public static RegistryObject<Item> TOMATO = ITEMS.register("tomato", () -> new Item(new Item.Properties().food(ModFoods.TOMATO)));
     public static RegistryObject<Item> FRIED_EGG = ITEMS.register("fried_egg", () -> new Item(new Item.Properties().food(ModFoods.FRIED_EGG)));
     public static RegistryObject<Item> SCRAMBLE_EGG_WITH_TOMATOES = ITEMS.register("scramble_egg_with_tomatoes", () -> new Item(new Item.Properties().food(ModFoods.SCRAMBLE_EGG_WITH_TOMATOES)));
-    public static RegistryObject<Item> CARAMEL_HONEY_COOKIE_FRAGMENTS = ITEMS.register("caramel_honey_cookie_fragments", () -> new BowlFoodBlockItem(ModBlocks.CARAMEL_HONEY_COOKIE_FRAGMENTS.get(), ModFoods.CARAMEL_HONEY_COOKIE_FRAGMENTS_ITEM));
+    public static RegistryObject<Item> FONDANT_PIE = ITEMS.register("fondant_pie", () -> new BowlFoodBlockItem(ModBlocks.FONDANT_PIE.get(), ModFoods.FONDANT_PIE_ITEM));
     public static RegistryObject<Item> SLIME_BALL_MEAL = ITEMS.register("slime_ball_meal", () -> new BowlFoodBlockItem(ModBlocks.SLIME_BALL_MEAL.get(), ModFoods.SLIME_BALL_MEAL_ITEM));
 }

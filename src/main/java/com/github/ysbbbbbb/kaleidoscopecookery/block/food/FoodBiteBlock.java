@@ -2,6 +2,9 @@ package com.github.ysbbbbbb.kaleidoscopecookery.block.food;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -47,6 +50,14 @@ public class FoodBiteBlock extends FoodBlock {
         int bites = state.getValue(BITES);
         if (bites >= MAX_BITES) {
             level.removeBlock(pos, false);
+            if (level instanceof ServerLevel serverLevel) {
+                var option = new BlockParticleOption(ParticleTypes.BLOCK, state);
+                serverLevel.sendParticles(option,
+                        pos.getX() + 0.5,
+                        pos.getY() + 0.25,
+                        pos.getZ() + 0.5,
+                        20, 0.5, 0.1, 0.5, 0);
+            }
             level.gameEvent(player, GameEvent.BLOCK_DESTROY, pos);
             level.playSound(null, pos, SoundEvents.WOOD_BREAK, SoundSource.PLAYERS);
             ItemHandlerHelper.giveItemToPlayer(player, Items.BOWL.getDefaultInstance());

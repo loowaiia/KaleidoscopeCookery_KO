@@ -24,7 +24,7 @@ public class ModCreativeTabs {
                 output.accept(ModItems.TOMATO.get());
                 output.accept(ModItems.FRIED_EGG.get());
                 output.accept(ModItems.SCRAMBLE_EGG_WITH_TOMATOES.get());
-                output.accept(ModItems.CARAMEL_HONEY_COOKIE_FRAGMENTS.get());
+                output.accept(ModItems.FONDANT_PIE.get());
                 output.accept(ModItems.SLIME_BALL_MEAL.get());
                 output.accept(ModItems.CHOPPING_BOARD.get());
                 output.accept(ModItems.COOK_STOOL_OAK.get());

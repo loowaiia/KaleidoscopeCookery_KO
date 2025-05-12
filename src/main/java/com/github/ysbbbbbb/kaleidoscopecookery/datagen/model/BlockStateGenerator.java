@@ -36,7 +36,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         });
 
         addFoodBiteBlock(ModBlocks.SLIME_BALL_MEAL, "slime_ball_meal");
-        addFoodBiteBlock(ModBlocks.CARAMEL_HONEY_COOKIE_FRAGMENTS, "caramel_honey_cookie_fragments");
+        addFoodBiteBlock(ModBlocks.FONDANT_PIE, "fondant_pie");
 
         horizontalBlock(ModBlocks.FRUIT_BASKET.get(), new ModelFile.UncheckedModelFile(modLoc("block/fruit_basket")));
         horizontalBlock(ModBlocks.CHOPPING_BOARD.get(), new ModelFile.UncheckedModelFile(modLoc("block/chopping_board")));

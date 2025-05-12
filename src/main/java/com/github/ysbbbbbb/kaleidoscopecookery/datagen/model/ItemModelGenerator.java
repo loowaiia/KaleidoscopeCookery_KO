@@ -37,7 +37,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         basicItem(ModItems.SCARECROW.get());
         basicItem(ModItems.TOMATO.get());
         basicItem(ModItems.SCRAMBLE_EGG_WITH_TOMATOES.get());
-        basicItem(ModItems.CARAMEL_HONEY_COOKIE_FRAGMENTS.get());
+        basicItem(ModItems.FONDANT_PIE.get());
 
         withExistingParent("cook_stool_oak", modLoc("block/cook_stool/oak"));
         withExistingParent("cook_stool_spruce", modLoc("block/cook_stool/spruce"));
