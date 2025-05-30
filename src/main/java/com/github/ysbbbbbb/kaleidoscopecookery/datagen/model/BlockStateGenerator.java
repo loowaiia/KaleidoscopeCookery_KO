@@ -6,8 +6,11 @@ import com.github.ysbbbbbb.kaleidoscopecookery.block.StoveBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
@@ -55,6 +58,15 @@ public class BlockStateGenerator extends BlockStateProvider {
         cookStool(ModBlocks.COOK_STOOL_JUNGLE, "jungle");
         cookStool(ModBlocks.COOK_STOOL_MANGROVE, "mangrove");
         cookStool(ModBlocks.COOK_STOOL_WARPED, "warped");
+
+
+        getVariantBuilder(ModBlocks.TOMATO_CROP.get()).forAllStates(state -> {
+            int age = state.getValue(CropBlock.AGE);
+            ResourceLocation file = modLoc("block/crop/tomato_stage" + age);
+            return ConfiguredModel.builder()
+                    .modelFile(new ModelFile.UncheckedModelFile(file))
+                    .build();
+        });
     }
 
     public void cookStool(RegistryObject<Block> block, String name) {

@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.ScarecrowModel;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.model.StrawHatModel;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.entity.ScarecrowRender;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.entity.SitRenderer;
 import com.github.ysbbbbbb.kaleidoscopecookery.entity.ScarecrowEntity;
@@ -22,5 +23,6 @@ public class ModEntitiesRender {
     @SubscribeEvent
     public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(ScarecrowModel.LAYER_LOCATION, ScarecrowModel::createBodyLayer);
+        event.registerLayerDefinition(StrawHatModel.LAYER_LOCATION, StrawHatModel::createBodyLayer);
     }
 }

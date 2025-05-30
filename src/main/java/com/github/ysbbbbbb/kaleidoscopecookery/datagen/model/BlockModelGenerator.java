@@ -6,6 +6,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
+import java.util.stream.IntStream;
+
 public class BlockModelGenerator extends BlockModelProvider {
     public BlockModelGenerator(PackOutput output, ExistingFileHelper existingFileHelper) {
         super(output, KaleidoscopeCookery.MOD_ID, existingFileHelper);
@@ -31,10 +33,19 @@ public class BlockModelGenerator extends BlockModelProvider {
         cookStool("jungle");
         cookStool("mangrove");
         cookStool("warped");
+
+        crop("tomato", 8);
     }
 
     public void cookStool(String name) {
         String path = "block/cook_stool/" + name;
         withExistingParent(path, modLoc("block/cook_stool/cook_stool")).texture("particle", modLoc(path));
+    }
+
+    public void crop(String name, int stage) {
+        IntStream.range(0, stage).forEach(i -> {
+            String id = "block/crop/%s_stage%d".formatted(name, i);
+            cross(id, modLoc(id)).renderType("cutout");
+        });
     }
 }

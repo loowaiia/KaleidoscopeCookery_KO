@@ -6,6 +6,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.loot.AdvanceMatchTool;
 import com.google.common.collect.Sets;
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.resources.ResourceLocation;
@@ -13,11 +14,13 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.LootingEnchantFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
@@ -53,6 +56,13 @@ public class LootTableGenerator {
             dropSelf(ModBlocks.COOK_STOOL_JUNGLE.get());
             dropSelf(ModBlocks.COOK_STOOL_MANGROVE.get());
             dropSelf(ModBlocks.COOK_STOOL_WARPED.get());
+
+            StatePropertiesPredicate.Builder property = StatePropertiesPredicate.Builder
+                    .properties().hasProperty(CropBlock.AGE, 7);
+            LootItemCondition.Builder builder = LootItemBlockStatePropertyCondition
+                    .hasBlockStateProperties(ModBlocks.TOMATO_CROP.get())
+                    .setProperties(property);
+            this.add(ModBlocks.TOMATO_CROP.get(), createCropDrops(ModBlocks.TOMATO_CROP.get(), ModItems.TOMATO.get(), ModItems.TOMATO_SEED.get(), builder));
         }
 
         @Override

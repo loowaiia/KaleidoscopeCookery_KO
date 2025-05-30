@@ -40,5 +40,8 @@ public class ModCreativeTabs {
                 output.accept(ModItems.COOK_STOOL_WARPED.get());
                 output.accept(ModItems.FRUIT_BASKET.get());
                 output.accept(ModItems.SCARECROW.get());
+                output.accept(ModItems.STRAW_HAT.get());
+                output.accept(ModItems.STRAW_HAT_FLOWER.get());
+                output.accept(ModItems.TOMATO_SEED.get());
             }).build());
 }
