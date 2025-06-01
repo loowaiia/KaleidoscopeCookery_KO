@@ -62,6 +62,8 @@ public class BlockStateGenerator extends BlockStateProvider {
         cookStool(ModBlocks.COOK_STOOL_MANGROVE, "mangrove");
         cookStool(ModBlocks.COOK_STOOL_WARPED, "warped");
 
+        simpleBlock(ModBlocks.OIL_BLOCK.get());
+
         getVariantBuilder(ModBlocks.TOMATO_CROP.get()).forAllStates(state -> {
             int age = state.getValue(CropBlock.AGE);
             ResourceLocation file = modLoc("block/crop/tomato_stage" + age);

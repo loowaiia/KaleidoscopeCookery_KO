@@ -21,6 +21,7 @@ public class ModBlocks {
     public static RegistryObject<Block> FRUIT_BASKET = BLOCKS.register("fruit_basket", FruitBasketBlock::new);
     public static RegistryObject<Block> CHOPPING_BOARD = BLOCKS.register("chopping_board", ChoppingBoardBlock::new);
     public static RegistryObject<Block> TOMATO_CROP = BLOCKS.register("tomato_crop", TomatoCropBlock::new);
+    public static RegistryObject<Block> OIL_BLOCK = BLOCKS.register("oil_block", OilBlock::new);
 
     public static RegistryObject<Block> COOK_STOOL_OAK = BLOCKS.register("cook_stool_oak", CookStoolBlock::new);
     public static RegistryObject<Block> COOK_STOOL_SPRUCE = BLOCKS.register("cook_stool_spruce", CookStoolBlock::new);

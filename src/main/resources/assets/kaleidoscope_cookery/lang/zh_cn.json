@@ -33,6 +33,7 @@
   "block.kaleidoscope_cookery.stargazy_pie": "仰望星空派",
   "block.kaleidoscope_cookery.sweet_and_sour_ender_pearls": "珍珠咕噜肉",
   "block.kaleidoscope_cookery.tomato_crop": "番茄",
+  "block.kaleidoscope_cookery.oil_block": "油脂块",
   "item.kaleidoscope_cookery.oil": "油脂",
   "item.kaleidoscope_cookery.kitchen_knife": "菜刀",
   "item.kaleidoscope_cookery.kitchen_shovel": "锅铲",
@@ -53,6 +54,5 @@
   "tip.kaleidoscope_cookery.pot.need_stir_fry": "等待翻炒中...",
   "tip.kaleidoscope_cookery.pot.done": "烹饪完成，料理已就绪!",
   "tip.kaleidoscope_cookery.pot.need_bowl": "请掏出碗来盛取!",
-  "tip.kaleidoscope_cookery.pot.need_kitchen_shovel": "请用锅铲潜行盛取!",
-  "item.kaleidoscope_cookery.slime_ball_meal": "粘液饭"
+  "tip.kaleidoscope_cookery.pot.need_kitchen_shovel": "请用锅铲潜行盛取!"
 }

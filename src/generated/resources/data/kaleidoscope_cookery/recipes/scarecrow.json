@@ -3,18 +3,21 @@
   "category": "misc",
   "key": {
     "#": {
-      "item": "minecraft:stick"
+      "item": "minecraft:hay_block"
     },
     "H": {
-      "item": "minecraft:hay_block"
+      "tag": "kaleidoscope_cookery:straw_hat"
     },
     "P": {
       "item": "minecraft:pumpkin"
+    },
+    "S": {
+      "item": "minecraft:stick"
     }
   },
   "pattern": [
-    " P ",
-    "#H#",
+    " H ",
+    "SPS",
     " # "
   ],
   "result": {

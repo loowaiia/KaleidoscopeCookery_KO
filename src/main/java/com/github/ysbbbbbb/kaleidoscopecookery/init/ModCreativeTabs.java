@@ -19,6 +19,7 @@ public class ModCreativeTabs {
                 output.accept(ModItems.STOVE.get());
                 output.accept(ModItems.POT.get());
                 output.accept(ModItems.OIL.get());
+                output.accept(ModItems.OIL_BLOCK.get());
                 output.accept(ModItems.KITCHEN_KNIFE.get());
                 output.accept(ModItems.KITCHEN_SHOVEL.get());
                 output.accept(ModItems.TOMATO.get());

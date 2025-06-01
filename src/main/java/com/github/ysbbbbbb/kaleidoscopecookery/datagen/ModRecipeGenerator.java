@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder.ChoppingBoardBuilder;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder.PotRecipeBuilder;
+import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import net.minecraft.data.DataGenerator;
@@ -57,12 +58,13 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .save(consumer);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.SCARECROW.get())
-                .pattern(" P ")
-                .pattern("#H#")
+                .pattern(" H ")
+                .pattern("SPS")
                 .pattern(" # ")
+                .define('H', TagItem.STRAW_HAT)
+                .define('S', Items.STICK)
                 .define('P', Items.PUMPKIN)
-                .define('#', Items.STICK)
-                .define('H', Items.HAY_BLOCK)
+                .define('#', Items.HAY_BLOCK)
                 .unlockedBy("has_pumpkin", has(Items.PUMPKIN))
                 .save(consumer);
 
@@ -105,6 +107,19 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .pattern("FFF")
                 .define('F', ItemTags.FLOWERS)
                 .define('H', ModItems.STRAW_HAT.get())
+                .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.OIL_BLOCK.get())
+                .pattern("OOO")
+                .pattern("OOO")
+                .pattern("OOO")
+                .define('O', ModItems.OIL.get())
+                .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
+                .save(consumer);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ModItems.OIL.get(), 9)
+                .requires(ModItems.OIL_BLOCK.get())
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
 
