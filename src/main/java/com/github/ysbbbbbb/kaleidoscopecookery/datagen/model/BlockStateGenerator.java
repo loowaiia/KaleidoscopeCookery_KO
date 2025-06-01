@@ -5,6 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.block.PotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.StoveBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -13,6 +14,7 @@ import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class BlockStateGenerator extends BlockStateProvider {
@@ -38,14 +40,15 @@ public class BlockStateGenerator extends BlockStateProvider {
             }
         });
 
-        addFoodBiteBlock(ModBlocks.SLIME_BALL_MEAL, "slime_ball_meal");
-        addFoodBiteBlock(ModBlocks.FONDANT_PIE, "fondant_pie");
+        FoodBiteRegistry.FOOD_DATA_MAP.forEach((key, value) -> {
+            Block block = ForgeRegistries.BLOCKS.getValue(key);
+            if (block != null) {
+                addFoodBiteBlock(block, key);
+            }
+        });
 
         horizontalBlock(ModBlocks.FRUIT_BASKET.get(), new ModelFile.UncheckedModelFile(modLoc("block/fruit_basket")));
         horizontalBlock(ModBlocks.CHOPPING_BOARD.get(), new ModelFile.UncheckedModelFile(modLoc("block/chopping_board")));
-
-        simpleBlock(ModBlocks.SUSPICIOUS_STIR_FRY.get(), new ModelFile.UncheckedModelFile(modLoc("block/suspicious_stir_fry")));
-        simpleBlock(ModBlocks.DARK_CUISINE.get(), new ModelFile.UncheckedModelFile(modLoc("block/dark_cuisine")));
 
         cookStool(ModBlocks.COOK_STOOL_OAK, "oak");
         cookStool(ModBlocks.COOK_STOOL_SPRUCE, "spruce");
@@ -58,7 +61,6 @@ public class BlockStateGenerator extends BlockStateProvider {
         cookStool(ModBlocks.COOK_STOOL_JUNGLE, "jungle");
         cookStool(ModBlocks.COOK_STOOL_MANGROVE, "mangrove");
         cookStool(ModBlocks.COOK_STOOL_WARPED, "warped");
-
 
         getVariantBuilder(ModBlocks.TOMATO_CROP.get()).forAllStates(state -> {
             int age = state.getValue(CropBlock.AGE);
@@ -73,13 +75,14 @@ public class BlockStateGenerator extends BlockStateProvider {
         horizontalBlock(block.get(), new ModelFile.UncheckedModelFile(modLoc("block/cook_stool/" + name)));
     }
 
-    public void addFoodBiteBlock(RegistryObject<Block> block, String name) {
-        horizontalBlock(block.get(), blockState -> {
-            int bites = blockState.getValue(FoodBiteBlock.BITES);
-            if (bites >= FoodBiteBlock.MAX_BITES) {
-                return new ModelFile.UncheckedModelFile(modLoc("block/plate"));
+    public void addFoodBiteBlock(Block block, ResourceLocation id) {
+        horizontalBlock(block, blockState -> {
+            if (!(blockState.getBlock() instanceof FoodBiteBlock foodBiteBlock)) {
+                throw new IllegalArgumentException("Block must be an instance of FoodBiteBlock");
             }
-            return new ModelFile.UncheckedModelFile(modLoc("block/%s/%s_%d".formatted(name, name, bites)));
+            int bites = blockState.getValue(foodBiteBlock.getBites());
+            ResourceLocation model = new ResourceLocation(id.getNamespace(), "block/food/%s/%s_%d".formatted(id.getPath(), id.getPath(), bites));
+            return new ModelFile.UncheckedModelFile(model);
         });
     }
 }

@@ -5,6 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModParticles;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import com.github.ysbbbbbb.kaleidoscopecookery.recipe.PotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.IntRange;
 import net.minecraft.core.BlockPos;
@@ -28,6 +29,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -262,7 +264,8 @@ public class PotBlockEntity extends BlockEntity implements Container {
     }
 
     private ItemStack getResult(Level level) {
-        ItemStack result = ModItems.SUSPICIOUS_STIR_FRY.get().getDefaultInstance();
+        Item suspiciousStirFry = FoodBiteRegistry.getItem(FoodBiteRegistry.SUSPICIOUS_STIR_FRY);
+        ItemStack result = suspiciousStirFry.getDefaultInstance();
         if (this.recipeId != null) {
             var recipe = level.getRecipeManager().getRecipeFor(ModRecipes.POT_RECIPE, this, level, this.recipeId);
             if (recipe.isPresent()) {
@@ -272,7 +275,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
                 }
             }
         }
-        if (result.is(ModItems.SUSPICIOUS_STIR_FRY.get())) {
+        if (result.is(suspiciousStirFry)) {
             this.needBowl = true;
         }
         return result;
@@ -290,7 +293,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
         ItemStack finallyResult = this.getResult(level);
         int time = this.currentTick - this.getResultTick.start();
         if (time > 20 * 20) {
-            finallyResult = new ItemStack(ModItems.DARK_CUISINE.get());
+            finallyResult = new ItemStack(FoodBiteRegistry.getItem(FoodBiteRegistry.DARK_CUISINE));
         }
 
         if (this.needBowl) {

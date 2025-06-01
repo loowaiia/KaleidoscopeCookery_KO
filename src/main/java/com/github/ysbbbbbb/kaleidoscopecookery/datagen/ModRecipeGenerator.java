@@ -4,6 +4,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder.ChoppingBoardBuilder;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder.PotRecipeBuilder;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
@@ -89,6 +90,24 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.STRAW_HAT.get())
+                .pattern(" W ")
+                .pattern(" S ")
+                .pattern("WWW")
+                .define('W', Items.WHEAT)
+                .define('S', Items.STRING)
+                .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.STRAW_HAT_FLOWER.get())
+                .pattern("FFF")
+                .pattern("FHF")
+                .pattern("FFF")
+                .define('F', ItemTags.FLOWERS)
+                .define('H', ModItems.STRAW_HAT.get())
+                .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
+                .save(consumer);
+
         addCookStool(ModItems.COOK_STOOL_OAK, Blocks.OAK_PLANKS).save(consumer);
         addCookStool(ModItems.COOK_STOOL_SPRUCE, Blocks.SPRUCE_PLANKS).save(consumer);
         addCookStool(ModItems.COOK_STOOL_ACACIA, Blocks.ACACIA_PLANKS).save(consumer);
@@ -117,18 +136,77 @@ public class ModRecipeGenerator extends RecipeProvider {
 
         PotRecipeBuilder.builder().addInput(ModItems.FRIED_EGG.get(), ModItems.FRIED_EGG.get(), ModItems.TOMATO.get(), ModItems.TOMATO.get())
                 .setNeedBowl(true).setResult(ModItems.SCRAMBLE_EGG_WITH_TOMATOES.get()).save(consumer);
-        PotRecipeBuilder.builder().addInput(Items.HONEY_BOTTLE, Items.SUGAR, Items.PUMPKIN_PIE, Items.PUMPKIN_PIE, Items.PUMPKIN_PIE)
-                .setNeedBowl(true).setResult(ModItems.FONDANT_PIE.get()).save(consumer);
-
-        addSameItemRecipe(Items.SLIME_BALL, 4, ModItems.SLIME_BALL_MEAL.get().getDefaultInstance(), true, consumer);
-        addSameItemRecipe(Items.SLIME_BALL, 5, ModItems.SLIME_BALL_MEAL.get().getDefaultInstance(), true, consumer);
-        addSameItemRecipe(Items.SLIME_BALL, 6, ModItems.SLIME_BALL_MEAL.get().getDefaultInstance(), true, consumer);
-        addSameItemRecipe(Items.SLIME_BALL, 7, ModItems.SLIME_BALL_MEAL.get().getDefaultInstance(), true, consumer);
-        addSameItemRecipe(Items.SLIME_BALL, 8, new ItemStack(ModItems.SLIME_BALL_MEAL.get(), 2), true, consumer);
-        addSameItemRecipe(Items.SLIME_BALL, 9, new ItemStack(ModItems.SLIME_BALL_MEAL.get(), 2), true, consumer);
 
         ChoppingBoardBuilder.builder().setIngredient(Items.MUTTON).setResult(Items.COOKED_MUTTON, 3)
                 .setCutCount(4).setModelId(modLoc("mutton")).save(consumer);
+
+        this.addFoodBiteRecipe(consumer);
+    }
+
+    private void addFoodBiteRecipe(Consumer<FinishedRecipe> consumer) {
+        Item slimeBallMeal = FoodBiteRegistry.getItem(FoodBiteRegistry.SLIME_BALL_MEAL);
+        addSameItemRecipe(Items.SLIME_BALL, 4, slimeBallMeal.getDefaultInstance(), true, consumer);
+        addSameItemRecipe(Items.SLIME_BALL, 5, slimeBallMeal.getDefaultInstance(), true, consumer);
+        addSameItemRecipe(Items.SLIME_BALL, 6, slimeBallMeal.getDefaultInstance(), true, consumer);
+        addSameItemRecipe(Items.SLIME_BALL, 7, slimeBallMeal.getDefaultInstance(), true, consumer);
+        addSameItemRecipe(Items.SLIME_BALL, 8, new ItemStack(slimeBallMeal, 2), true, consumer);
+        addSameItemRecipe(Items.SLIME_BALL, 9, new ItemStack(slimeBallMeal, 2), true, consumer);
+
+        PotRecipeBuilder.builder().addInput(Items.HONEY_BOTTLE, Items.HONEY_BOTTLE, Items.SUGAR, Items.SUGAR, Items.PUMPKIN_PIE)
+                .setNeedBowl(true).setResult(FoodBiteRegistry.FONDANT_PIE).save(consumer);
+
+        PotRecipeBuilder.builder().addInput(Items.PORKCHOP, Items.PORKCHOP, Items.PORKCHOP, Items.BAMBOO, Items.BAMBOO)
+                .setNeedBowl(true).setResult(FoodBiteRegistry.DONGPO_PORK).save(consumer);
+
+        PotRecipeBuilder.builder().addInput(Items.SUGAR, Items.SUGAR, Items.SUGAR, Items.SPIDER_EYE, Items.SPIDER_EYE, Items.SPIDER_EYE)
+                .setNeedBowl(true).setResult(FoodBiteRegistry.FONDANT_SPIDER_EYE).save(consumer);
+
+        PotRecipeBuilder.builder().addInput(Items.CHORUS_FRUIT, ModItems.FRIED_EGG.get())
+                .setNeedBowl(true).setResult(FoodBiteRegistry.CHORUS_FRIED_EGG, 3).save(consumer);
+
+        PotRecipeBuilder.builder().addInput(Items.COD, Items.COD)
+                .setNeedBowl(true).setResult(FoodBiteRegistry.BRAISED_FISH).save(consumer, "braised_fish_cod");
+        PotRecipeBuilder.builder().addInput(Items.SALMON, Items.SALMON)
+                .setNeedBowl(true).setResult(FoodBiteRegistry.BRAISED_FISH).save(consumer, "braised_fish_salmon");
+        PotRecipeBuilder.builder().addInput(Items.COD, Items.SALMON)
+                .setNeedBowl(true).setResult(FoodBiteRegistry.BRAISED_FISH).save(consumer, "braised_fish_cod_salmon");
+
+        PotRecipeBuilder.builder().addInput(Items.GOLDEN_APPLE, Items.GOLDEN_APPLE, Items.GOLDEN_CARROT, Items.GOLDEN_CARROT, Items.GLISTERING_MELON_SLICE, Items.GLISTERING_MELON_SLICE)
+                .setNeedBowl(true).setResult(FoodBiteRegistry.GOLDEN_SALAD).save(consumer, "golden_salad_golden_apple");
+        PotRecipeBuilder.builder().addInput(Items.ENCHANTED_GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE, Items.GOLDEN_CARROT, Items.GOLDEN_CARROT, Items.GLISTERING_MELON_SLICE, Items.GLISTERING_MELON_SLICE)
+                .setNeedBowl(true).setResult(FoodBiteRegistry.GOLDEN_SALAD).save(consumer, "golden_salad_enchanted_golden_apple");
+
+        PotRecipeBuilder.builder().addInput(Items.AMETHYST_SHARD, Items.AMETHYST_SHARD, Items.AMETHYST_SHARD, Items.MUTTON)
+                .setNeedBowl(true).setResult(FoodBiteRegistry.CRYSTAL_LAMB_CHOP).save(consumer);
+
+        Item frogspawnJelly = FoodBiteRegistry.getItem(FoodBiteRegistry.FROGSPAWN_JELLY);
+        addSameItemRecipe(Items.FROGSPAWN, 3, frogspawnJelly.getDefaultInstance(), true, consumer);
+        addSameItemRecipe(Items.FROGSPAWN, 4, frogspawnJelly.getDefaultInstance(), true, consumer);
+        addSameItemRecipe(Items.FROGSPAWN, 5, frogspawnJelly.getDefaultInstance(), true, consumer);
+        addSameItemRecipe(Items.FROGSPAWN, 6, new ItemStack(frogspawnJelly, 2), true, consumer);
+        addSameItemRecipe(Items.FROGSPAWN, 7, new ItemStack(frogspawnJelly, 2), true, consumer);
+        addSameItemRecipe(Items.FROGSPAWN, 8, new ItemStack(frogspawnJelly, 2), true, consumer);
+        addSameItemRecipe(Items.FROGSPAWN, 9, new ItemStack(frogspawnJelly, 3), true, consumer);
+
+        PotRecipeBuilder.builder().addInput(Items.CRIMSON_FUNGUS, Items.CRIMSON_FUNGUS, Items.WARPED_FUNGUS, Items.WARPED_FUNGUS, Items.TROPICAL_FISH, Items.TROPICAL_FISH)
+                .setNeedBowl(true).setResult(FoodBiteRegistry.NETHER_STYLE_SASHIMI).save(consumer);
+
+        PotRecipeBuilder.builder().addInput(Items.BONE, Items.BONE, Items.BONE, Items.BEEF, Items.BEEF, Items.SWEET_BERRIES, Items.SWEET_BERRIES, Items.SWEET_BERRIES)
+                .setNeedBowl(true).setResult(FoodBiteRegistry.PAN_SEARED_KNIGHT_STEAK).save(consumer);
+
+        PotRecipeBuilder.builder().addInput(Items.PUMPKIN_PIE, Items.COD, Items.COD, Items.COD, Items.COD, Items.COD)
+                .setNeedBowl(true).setResult(FoodBiteRegistry.STARGAZY_PIE).save(consumer, "stargazy_pie_cod");
+        PotRecipeBuilder.builder().addInput(Items.PUMPKIN_PIE, Items.SALMON, Items.SALMON, Items.SALMON, Items.SALMON, Items.SALMON)
+                .setNeedBowl(true).setResult(FoodBiteRegistry.STARGAZY_PIE).save(consumer, "stargazy_pie_salmon");
+
+        PotRecipeBuilder.builder().addInput(Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_EYE)
+                .setNeedBowl(true).setResult(FoodBiteRegistry.SWEET_AND_SOUR_ENDER_PEARLS).save(consumer, "sweet_and_sour_ender_pearls_1");
+        PotRecipeBuilder.builder().addInput(Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL,
+                        Items.ENDER_EYE, Items.ENDER_EYE)
+                .setNeedBowl(true).setResult(FoodBiteRegistry.SWEET_AND_SOUR_ENDER_PEARLS, 2).save(consumer, "sweet_and_sour_ender_pearls_2");
+        PotRecipeBuilder.builder().addInput(Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL,
+                        Items.ENDER_EYE, Items.ENDER_EYE, Items.ENDER_EYE)
+                .setNeedBowl(true).setResult(FoodBiteRegistry.SWEET_AND_SOUR_ENDER_PEARLS, 3).save(consumer, "sweet_and_sour_ender_pearls_3");
     }
 
     private void addSingleItemRecipe(Item inputItem, Item outputItem, Consumer<FinishedRecipe> consumer) {

@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen.model;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -30,17 +31,20 @@ public class ItemModelGenerator extends ItemModelProvider {
         handheldItem(ModItems.KITCHEN_SHOVEL.get());
 
         basicItem(ModItems.OIL.get());
-        basicItem(ModItems.SUSPICIOUS_STIR_FRY.get());
-        basicItem(ModItems.DARK_CUISINE.get());
         basicItem(ModItems.FRIED_EGG.get());
-        basicItem(ModItems.SLIME_BALL_MEAL.get());
         basicItem(ModItems.SCARECROW.get());
         basicItem(ModItems.TOMATO.get());
         basicItem(ModItems.SCRAMBLE_EGG_WITH_TOMATOES.get());
-        basicItem(ModItems.FONDANT_PIE.get());
         basicItem(ModItems.STRAW_HAT.get());
         basicItem(ModItems.STRAW_HAT_FLOWER.get());
         basicItem(ModItems.TOMATO_SEED.get());
+
+        FoodBiteRegistry.FOOD_DATA_MAP.forEach((key, value) -> {
+            Item item = ForgeRegistries.ITEMS.getValue(key);
+            if (item != null) {
+                basicItem(item);
+            }
+        });
 
         withExistingParent("cook_stool_oak", modLoc("block/cook_stool/oak"));
         withExistingParent("cook_stool_spruce", modLoc("block/cook_stool/spruce"));

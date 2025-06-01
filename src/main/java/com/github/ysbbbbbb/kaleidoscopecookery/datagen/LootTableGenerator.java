@@ -1,8 +1,10 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import com.github.ysbbbbbb.kaleidoscopecookery.loot.AdvanceMatchTool;
 import com.google.common.collect.Sets;
 import net.minecraft.advancements.critereon.ItemPredicate;
@@ -13,17 +15,23 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.EmptyLootItem;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.LootingEnchantFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -42,8 +50,6 @@ public class LootTableGenerator {
         public void generate() {
             dropSelf(ModBlocks.STOVE.get());
             dropSelf(ModBlocks.POT.get());
-            dropSelf(ModBlocks.SUSPICIOUS_STIR_FRY.get());
-            dropSelf(ModBlocks.DARK_CUISINE.get());
             dropSelf(ModBlocks.CHOPPING_BOARD.get());
             dropSelf(ModBlocks.COOK_STOOL_OAK.get());
             dropSelf(ModBlocks.COOK_STOOL_SPRUCE.get());
@@ -63,6 +69,35 @@ public class LootTableGenerator {
                     .hasBlockStateProperties(ModBlocks.TOMATO_CROP.get())
                     .setProperties(property);
             this.add(ModBlocks.TOMATO_CROP.get(), createCropDrops(ModBlocks.TOMATO_CROP.get(), ModItems.TOMATO.get(), ModItems.TOMATO_SEED.get(), builder));
+
+            FoodBiteRegistry.FOOD_DATA_MAP.forEach(this::dropFoodBite);
+        }
+
+        private void dropFoodBite(ResourceLocation id, FoodBiteRegistry.FoodData data) {
+            Block block = ForgeRegistries.BLOCKS.getValue(id);
+            Item food = ForgeRegistries.ITEMS.getValue(id);
+            if (!(block instanceof FoodBiteBlock foodBiteBlock)) {
+                return;
+            }
+            if (food == null) {
+                return;
+            }
+            ConstantValue exactly = ConstantValue.exactly(1);
+            StatePropertiesPredicate.Builder notBite = StatePropertiesPredicate.Builder.properties().hasProperty(foodBiteBlock.getBites(), 0);
+            LootItemCondition.Builder builder = LootItemBlockStatePropertyCondition.hasBlockStateProperties(foodBiteBlock).setProperties(notBite);
+
+            LootTable.Builder lootTable = LootTable.lootTable();
+            for (int i = 0; i < data.getLootItems().size(); i++) {
+                ItemLike itemLike = data.getLootItems().get(i);
+                LootPool.Builder rolls = LootPool.lootPool().setRolls(exactly).when(ExplosionCondition.survivesExplosion());
+                if (i == 0) {
+                    rolls.add(LootItem.lootTableItem(food).when(builder).otherwise(LootItem.lootTableItem(itemLike)));
+                } else {
+                    rolls.add(EmptyLootItem.emptyItem().when(builder).otherwise(LootItem.lootTableItem(itemLike)));
+                }
+                lootTable.withPool(rolls);
+            }
+            this.add(block, lootTable);
         }
 
         @Override

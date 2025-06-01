@@ -1,10 +1,12 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ModCreativeTabs {
@@ -19,13 +21,9 @@ public class ModCreativeTabs {
                 output.accept(ModItems.OIL.get());
                 output.accept(ModItems.KITCHEN_KNIFE.get());
                 output.accept(ModItems.KITCHEN_SHOVEL.get());
-                output.accept(ModItems.SUSPICIOUS_STIR_FRY.get());
-                output.accept(ModItems.DARK_CUISINE.get());
                 output.accept(ModItems.TOMATO.get());
                 output.accept(ModItems.FRIED_EGG.get());
                 output.accept(ModItems.SCRAMBLE_EGG_WITH_TOMATOES.get());
-                output.accept(ModItems.FONDANT_PIE.get());
-                output.accept(ModItems.SLIME_BALL_MEAL.get());
                 output.accept(ModItems.CHOPPING_BOARD.get());
                 output.accept(ModItems.COOK_STOOL_OAK.get());
                 output.accept(ModItems.COOK_STOOL_SPRUCE.get());
@@ -43,5 +41,11 @@ public class ModCreativeTabs {
                 output.accept(ModItems.STRAW_HAT.get());
                 output.accept(ModItems.STRAW_HAT_FLOWER.get());
                 output.accept(ModItems.TOMATO_SEED.get());
+                FoodBiteRegistry.FOOD_DATA_MAP.keySet().forEach(foodName -> {
+                    var foodItem = ForgeRegistries.ITEMS.getValue(foodName);
+                    if (foodItem != null) {
+                        output.accept(foodItem);
+                    }
+                });
             }).build());
 }

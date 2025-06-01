@@ -66,6 +66,21 @@ public class PotRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
+    public PotRecipeBuilder setResult(ResourceLocation result) {
+        this.result = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(result)));
+        return this;
+    }
+
+    public PotRecipeBuilder setResult(Item result, int count) {
+        this.result = new ItemStack(result, count);
+        return this;
+    }
+
+    public PotRecipeBuilder setResult(ResourceLocation result, int count) {
+        this.result = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(result)), count);
+        return this;
+    }
+
     public PotRecipeBuilder setResult(ItemStack result) {
         this.result = result;
         return this;

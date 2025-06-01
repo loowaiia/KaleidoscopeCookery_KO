@@ -17,14 +17,11 @@ public final class ModItems {
     public static RegistryObject<Item> OIL = ITEMS.register("oil", () -> new Item(new Item.Properties()));
     public static RegistryObject<Item> KITCHEN_KNIFE = ITEMS.register("kitchen_knife", KitchenKnifeItem::new);
     public static RegistryObject<Item> KITCHEN_SHOVEL = ITEMS.register("kitchen_shovel", KitchenShovelItem::new);
-    public static RegistryObject<Item> SUSPICIOUS_STIR_FRY = ITEMS.register("suspicious_stir_fry", () -> new BowlFoodBlockItem(ModBlocks.SUSPICIOUS_STIR_FRY.get(), ModFoods.SUSPICIOUS_STIR_FRY));
-    public static RegistryObject<Item> DARK_CUISINE = ITEMS.register("dark_cuisine", () -> new BowlFoodBlockItem(ModBlocks.DARK_CUISINE.get(), ModFoods.DARK_CUISINE));
     public static RegistryObject<Item> FRUIT_BASKET = ITEMS.register("fruit_basket", FruitBasketItem::new);
     public static RegistryObject<Item> SCARECROW = ITEMS.register("scarecrow", ScarecrowItem::new);
     public static RegistryObject<Item> STRAW_HAT = ITEMS.register("straw_hat", () -> new StrawHatItem(false));
     public static RegistryObject<Item> STRAW_HAT_FLOWER = ITEMS.register("straw_hat_flower", () -> new StrawHatItem(true));
     public static RegistryObject<Item> CHOPPING_BOARD = ITEMS.register("chopping_board", () -> new BlockItem(ModBlocks.CHOPPING_BOARD.get(), new Item.Properties()));
-
     public static RegistryObject<Item> TOMATO_SEED = ITEMS.register("tomato_seed", () -> new ItemNameBlockItem(ModBlocks.TOMATO_CROP.get(), new Item.Properties()));
 
     public static RegistryObject<Item> COOK_STOOL_OAK = ITEMS.register("cook_stool_oak", () -> new BlockItem(ModBlocks.COOK_STOOL_OAK.get(), new Item.Properties()));
@@ -42,6 +39,4 @@ public final class ModItems {
     public static RegistryObject<Item> TOMATO = ITEMS.register("tomato", () -> new Item(new Item.Properties().food(ModFoods.TOMATO)));
     public static RegistryObject<Item> FRIED_EGG = ITEMS.register("fried_egg", () -> new Item(new Item.Properties().food(ModFoods.FRIED_EGG)));
     public static RegistryObject<Item> SCRAMBLE_EGG_WITH_TOMATOES = ITEMS.register("scramble_egg_with_tomatoes", () -> new Item(new Item.Properties().food(ModFoods.SCRAMBLE_EGG_WITH_TOMATOES)));
-    public static RegistryObject<Item> FONDANT_PIE = ITEMS.register("fondant_pie", () -> new BowlFoodBlockItem(ModBlocks.FONDANT_PIE.get(), ModFoods.FONDANT_PIE_ITEM));
-    public static RegistryObject<Item> SLIME_BALL_MEAL = ITEMS.register("slime_ball_meal", () -> new BowlFoodBlockItem(ModBlocks.SLIME_BALL_MEAL.get(), ModFoods.SLIME_BALL_MEAL_ITEM));
 }
