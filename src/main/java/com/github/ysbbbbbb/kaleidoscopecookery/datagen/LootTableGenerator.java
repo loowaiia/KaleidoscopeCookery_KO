@@ -2,10 +2,12 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
-import com.github.ysbbbbbb.kaleidoscopecookery.loot.AdvanceMatchTool;
+import com.github.ysbbbbbb.kaleidoscopecookery.loot.AdvanceBlockMatchTool;
+import com.github.ysbbbbbb.kaleidoscopecookery.loot.AdvanceEntityMatchTool;
 import com.google.common.collect.Sets;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
@@ -16,7 +18,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
@@ -24,11 +26,13 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.EmptyLootItem;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.LootingEnchantFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -73,6 +77,20 @@ public class LootTableGenerator {
             FoodBiteRegistry.FOOD_DATA_MAP.forEach(this::dropFoodBite);
         }
 
+        @Override
+        public void generate(BiConsumer<ResourceLocation, LootTable.Builder> output) {
+            super.generate(output);
+
+            // 穿戴草帽掉落番茄种子
+            ItemPredicate hasHat = ItemPredicate.Builder.item().of(TagItem.STRAW_HAT).build();
+            LootItemCondition.Builder hatMatches = AdvanceBlockMatchTool.toolMatches(EquipmentSlot.HEAD, hasHat);
+            var seed = LootItem.lootTableItem(ModItems.TOMATO_SEED.get())
+                    .when(LootItemRandomChanceCondition.randomChance(0.125F)).when(hatMatches)
+                    .apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE, 2));
+            LootTable.Builder dropSeed = LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(seed));
+            output.accept(modLoc("straw_hat_seed_drop"), dropSeed);
+        }
+
         private void dropFoodBite(ResourceLocation id, FoodBiteRegistry.FoodData data) {
             Block block = ForgeRegistries.BLOCKS.getValue(id);
             Item food = ForgeRegistries.ITEMS.getValue(id);
@@ -110,6 +128,10 @@ public class LootTableGenerator {
         public Iterable<Block> getKnownBlocks() {
             return this.knownBlocks;
         }
+
+        public ResourceLocation modLoc(String name) {
+            return new ResourceLocation(KaleidoscopeCookery.MOD_ID, name);
+        }
     }
 
     public static class EntityLootTables extends EntityLootSubProvider {
@@ -123,8 +145,9 @@ public class LootTableGenerator {
         public void generate(BiConsumer<ResourceLocation, LootTable.Builder> output) {
             super.generate(output);
 
+            // 厨具刀杀猪掉油
             ItemPredicate hasKnife = ItemPredicate.Builder.item().of(ModItems.KITCHEN_KNIFE.get()).build();
-            LootItemCondition.Builder toolMatches = AdvanceMatchTool.toolMatches(EquipmentSlot.MAINHAND, hasKnife);
+            LootItemCondition.Builder toolMatches = AdvanceEntityMatchTool.toolMatches(EquipmentSlot.MAINHAND, hasKnife);
             var count = SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F));
             var looting = LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F));
             var oil = LootItem.lootTableItem(ModItems.OIL.get()).apply(count).apply(looting);

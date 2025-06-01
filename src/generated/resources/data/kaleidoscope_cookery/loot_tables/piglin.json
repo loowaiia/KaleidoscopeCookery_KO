@@ -5,7 +5,7 @@
       "bonus_rolls": 0.0,
       "conditions": [
         {
-          "condition": "kaleidoscope_cookery:advance_match_tool",
+          "condition": "kaleidoscope_cookery:advance_entity_match_tool",
           "predicate": {
             "items": [
               "kaleidoscope_cookery:kitchen_knife"

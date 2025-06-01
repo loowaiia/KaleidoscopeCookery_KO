@@ -23,6 +23,7 @@ public class TagItem extends ItemTagsProvider {
     public static final TagKey<Item> EXTINGUISH_STOVE = TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "extinguish_stove"));
     public static final TagKey<Item> OIL = TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "oil"));
     public static final TagKey<Item> POT_INGREDIENT = TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "pot_ingredient"));
+    public static final TagKey<Item> STRAW_HAT = TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "straw_hat"));
 
     public TagItem(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pLookupProvider,
                    CompletableFuture<TagLookup<Block>> pBlockTags, @Nullable ExistingFileHelper existingFileHelper) {
@@ -36,6 +37,7 @@ public class TagItem extends ItemTagsProvider {
         tag(OIL).add(ModItems.OIL.get());
         tag(ItemTags.SHOVELS).add(ModItems.KITCHEN_SHOVEL.get());
         tag(ItemTags.SWORDS).add(ModItems.KITCHEN_KNIFE.get());
+        tag(STRAW_HAT).add(ModItems.STRAW_HAT.get(), ModItems.STRAW_HAT_FLOWER.get());
         addPotIngredient();
     }
 

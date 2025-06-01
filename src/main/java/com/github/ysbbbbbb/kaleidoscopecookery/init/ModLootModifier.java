@@ -3,7 +3,8 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.loot.AdditionLootModifier;
-import com.github.ysbbbbbb.kaleidoscopecookery.loot.AdvanceMatchTool;
+import com.github.ysbbbbbb.kaleidoscopecookery.loot.AdvanceBlockMatchTool;
+import com.github.ysbbbbbb.kaleidoscopecookery.loot.AdvanceEntityMatchTool;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -24,13 +25,14 @@ public final class ModLootModifier {
             DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, KaleidoscopeCookery.MOD_ID);
     public static final RegistryObject<Codec<? extends IGlobalLootModifier>> ADDITION =
             GLOBAL_LOOT_MODIFIER_SERIALIZER.register("addition", AdditionLootModifier.CODEC);
-    public static final LootItemConditionType ADVANCE_MATCH_TOOL =
-            new LootItemConditionType(new AdvanceMatchTool.AdvanceMatchToolSerializer());
+    public static final LootItemConditionType ADVANCE_ENTITY_MATCH_TOOL = new LootItemConditionType(new AdvanceEntityMatchTool.AdvanceEntityMatchToolSerializer());
+    public static final LootItemConditionType ADVANCE_BLOCK_MATCH_TOOL = new LootItemConditionType(new AdvanceBlockMatchTool.AdvanceBlockMatchToolSerializer());
 
     @SubscribeEvent
     public static void register(RegisterEvent evt) {
         if (evt.getRegistryKey().equals(Registries.LOOT_CONDITION_TYPE)) {
-            Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "advance_match_tool"), ADVANCE_MATCH_TOOL);
+            Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "advance_entity_match_tool"), ADVANCE_ENTITY_MATCH_TOOL);
+            Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "advance_block_match_tool"), ADVANCE_BLOCK_MATCH_TOOL);
         }
     }
 }
