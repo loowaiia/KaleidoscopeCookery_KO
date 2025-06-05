@@ -54,5 +54,7 @@
   "tip.kaleidoscope_cookery.pot.need_stir_fry": "Waiting for the stir-fry...",
   "tip.kaleidoscope_cookery.pot.done": "The cooking is complete and the dish is ready!",
   "tip.kaleidoscope_cookery.pot.need_bowl": "Need to right click on the bowl to take it out!",
-  "tip.kaleidoscope_cookery.pot.need_kitchen_shovel": "Need sneak and right click with a kitchen shovel to take it out!"
+  "tip.kaleidoscope_cookery.pot.need_kitchen_shovel": "Need sneak and right click with a kitchen shovel to take it out!",
+  "jei.kaleidoscope_cookery.pot.stir_fry_count": "Stir-fry at least %s times",
+  "jei.kaleidoscope_cookery.pot.need_bowl": "Need Bowl"
 }
