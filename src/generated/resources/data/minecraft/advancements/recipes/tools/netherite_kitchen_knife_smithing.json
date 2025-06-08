@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_ingot_iron": {
+    "has_netherite_ingot": {
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:iron_ingot"
+              "minecraft:netherite_ingot"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "kaleidoscope_cookery:netherite_kitchen_knife"
+        "recipe": "minecraft:netherite_kitchen_knife_smithing"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_ingot_iron",
+      "has_netherite_ingot",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "kaleidoscope_cookery:netherite_kitchen_knife"
+      "minecraft:netherite_kitchen_knife_smithing"
     ]
   },
   "sends_telemetry_event": false

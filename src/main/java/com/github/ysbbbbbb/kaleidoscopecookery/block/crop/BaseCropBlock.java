@@ -23,8 +23,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.registries.RegistryObject;
 
 public class BaseCropBlock extends CropBlock {
-    private final RegistryObject<Item> result;
-    private final RegistryObject<Item> seed;
+    protected final RegistryObject<Item> result;
+    protected final RegistryObject<Item> seed;
 
     private static final VoxelShape[] SHAPE_BY_AGE = new VoxelShape[]{
             Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D),

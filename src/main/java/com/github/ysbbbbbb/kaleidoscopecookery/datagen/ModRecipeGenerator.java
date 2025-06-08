@@ -102,14 +102,6 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.NETHERITE_KITCHEN_KNIFE.get())
-                .pattern("##")
-                .pattern("#S")
-                .define('#', Tags.Items.INGOTS_NETHERITE)
-                .define('S', Items.STICK)
-                .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
-                .save(consumer);
-
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.KITCHEN_SHOVEL.get())
                 .pattern("#")
                 .pattern("S")
@@ -148,6 +140,8 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .requires(ModItems.OIL_BLOCK.get())
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
+
+        netheriteSmithing(consumer, ModItems.DIAMOND_KITCHEN_KNIFE.get(), RecipeCategory.TOOLS, ModItems.NETHERITE_KITCHEN_KNIFE.get());
 
         simpleCookingRecipe(ModItems.RAW_LAMB_CHOPS.get(), ModItems.COOKED_LAMB_CHOPS.get(), 0.35F, consumer);
         simpleCookingRecipe(ModItems.RAW_COW_OFFAL.get(), ModItems.COOKED_COW_OFFAL.get(), 0.35F, consumer);

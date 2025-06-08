@@ -3,6 +3,8 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.BaseCropBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.ChiliCropBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.LettuceCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.ChoppingBoardBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.FruitBasketBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.PotBlockEntity;
@@ -21,8 +23,8 @@ public class ModBlocks {
     public static RegistryObject<Block> FRUIT_BASKET = BLOCKS.register("fruit_basket", FruitBasketBlock::new);
     public static RegistryObject<Block> CHOPPING_BOARD = BLOCKS.register("chopping_board", ChoppingBoardBlock::new);
     public static RegistryObject<Block> TOMATO_CROP = BLOCKS.register("tomato_crop", () -> new BaseCropBlock(ModItems.TOMATO, ModItems.TOMATO_SEED));
-    public static RegistryObject<Block> CHILI_CROP = BLOCKS.register("chili_crop", () -> new BaseCropBlock(ModItems.RED_CHILI, ModItems.CHILI_SEED));
-    public static RegistryObject<Block> LETTUCE_CROP = BLOCKS.register("lettuce_crop", () -> new BaseCropBlock(ModItems.LETTUCE, ModItems.LETTUCE_SEED));
+    public static RegistryObject<Block> CHILI_CROP = BLOCKS.register("chili_crop", ChiliCropBlock::new);
+    public static RegistryObject<Block> LETTUCE_CROP = BLOCKS.register("lettuce_crop", LettuceCropBlock::new);
     public static RegistryObject<Block> OIL_BLOCK = BLOCKS.register("oil_block", OilBlock::new);
 
     public static RegistryObject<Block> COOK_STOOL_OAK = BLOCKS.register("cook_stool_oak", CookStoolBlock::new);
