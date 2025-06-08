@@ -32,6 +32,7 @@ public class ChoppingBoardBlock extends HorizontalDirectionalBlock implements En
 
     public ChoppingBoardBlock() {
         super(BlockBehaviour.Properties.of()
+                .forceSolidOn()
                 .mapColor(MapColor.WOOD)
                 .sound(SoundType.WOOD));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH));

@@ -42,6 +42,7 @@ public class FruitBasketBlock extends HorizontalDirectionalBlock implements Enti
 
     public FruitBasketBlock() {
         super(BlockBehaviour.Properties.of()
+                .forceSolidOn()
                 .mapColor(MapColor.WOOD)
                 .instrument(NoteBlockInstrument.BASS)
                 .sound(SoundType.BAMBOO));

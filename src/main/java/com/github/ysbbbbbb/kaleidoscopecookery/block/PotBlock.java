@@ -45,6 +45,7 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock 
 
     public PotBlock() {
         super(Properties.of()
+                .forceSolidOn()
                 .mapColor(MapColor.METAL)
                 .sound(ModSoundType.POT).noOcclusion()
                 .strength(1.5F, 6.0F));

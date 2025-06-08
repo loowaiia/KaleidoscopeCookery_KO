@@ -33,6 +33,7 @@ public class CookStoolBlock extends HorizontalDirectionalBlock {
 
     public CookStoolBlock() {
         super(BlockBehaviour.Properties.of()
+                .forceSolidOn()
                 .mapColor(MapColor.WOOD)
                 .instrument(NoteBlockInstrument.BASS)
                 .strength(2.0F, 3.0F)
