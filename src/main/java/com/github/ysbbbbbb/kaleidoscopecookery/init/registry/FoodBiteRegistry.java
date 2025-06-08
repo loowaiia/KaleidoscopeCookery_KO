@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init.registry;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModFoods;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.resources.ResourceLocation;
@@ -42,12 +43,12 @@ public class FoodBiteRegistry {
 
         DARK_CUISINE = registry.registerFoodData("dark_cuisine", FoodData
                 .maxBites(3).setBlockFood(2, 0.1f)
-                .setItemFood(2, 0.1f)
+                .setBlockFood(ModFoods.DARK_CUISINE_BLOCK).setItemFood(ModFoods.DARK_CUISINE_ITEM)
                 .setAnimateTick(FoodBiteAnimateTicks.DARK_CUISINE_ANIMATE_TICK));
 
         SUSPICIOUS_STIR_FRY = registry.registerFoodData("suspicious_stir_fry", FoodData
                 .maxBites(1).setBlockFood(2, 0.1f)
-                .setItemFood(2, 0.1f)
+                .setBlockFood(ModFoods.SUSPICIOUS_STIR_FRY).setItemFood(ModFoods.SUSPICIOUS_STIR_FRY)
                 .setAnimateTick(FoodBiteAnimateTicks.SUSPICIOUS_STIR_FRY_ANIMATE_TICK));
 
         SLIME_BALL_MEAL = registry.registerFoodData("slime_ball_meal", FoodData
@@ -149,8 +150,18 @@ public class FoodBiteRegistry {
             return this;
         }
 
+        public FoodData setBlockFood(FoodProperties blockFood) {
+            this.blockFood = blockFood;
+            return this;
+        }
+
         public FoodData setBlockFood(int nutrition, float saturationModifier) {
             this.blockFood = new FoodProperties.Builder().nutrition(nutrition).saturationMod(saturationModifier).alwaysEat().build();
+            return this;
+        }
+
+        public FoodData setItemFood(FoodProperties itemFood) {
+            this.itemFood = itemFood;
             return this;
         }
 

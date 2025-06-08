@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.entity;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
@@ -86,7 +87,7 @@ public class ChoppingBoardBlockEntity extends BlockEntity {
         if (this.currentCutCount >= this.maxCutCount) {
             return false;
         }
-        if (player.getMainHandItem().is(ModItems.KITCHEN_KNIFE.get())) {
+        if (player.getMainHandItem().is(TagItem.KITCHEN_KNIFE)) {
             this.currentCutCount++;
             this.playParticlesSound();
             this.refresh();

@@ -26,6 +26,7 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.EmptyLootItem;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.LootingEnchantFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
@@ -67,28 +68,51 @@ public class LootTableGenerator {
             dropSelf(ModBlocks.COOK_STOOL_MANGROVE.get());
             dropSelf(ModBlocks.COOK_STOOL_WARPED.get());
 
-            StatePropertiesPredicate.Builder property = StatePropertiesPredicate.Builder
-                    .properties().hasProperty(CropBlock.AGE, 7);
-            LootItemCondition.Builder builder = LootItemBlockStatePropertyCondition
-                    .hasBlockStateProperties(ModBlocks.TOMATO_CROP.get())
-                    .setProperties(property);
-            this.add(ModBlocks.TOMATO_CROP.get(), createCropDrops(ModBlocks.TOMATO_CROP.get(), ModItems.TOMATO.get(), ModItems.TOMATO_SEED.get(), builder));
+            this.add(ModBlocks.TOMATO_CROP.get(), createCropDrops(ModBlocks.TOMATO_CROP.get(), ModItems.TOMATO.get(),
+                    ModItems.TOMATO_SEED.get(), createCropBuilder(ModBlocks.TOMATO_CROP.get())));
+
+            var chiliBuilder = createCropBuilder(ModBlocks.CHILI_CROP.get());
+            LootPoolSingletonContainer.Builder<?> greenChili = LootItem.lootTableItem(ModItems.GREEN_CHILI.get())
+                    .when(LootItemRandomChanceCondition.randomChance(0.2F));
+            this.add(ModBlocks.CHILI_CROP.get(), createCropDrops(ModBlocks.CHILI_CROP.get(), ModItems.RED_CHILI.get(), ModItems.CHILI_SEED.get(), chiliBuilder)
+                    .withPool(LootPool.lootPool().when(chiliBuilder).add(greenChili)));
+
+            var lettuceBuilder = createCropBuilder(ModBlocks.LETTUCE_CROP.get());
+            LootPoolSingletonContainer.Builder<?> caterpillar = LootItem.lootTableItem(ModItems.CATERPILLAR.get())
+                    .when(LootItemRandomChanceCondition.randomChance(0.1F));
+            this.add(ModBlocks.LETTUCE_CROP.get(), createCropDrops(ModBlocks.LETTUCE_CROP.get(), ModItems.LETTUCE.get(), ModItems.LETTUCE_SEED.get(), lettuceBuilder)
+                    .withPool(LootPool.lootPool().when(lettuceBuilder).add(caterpillar)));
 
             FoodBiteRegistry.FOOD_DATA_MAP.forEach(this::dropFoodBite);
+        }
+
+        private LootItemCondition.Builder createCropBuilder(Block cropBlock) {
+            StatePropertiesPredicate.Builder property = StatePropertiesPredicate.Builder
+                    .properties().hasProperty(CropBlock.AGE, 7);
+            return LootItemBlockStatePropertyCondition
+                    .hasBlockStateProperties(cropBlock)
+                    .setProperties(property);
         }
 
         @Override
         public void generate(BiConsumer<ResourceLocation, LootTable.Builder> output) {
             super.generate(output);
 
-            // 穿戴草帽掉落番茄种子
+            // 穿戴草帽掉落番茄辣椒等种子
+            var tomato = getSeed(ModItems.TOMATO_SEED.get());
+            var chili = getSeed(ModItems.CHILI_SEED.get());
+            var lettuce = getSeed(ModItems.LETTUCE_SEED.get());
+            LootTable.Builder dropSeed = LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                    .add(tomato).add(chili).add(lettuce));
+            output.accept(modLoc("straw_hat_seed_drop"), dropSeed);
+        }
+
+        private LootPoolSingletonContainer.Builder<?> getSeed(ItemLike item) {
             ItemPredicate hasHat = ItemPredicate.Builder.item().of(TagItem.STRAW_HAT).build();
             LootItemCondition.Builder hatMatches = AdvanceBlockMatchTool.toolMatches(EquipmentSlot.HEAD, hasHat);
-            var seed = LootItem.lootTableItem(ModItems.TOMATO_SEED.get())
+            return LootItem.lootTableItem(item)
                     .when(LootItemRandomChanceCondition.randomChance(0.125F)).when(hatMatches)
                     .apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE, 2));
-            LootTable.Builder dropSeed = LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(seed));
-            output.accept(modLoc("straw_hat_seed_drop"), dropSeed);
         }
 
         private void dropFoodBite(ResourceLocation id, FoodBiteRegistry.FoodData data) {
@@ -146,7 +170,7 @@ public class LootTableGenerator {
             super.generate(output);
 
             // 厨具刀杀猪掉油
-            ItemPredicate hasKnife = ItemPredicate.Builder.item().of(ModItems.KITCHEN_KNIFE.get()).build();
+            ItemPredicate hasKnife = ItemPredicate.Builder.item().of(TagItem.KITCHEN_KNIFE).build();
             LootItemCondition.Builder toolMatches = AdvanceEntityMatchTool.toolMatches(EquipmentSlot.MAINHAND, hasKnife);
             var count = SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F));
             var looting = LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F));

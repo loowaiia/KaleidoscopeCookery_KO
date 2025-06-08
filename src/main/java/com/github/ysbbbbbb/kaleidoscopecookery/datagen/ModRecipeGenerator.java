@@ -13,6 +13,8 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -76,10 +78,34 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.KITCHEN_KNIFE.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.IRON_KITCHEN_KNIFE.get())
                 .pattern("##")
                 .pattern("#S")
                 .define('#', Tags.Items.INGOTS_IRON)
+                .define('S', Items.STICK)
+                .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.GOLD_KITCHEN_KNIFE.get())
+                .pattern("##")
+                .pattern("#S")
+                .define('#', Tags.Items.INGOTS_GOLD)
+                .define('S', Items.STICK)
+                .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.DIAMOND_KITCHEN_KNIFE.get())
+                .pattern("##")
+                .pattern("#S")
+                .define('#', Tags.Items.GEMS_DIAMOND)
+                .define('S', Items.STICK)
+                .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.NETHERITE_KITCHEN_KNIFE.get())
+                .pattern("##")
+                .pattern("#S")
+                .define('#', Tags.Items.INGOTS_NETHERITE)
                 .define('S', Items.STICK)
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
@@ -123,6 +149,10 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
 
+        simpleCookingRecipe(ModItems.RAW_LAMB_CHOPS.get(), ModItems.COOKED_LAMB_CHOPS.get(), 0.35F, consumer);
+        simpleCookingRecipe(ModItems.RAW_COW_OFFAL.get(), ModItems.COOKED_COW_OFFAL.get(), 0.35F, consumer);
+        simpleCookingRecipe(ModItems.RAW_PORK_BELLY.get(), ModItems.COOKED_PORK_BELLY.get(), 0.35F, consumer);
+
         addCookStool(ModItems.COOK_STOOL_OAK, Blocks.OAK_PLANKS).save(consumer);
         addCookStool(ModItems.COOK_STOOL_SPRUCE, Blocks.SPRUCE_PLANKS).save(consumer);
         addCookStool(ModItems.COOK_STOOL_ACACIA, Blocks.ACACIA_PLANKS).save(consumer);
@@ -152,10 +182,23 @@ public class ModRecipeGenerator extends RecipeProvider {
         PotRecipeBuilder.builder().addInput(ModItems.FRIED_EGG.get(), ModItems.FRIED_EGG.get(), ModItems.TOMATO.get(), ModItems.TOMATO.get())
                 .setNeedBowl(true).setResult(ModItems.SCRAMBLE_EGG_WITH_TOMATOES.get()).save(consumer);
 
-        ChoppingBoardBuilder.builder().setIngredient(Items.MUTTON).setResult(Items.COOKED_MUTTON, 3)
-                .setCutCount(4).setModelId(modLoc("mutton")).save(consumer);
+        ChoppingBoardBuilder.builder().setIngredient(Items.MUTTON).setResult(ModItems.RAW_LAMB_CHOPS.get(), 2)
+                .setCutCount(4).setModelId(modLoc("raw_lamb_chops")).save(consumer);
+        ChoppingBoardBuilder.builder().setIngredient(Items.TROPICAL_FISH).setResult(ModItems.SASHIMI.get(), 2)
+                .setCutCount(3).setModelId(modLoc("sashimi")).save(consumer);
+        ChoppingBoardBuilder.builder().setIngredient(Items.BEEF).setResult(ModItems.RAW_COW_OFFAL.get(), 2)
+                .setCutCount(4).setModelId(modLoc("raw_cow_offal")).save(consumer);
+        ChoppingBoardBuilder.builder().setIngredient(Items.PORKCHOP).setResult(ModItems.RAW_PORK_BELLY.get(), 2)
+                .setCutCount(4).setModelId(modLoc("raw_pork_belly")).save(consumer);
 
         this.addFoodBiteRecipe(consumer);
+    }
+
+    public void simpleCookingRecipe(ItemLike input, ItemLike output, float experience, Consumer<FinishedRecipe> consumer) {
+        simpleCookingRecipe(consumer, "smoking", RecipeSerializer.SMOKING_RECIPE, 100, input, output, experience);
+        simpleCookingRecipe(consumer, "campfire_cooking", RecipeSerializer.CAMPFIRE_COOKING_RECIPE, 600, input, output, experience);
+        simpleCookingRecipe(consumer, "smelting", RecipeSerializer.SMELTING_RECIPE, 200, input, output, experience);
+        PotRecipeBuilder.builder().addInput(input).setResult(output.asItem()).save(consumer);
     }
 
     private void addFoodBiteRecipe(Consumer<FinishedRecipe> consumer) {
@@ -222,6 +265,18 @@ public class ModRecipeGenerator extends RecipeProvider {
         PotRecipeBuilder.builder().addInput(Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL,
                         Items.ENDER_EYE, Items.ENDER_EYE, Items.ENDER_EYE)
                 .setNeedBowl(true).setResult(FoodBiteRegistry.SWEET_AND_SOUR_ENDER_PEARLS, 3).save(consumer, "sweet_and_sour_ender_pearls_3");
+
+        PotRecipeBuilder.builder().addInput(Ingredient.of(TagItem.CHILI), Ingredient.of(TagItem.CHILI),
+                        Ingredient.of(Items.CHICKEN), Ingredient.of(Items.CHICKEN), Ingredient.of(Items.CHICKEN), Ingredient.of(Items.CHICKEN),
+                        Ingredient.of(Items.BLAZE_POWDER))
+                .setNeedBowl(true).setResult(FoodBiteRegistry.SPICY_CHICKEN).save(consumer, "spicy_chicken_blaze_powder");
+        PotRecipeBuilder.builder().addInput(Ingredient.of(TagItem.CHILI), Ingredient.of(TagItem.CHILI), Ingredient.of(TagItem.CHILI),
+                        Ingredient.of(Items.CHICKEN), Ingredient.of(Items.CHICKEN), Ingredient.of(Items.CHICKEN), Ingredient.of(Items.CHICKEN))
+                .setNeedBowl(true).setResult(FoodBiteRegistry.SPICY_CHICKEN).save(consumer, "spicy_chicken");
+
+        PotRecipeBuilder.builder().addInput(Ingredient.of(TagItem.CHILI), Ingredient.of(TagItem.CHILI),
+                        Ingredient.of(Items.CHICKEN), Ingredient.of(Items.CHICKEN), Ingredient.of(Items.CHICKEN), Ingredient.of(Items.CHICKEN))
+                .setNeedBowl(true).setResult(FoodBiteRegistry.YAKITORI).save(consumer);
     }
 
     private void addSingleItemRecipe(Item inputItem, Item outputItem, Consumer<FinishedRecipe> consumer) {

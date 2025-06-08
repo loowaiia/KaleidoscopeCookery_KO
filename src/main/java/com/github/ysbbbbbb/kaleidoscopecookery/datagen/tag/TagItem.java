@@ -24,6 +24,8 @@ public class TagItem extends ItemTagsProvider {
     public static final TagKey<Item> OIL = TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "oil"));
     public static final TagKey<Item> POT_INGREDIENT = TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "pot_ingredient"));
     public static final TagKey<Item> STRAW_HAT = TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "straw_hat"));
+    public static final TagKey<Item> KITCHEN_KNIFE = TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "kitchen_knife"));
+    public static final TagKey<Item> CHILI = TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "chili"));
 
     public TagItem(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pLookupProvider,
                    CompletableFuture<TagLookup<Block>> pBlockTags, @Nullable ExistingFileHelper existingFileHelper) {
@@ -36,8 +38,13 @@ public class TagItem extends ItemTagsProvider {
         tag(EXTINGUISH_STOVE).addTag(ItemTags.SHOVELS);
         tag(OIL).add(ModItems.OIL.get());
         tag(ItemTags.SHOVELS).add(ModItems.KITCHEN_SHOVEL.get());
-        tag(ItemTags.SWORDS).add(ModItems.KITCHEN_KNIFE.get());
+        tag(KITCHEN_KNIFE).add(ModItems.IRON_KITCHEN_KNIFE.get(),
+                ModItems.GOLD_KITCHEN_KNIFE.get(),
+                ModItems.DIAMOND_KITCHEN_KNIFE.get(),
+                ModItems.NETHERITE_KITCHEN_KNIFE.get());
+        tag(ItemTags.SWORDS).addTag(KITCHEN_KNIFE);
         tag(STRAW_HAT).add(ModItems.STRAW_HAT.get(), ModItems.STRAW_HAT_FLOWER.get());
+        tag(CHILI).add(ModItems.RED_CHILI.get(), ModItems.GREEN_CHILI.get());
         addPotIngredient();
     }
 

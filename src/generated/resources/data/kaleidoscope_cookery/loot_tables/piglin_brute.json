@@ -7,9 +7,7 @@
         {
           "condition": "kaleidoscope_cookery:advance_entity_match_tool",
           "predicate": {
-            "items": [
-              "kaleidoscope_cookery:kitchen_knife"
-            ]
+            "tag": "kaleidoscope_cookery:kitchen_knife"
           },
           "slot": "mainhand"
         }

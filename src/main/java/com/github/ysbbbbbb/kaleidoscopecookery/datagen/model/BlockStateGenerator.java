@@ -64,9 +64,15 @@ public class BlockStateGenerator extends BlockStateProvider {
 
         simpleBlock(ModBlocks.OIL_BLOCK.get());
 
-        getVariantBuilder(ModBlocks.TOMATO_CROP.get()).forAllStates(state -> {
+        crop(ModBlocks.TOMATO_CROP,"tomato");
+        crop(ModBlocks.CHILI_CROP,"chili");
+        crop(ModBlocks.LETTUCE_CROP,"lettuce");
+    }
+
+    public void crop(RegistryObject<Block> block, String name) {
+        getVariantBuilder(block.get()).forAllStates(state -> {
             int age = state.getValue(CropBlock.AGE);
-            ResourceLocation file = modLoc("block/crop/tomato_stage" + age);
+            ResourceLocation file = modLoc("block/crop/%s/stage%d".formatted(name, age));
             return ConfiguredModel.builder()
                     .modelFile(new ModelFile.UncheckedModelFile(file))
                     .build();

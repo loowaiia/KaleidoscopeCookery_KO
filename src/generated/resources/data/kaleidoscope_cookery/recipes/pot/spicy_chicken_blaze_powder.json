@@ -1,0 +1,32 @@
+{
+  "type": "kaleidoscope_cookery:pot",
+  "ingredients": [
+    {
+      "tag": "kaleidoscope_cookery:chili"
+    },
+    {
+      "tag": "kaleidoscope_cookery:chili"
+    },
+    {
+      "item": "minecraft:chicken"
+    },
+    {
+      "item": "minecraft:chicken"
+    },
+    {
+      "item": "minecraft:chicken"
+    },
+    {
+      "item": "minecraft:chicken"
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    }
+  ],
+  "need_bowl": true,
+  "result": {
+    "item": "kaleidoscope_cookery:spicy_chicken"
+  },
+  "stir_fry_count": 3,
+  "time": 200
+}

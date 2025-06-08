@@ -27,7 +27,10 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent("stove", modLoc("block/stove"));
         withExistingParent("pot", modLoc("block/pot"));
 
-        handheldItem(ModItems.KITCHEN_KNIFE.get());
+        handheldItem(ModItems.IRON_KITCHEN_KNIFE.get());
+        handheldItem(ModItems.GOLD_KITCHEN_KNIFE.get());
+        handheldItem(ModItems.DIAMOND_KITCHEN_KNIFE.get());
+        handheldItem(ModItems.NETHERITE_KITCHEN_KNIFE.get());
         handheldItem(ModItems.KITCHEN_SHOVEL.get());
 
         basicItem(ModItems.OIL.get());
@@ -38,6 +41,19 @@ public class ItemModelGenerator extends ItemModelProvider {
         basicItem(ModItems.STRAW_HAT.get());
         basicItem(ModItems.STRAW_HAT_FLOWER.get());
         basicItem(ModItems.TOMATO_SEED.get());
+        basicItem(ModItems.SASHIMI.get());
+        basicItem(ModItems.RAW_LAMB_CHOPS.get());
+        basicItem(ModItems.RAW_COW_OFFAL.get());
+        basicItem(ModItems.RAW_PORK_BELLY.get());
+        basicItem(ModItems.COOKED_LAMB_CHOPS.get());
+        basicItem(ModItems.COOKED_COW_OFFAL.get());
+        basicItem(ModItems.COOKED_PORK_BELLY.get());
+        basicItem(ModItems.RED_CHILI.get());
+        basicItem(ModItems.GREEN_CHILI.get());
+        basicItem(ModItems.CHILI_SEED.get());
+        basicItem(ModItems.LETTUCE.get());
+        basicItem(ModItems.LETTUCE_SEED.get());
+        basicItem(ModItems.CATERPILLAR.get());
 
         FoodBiteRegistry.FOOD_DATA_MAP.forEach((key, value) -> {
             Item item = ForgeRegistries.ITEMS.getValue(key);

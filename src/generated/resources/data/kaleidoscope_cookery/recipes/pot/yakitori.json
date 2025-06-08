@@ -1,0 +1,29 @@
+{
+  "type": "kaleidoscope_cookery:pot",
+  "ingredients": [
+    {
+      "tag": "kaleidoscope_cookery:chili"
+    },
+    {
+      "tag": "kaleidoscope_cookery:chili"
+    },
+    {
+      "item": "minecraft:chicken"
+    },
+    {
+      "item": "minecraft:chicken"
+    },
+    {
+      "item": "minecraft:chicken"
+    },
+    {
+      "item": "minecraft:chicken"
+    }
+  ],
+  "need_bowl": true,
+  "result": {
+    "item": "kaleidoscope_cookery:yakitori"
+  },
+  "stir_fry_count": 3,
+  "time": 200
+}

@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.ChoppingBoardBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -52,7 +53,7 @@ public class ChoppingBoardBlock extends HorizontalDirectionalBlock implements En
             if (choppingBoard.onTakeOut(player)) {
                 return InteractionResult.SUCCESS;
             }
-            if (mainHandItem.is(ModItems.KITCHEN_KNIFE.get()) && player.getOffhandItem().isEmpty()) {
+            if (mainHandItem.is(TagItem.KITCHEN_KNIFE) && player.getOffhandItem().isEmpty()) {
                 choppingBoard.playParticlesSound();
                 return InteractionResult.SUCCESS;
             }

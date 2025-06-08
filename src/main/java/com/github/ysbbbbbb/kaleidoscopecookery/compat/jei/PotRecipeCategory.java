@@ -1,13 +1,13 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.compat.jei;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.recipe.PotRecipe;
 import com.google.common.collect.Lists;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -23,6 +23,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +32,7 @@ import java.util.List;
 public class PotRecipeCategory implements IRecipeCategory<PotRecipe> {
     public static final RecipeType<PotRecipe> TYPE = RecipeType.create(KaleidoscopeCookery.MOD_ID, "pot", PotRecipe.class);
     private static final MutableComponent TITLE = Component.translatable("block.kaleidoscope_cookery.pot");
-    public static final int WIDTH = 128;
+    public static final int WIDTH = 150;
     public static final int HEIGHT = 76;
     private final IGuiHelper guiHelper;
     private final IDrawable slotDraw;
@@ -56,15 +57,18 @@ public class PotRecipeCategory implements IRecipeCategory<PotRecipe> {
     @Override
     public void draw(PotRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         Component stirFryCount = Component.translatable("jei.kaleidoscope_cookery.pot.stir_fry_count", recipe.getStirFryCount());
-        drawCenteredString(guiGraphics, stirFryCount, 64, 65);
-
+        drawCenteredString(guiGraphics, stirFryCount, WIDTH / 2, 66);
         if (recipe.isNeedBowl()) {
-            Component needBowl = Component.translatable("jei.kaleidoscope_cookery.pot.need_bowl");
-            drawCenteredString(guiGraphics, needBowl, 95, 48);
+            guiHelper.createDrawableItemLike(Items.BOWL).draw(guiGraphics, 128, 5);
         }
-
-        IDrawableStatic recipeArrow = guiHelper.getRecipeArrow();
-        recipeArrow.draw(guiGraphics, 72, 23);
+        int scale = 3;
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(0, -1.5, 0);
+        guiGraphics.pose().scale(scale, scale, 1);
+        guiHelper.createDrawableItemLike(ModBlocks.STOVE.get()).draw(guiGraphics, 70 / scale, 12 / scale);
+        guiGraphics.pose().translate(0.5, 0, 8);
+        guiHelper.createDrawableItemLike(ModBlocks.POT.get()).draw(guiGraphics, 70 / scale, -14 / scale);
+        guiGraphics.pose().popPose();
     }
 
     private void drawCenteredString(GuiGraphics guiGraphics, Component text, int centerX, int y) {
@@ -82,7 +86,7 @@ public class PotRecipeCategory implements IRecipeCategory<PotRecipe> {
             int yOffset = (i / 3) * 18 + 5;
             builder.addSlot(RecipeIngredientRole.INPUT, xOffset, yOffset).addIngredients(inputs.get(i)).setBackground(slotDraw, -1, -1);
         }
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 107, 23).addItemStack(output).setBackground(slotDraw, -1, -1);
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 128, 41).addItemStack(output).setBackground(slotDraw, -1, -1);
     }
 
     @Override
