@@ -30,6 +30,7 @@ public class ModCreativeTabs {
                 output.accept(ModItems.RED_CHILI.get());
                 output.accept(ModItems.GREEN_CHILI.get());
                 output.accept(ModItems.LETTUCE.get());
+                output.accept(ModItems.RICE_PANICLE.get());
                 output.accept(ModItems.CATERPILLAR.get());
                 output.accept(ModItems.FRIED_EGG.get());
                 output.accept(ModItems.SCRAMBLE_EGG_WITH_TOMATOES.get());
@@ -58,6 +59,7 @@ public class ModCreativeTabs {
                 output.accept(ModItems.TOMATO_SEED.get());
                 output.accept(ModItems.CHILI_SEED.get());
                 output.accept(ModItems.LETTUCE_SEED.get());
+                output.accept(ModItems.RICE_SEED.get());
                 FoodBiteRegistry.FOOD_DATA_MAP.keySet().forEach(foodName -> {
                     var foodItem = ForgeRegistries.ITEMS.getValue(foodName);
                     if (foodItem != null) {

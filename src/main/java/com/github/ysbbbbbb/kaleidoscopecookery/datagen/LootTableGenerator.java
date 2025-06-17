@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.RiceCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
@@ -83,6 +84,17 @@ public class LootTableGenerator {
             this.add(ModBlocks.LETTUCE_CROP.get(), createCropDrops(ModBlocks.LETTUCE_CROP.get(), ModItems.LETTUCE.get(), ModItems.LETTUCE_SEED.get(), lettuceBuilder)
                     .withPool(LootPool.lootPool().when(lettuceBuilder).add(caterpillar)));
 
+            Item riceSeed = ModItems.RICE_SEED.get();
+            LootItemCondition.Builder riceCropBuilder = createRiceCropBuilder();
+            var countFunction = SetItemCountFunction.setCount(UniformGenerator.between(2, 4));
+            LootPool.Builder ricePanicle = LootPool.lootPool().add(LootItem.lootTableItem(ModItems.RICE_PANICLE.get())
+                    .when(riceCropBuilder).apply(countFunction).otherwise(LootItem.lootTableItem(riceSeed)));
+            LootPool.Builder extraRiceSeeds = LootPool.lootPool().add(LootItem.lootTableItem(riceSeed))
+                    .when(riceCropBuilder).apply(ApplyBonusCount.addBonusBinomialDistributionCount(Enchantments.BLOCK_FORTUNE, 0.5714286F, 3));
+
+            this.add(ModBlocks.RICE_CROP.get(), this.applyExplosionDecay(ModBlocks.RICE_CROP.get(),
+                    LootTable.lootTable().withPool(ricePanicle).withPool(extraRiceSeeds)));
+
             FoodBiteRegistry.FOOD_DATA_MAP.forEach(this::dropFoodBite);
         }
 
@@ -94,6 +106,15 @@ public class LootTableGenerator {
                     .setProperties(property);
         }
 
+        private LootItemCondition.Builder createRiceCropBuilder() {
+            StatePropertiesPredicate.Builder property = StatePropertiesPredicate.Builder
+                    .properties().hasProperty(CropBlock.AGE, 7)
+                    .hasProperty(RiceCropBlock.LOCATION, RiceCropBlock.DOWN);
+            return LootItemBlockStatePropertyCondition
+                    .hasBlockStateProperties(ModBlocks.RICE_CROP.get())
+                    .setProperties(property);
+        }
+
         @Override
         public void generate(BiConsumer<ResourceLocation, LootTable.Builder> output) {
             super.generate(output);
@@ -102,8 +123,9 @@ public class LootTableGenerator {
             var tomato = getSeed(ModItems.TOMATO_SEED.get());
             var chili = getSeed(ModItems.CHILI_SEED.get());
             var lettuce = getSeed(ModItems.LETTUCE_SEED.get());
+            var rice = getSeed(ModItems.RICE_SEED.get());
             LootTable.Builder dropSeed = LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
-                    .add(tomato).add(chili).add(lettuce));
+                    .add(tomato).add(chili).add(lettuce).add(rice));
             output.accept(modLoc("straw_hat_seed_drop"), dropSeed);
         }
 

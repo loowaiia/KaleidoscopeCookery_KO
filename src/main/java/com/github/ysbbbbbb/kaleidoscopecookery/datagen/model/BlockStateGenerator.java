@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen.model;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.PotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.StoveBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.RiceCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
@@ -64,15 +65,35 @@ public class BlockStateGenerator extends BlockStateProvider {
 
         simpleBlock(ModBlocks.OIL_BLOCK.get());
 
-        crop(ModBlocks.TOMATO_CROP,"tomato");
-        crop(ModBlocks.CHILI_CROP,"chili");
-        crop(ModBlocks.LETTUCE_CROP,"lettuce");
+        crop(ModBlocks.TOMATO_CROP, "tomato");
+        crop(ModBlocks.CHILI_CROP, "chili");
+        crop(ModBlocks.LETTUCE_CROP, "lettuce");
+
+        riceCrop();
     }
 
     public void crop(RegistryObject<Block> block, String name) {
         getVariantBuilder(block.get()).forAllStates(state -> {
             int age = state.getValue(CropBlock.AGE);
             ResourceLocation file = modLoc("block/crop/%s/stage%d".formatted(name, age));
+            return ConfiguredModel.builder()
+                    .modelFile(new ModelFile.UncheckedModelFile(file))
+                    .build();
+        });
+    }
+
+    public void riceCrop() {
+        getVariantBuilder(ModBlocks.RICE_CROP.get()).forAllStates(state -> {
+            int age = state.getValue(CropBlock.AGE);
+            int location = state.getValue(RiceCropBlock.LOCATION);
+            ResourceLocation file;
+            if (location == RiceCropBlock.DOWN) {
+                file = modLoc("block/crop/rice/stage%d_down".formatted(age));
+            } else if (location == RiceCropBlock.MIDDLE) {
+                file = modLoc("block/crop/rice/stage%d_middle".formatted(age));
+            } else {
+                file = modLoc("block/crop/rice/stage%d_up".formatted(age));
+            }
             return ConfiguredModel.builder()
                     .modelFile(new ModelFile.UncheckedModelFile(file))
                     .build();

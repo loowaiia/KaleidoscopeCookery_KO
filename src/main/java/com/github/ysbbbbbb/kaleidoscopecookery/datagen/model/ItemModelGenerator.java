@@ -41,6 +41,8 @@ public class ItemModelGenerator extends ItemModelProvider {
         basicItem(ModItems.STRAW_HAT.get());
         basicItem(ModItems.STRAW_HAT_FLOWER.get());
         basicItem(ModItems.TOMATO_SEED.get());
+        basicItem(ModItems.RICE_SEED.get());
+        basicItem(ModItems.RICE_PANICLE.get());
         basicItem(ModItems.SASHIMI.get());
         basicItem(ModItems.RAW_LAMB_CHOPS.get());
         basicItem(ModItems.RAW_COW_OFFAL.get());

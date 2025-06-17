@@ -32,7 +32,7 @@ public class ChiliCropBlock extends BaseCropBlock {
                     pLevel.addFreshEntity(extra);
                 }
                 pLevel.playSound(null, pPos.getX(), pPos.getY(), pPos.getZ(), SoundEvents.CROP_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
-                pLevel.setBlock(pPos, this.getStateForAge(5), Block.UPDATE_ALL);
+                pLevel.setBlock(pPos, this.getStateForAge(5), Block.UPDATE_CLIENTS);
             }
             return InteractionResult.SUCCESS;
         }

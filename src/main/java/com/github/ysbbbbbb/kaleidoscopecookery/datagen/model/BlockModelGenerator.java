@@ -37,6 +37,8 @@ public class BlockModelGenerator extends BlockModelProvider {
         crop("tomato", 8);
         crop("chili", 8);
         crop("lettuce", 8);
+
+        riceCrop();
     }
 
     public void cookStool(String name) {
@@ -48,6 +50,17 @@ public class BlockModelGenerator extends BlockModelProvider {
         IntStream.range(0, stage).forEach(i -> {
             String id = "block/crop/%s/stage%d".formatted(name, i);
             cross(id, modLoc(id)).renderType("cutout");
+        });
+    }
+
+    public void riceCrop() {
+        IntStream.range(0, 8).forEach(i -> {
+            String down = "block/crop/rice/stage%d_down".formatted(i);
+            String middle = "block/crop/rice/stage%d_middle".formatted(i);
+            String up = "block/crop/rice/stage%d_up".formatted(i);
+            cross(down, modLoc(down)).renderType("cutout");
+            cross(middle, modLoc(middle)).renderType("cutout");
+            cross(up, modLoc(up)).renderType("cutout");
         });
     }
 }

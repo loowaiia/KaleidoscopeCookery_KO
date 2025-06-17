@@ -141,6 +141,11 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
 
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ModItems.RICE_PANICLE.get(), 1)
+                .requires(ModItems.RICE_SEED.get())
+                .unlockedBy("has_rice_seed", has(ModItems.RICE_SEED.get()))
+                .save(consumer);
+
         netheriteSmithing(consumer, ModItems.DIAMOND_KITCHEN_KNIFE.get(), RecipeCategory.TOOLS, ModItems.NETHERITE_KITCHEN_KNIFE.get());
 
         simpleCookingRecipe(ModItems.RAW_LAMB_CHOPS.get(), ModItems.COOKED_LAMB_CHOPS.get(), 0.35F, consumer);
