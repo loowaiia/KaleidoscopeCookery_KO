@@ -4,15 +4,12 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -168,7 +165,7 @@ public class RiceCropBlock extends BaseCropBlock implements LiquidBlockContainer
     }
 
     private boolean isThreeBlock(BlockState state) {
-        return state.getValue(AGE) > 3;
+        return state.is(this) && state.getValue(AGE) > 3;
     }
 
     @Override
@@ -222,19 +219,7 @@ public class RiceCropBlock extends BaseCropBlock implements LiquidBlockContainer
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (state.getValue(AGE) >= this.getMaxAge()) {
-            if (!level.isClientSide) {
-                ItemStack stack = this.result.get().getDefaultInstance();
-                stack.setCount(Mth.nextInt(level.random, 1, 3));
-                ItemEntity entity = new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), stack);
-                level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.CROP_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
-                entity.setPickUpDelay(10);
-                level.addFreshEntity(entity);
-                setCropState(level, pos.below(state.getValue(LOCATION)), 5);
-            }
-            return InteractionResult.SUCCESS;
-        }
-        return super.use(state, level, pos, player, hand, hitResult);
+        return InteractionResult.PASS;
     }
 
     @Override

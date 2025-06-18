@@ -1,0 +1,191 @@
+package com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder;
+
+import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
+import com.github.ysbbbbbb.kaleidoscopecookery.recipe.serializer.StockpotRecipeSerializer;
+import com.google.common.collect.Lists;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
+
+public class StockpotRecipeBuilder implements RecipeBuilder {
+    private static final String NAME = "stockpot";
+    private List<Ingredient> ingredients = Lists.newArrayList();
+    private @Nullable EntityType<?> inputEntityType;
+    private ItemStack result = ItemStack.EMPTY;
+    private int time = StockpotRecipeSerializer.DEFAULT_TIME;
+    private Fluid soupBase = StockpotRecipeSerializer.DEFAULT_SOUP_BASE;
+    private ResourceLocation cookingTexture = StockpotRecipeSerializer.DEFAULT_COOKING_TEXTURE;
+    private ResourceLocation finishedTexture = StockpotRecipeSerializer.DEFAULT_FINISHED_TEXTURE;
+
+    public static StockpotRecipeBuilder builder() {
+        return new StockpotRecipeBuilder();
+    }
+
+    public StockpotRecipeBuilder addInput(ItemLike... itemLikes) {
+        for (ItemLike itemLike : itemLikes) {
+            this.ingredients.add(Ingredient.of(itemLike));
+        }
+        return this;
+    }
+
+    public StockpotRecipeBuilder addInput(Ingredient... ingredients) {
+        this.ingredients.addAll(Arrays.asList(ingredients));
+        return this;
+    }
+
+    public StockpotRecipeBuilder addInputEntityType(EntityType<?> entityType) {
+        this.inputEntityType = entityType;
+        return this;
+    }
+
+    public StockpotRecipeBuilder setResult(Item result) {
+        this.result = new ItemStack(result);
+        return this;
+    }
+
+    public StockpotRecipeBuilder setResult(ResourceLocation result) {
+        this.result = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(result)));
+        return this;
+    }
+
+    public StockpotRecipeBuilder setResult(ItemStack result) {
+        this.result = result;
+        return this;
+    }
+
+    public StockpotRecipeBuilder setTime(int time) {
+        this.time = time;
+        return this;
+    }
+
+    public StockpotRecipeBuilder setSoupBase(Fluid soupBase) {
+        this.soupBase = soupBase;
+        return this;
+    }
+
+    public StockpotRecipeBuilder setCookingTexture(ResourceLocation cookingTexture) {
+        this.cookingTexture = cookingTexture;
+        return this;
+    }
+
+    public StockpotRecipeBuilder setFinishedTexture(ResourceLocation finishedTexture) {
+        this.finishedTexture = finishedTexture;
+        return this;
+    }
+
+    @Override
+    public RecipeBuilder unlockedBy(String criterionName, CriterionTriggerInstance criterionTrigger) {
+        return this;
+    }
+
+    @Override
+    public RecipeBuilder group(@Nullable String groupName) {
+        return this;
+    }
+
+    @Override
+    public Item getResult() {
+        return this.result.getItem();
+    }
+
+    @Override
+    public void save(Consumer<FinishedRecipe> output) {
+        String path = RecipeBuilder.getDefaultRecipeId(this.getResult()).getPath();
+        ResourceLocation filePath = new ResourceLocation(KaleidoscopeCookery.MOD_ID, NAME + "/" + path);
+        this.save(output, filePath);
+    }
+
+    @Override
+    public void save(Consumer<FinishedRecipe> output, String recipeId) {
+        ResourceLocation filePath = new ResourceLocation(KaleidoscopeCookery.MOD_ID, NAME + "/" + recipeId);
+        this.save(output, filePath);
+    }
+
+    @Override
+    public void save(Consumer<FinishedRecipe> recipeOutput, ResourceLocation id) {
+        recipeOutput.accept(new StockpotFinishedRecipe(id, this.ingredients, this.inputEntityType, this.result,
+                this.time, this.soupBase, this.cookingTexture, this.finishedTexture));
+    }
+
+    public class StockpotFinishedRecipe implements FinishedRecipe {
+        private final ResourceLocation id;
+        private final List<Ingredient> ingredients;
+        private final @Nullable EntityType<?> inputEntityType;
+        private final ItemStack result;
+        private final int time;
+        private final Fluid soupBase;
+        private final ResourceLocation cookingTexture;
+        private final ResourceLocation finishedTexture;
+
+        public StockpotFinishedRecipe(ResourceLocation id, List<Ingredient> ingredients, @Nullable EntityType<?> inputEntityType, ItemStack result,
+                                      int time, Fluid soupBase, ResourceLocation cookingTexture, ResourceLocation finishedTexture) {
+            this.id = id;
+            this.ingredients = ingredients;
+            this.inputEntityType = inputEntityType;
+            this.result = result;
+            this.time = time;
+            this.soupBase = soupBase;
+            this.cookingTexture = cookingTexture;
+            this.finishedTexture = finishedTexture;
+        }
+
+        @Override
+        public void serializeRecipeData(JsonObject json) {
+            JsonArray ingredientsJson = new JsonArray();
+            this.ingredients.stream().filter(i -> i != Ingredient.EMPTY).forEach(i -> ingredientsJson.add(i.toJson()));
+            json.add("ingredients", ingredientsJson);
+            if (this.inputEntityType != null) {
+                json.addProperty("input_entity_type", Objects.requireNonNull(ForgeRegistries.ENTITY_TYPES.getKey(this.inputEntityType)).toString());
+            }
+
+            JsonObject itemJson = new JsonObject();
+            itemJson.addProperty("item", Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.result.getItem())).toString());
+            json.add("result", itemJson);
+
+            json.addProperty("time", this.time);
+            json.addProperty("soup_base", Objects.requireNonNull(ForgeRegistries.FLUIDS.getKey(this.soupBase)).toString());
+            json.addProperty("cooking_texture", this.cookingTexture.toString());
+            json.addProperty("finished_texture", this.finishedTexture.toString());
+        }
+
+        @Override
+        public ResourceLocation getId() {
+            return this.id;
+        }
+
+        @Override
+        public RecipeSerializer<?> getType() {
+            return ModRecipes.STOCKPOT_SERIALIZER.get();
+        }
+
+        @Override
+        @Nullable
+        public JsonObject serializeAdvancement() {
+            return null;
+        }
+
+        @Override
+        @Nullable
+        public ResourceLocation getAdvancementId() {
+            return null;
+        }
+    }
+}

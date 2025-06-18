@@ -26,6 +26,7 @@ public class ItemModelGenerator extends ItemModelProvider {
     protected void registerModels() {
         withExistingParent("stove", modLoc("block/stove"));
         withExistingParent("pot", modLoc("block/pot"));
+        withExistingParent("stockpot", modLoc("block/stockpot"));
 
         handheldItem(ModItems.IRON_KITCHEN_KNIFE.get());
         handheldItem(ModItems.GOLD_KITCHEN_KNIFE.get());
@@ -50,6 +51,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         basicItem(ModItems.COOKED_LAMB_CHOPS.get());
         basicItem(ModItems.COOKED_COW_OFFAL.get());
         basicItem(ModItems.COOKED_PORK_BELLY.get());
+        basicItem(ModItems.COOKED_RICE.get());
         basicItem(ModItems.RED_CHILI.get());
         basicItem(ModItems.GREEN_CHILI.get());
         basicItem(ModItems.CHILI_SEED.get());

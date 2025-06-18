@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen.model;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.PotBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.StockpotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.StoveBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.RiceCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
@@ -38,6 +39,14 @@ public class BlockStateGenerator extends BlockStateProvider {
                 return new ModelFile.UncheckedModelFile(modLoc("block/pot_has_oil"));
             } else {
                 return new ModelFile.UncheckedModelFile(modLoc("block/pot"));
+            }
+        });
+
+        horizontalBlock(ModBlocks.STOCKPOT.get(), blockState -> {
+            if (blockState.getValue(StockpotBlock.HAS_LID)) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/stockpot_has_lid"));
+            } else {
+                return new ModelFile.UncheckedModelFile(modLoc("block/stockpot"));
             }
         });
 

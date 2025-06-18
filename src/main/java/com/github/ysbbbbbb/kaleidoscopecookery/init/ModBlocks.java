@@ -9,6 +9,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.RiceCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.ChoppingBoardBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.FruitBasketBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.PotBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.StockpotBlockEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -21,6 +22,7 @@ public class ModBlocks {
 
     public static RegistryObject<Block> STOVE = BLOCKS.register("stove", StoveBlock::new);
     public static RegistryObject<Block> POT = BLOCKS.register("pot", PotBlock::new);
+    public static RegistryObject<Block> STOCKPOT = BLOCKS.register("stockpot", StockpotBlock::new);
     public static RegistryObject<Block> FRUIT_BASKET = BLOCKS.register("fruit_basket", FruitBasketBlock::new);
     public static RegistryObject<Block> CHOPPING_BOARD = BLOCKS.register("chopping_board", ChoppingBoardBlock::new);
     public static RegistryObject<Block> TOMATO_CROP = BLOCKS.register("tomato_crop", () -> new BaseCropBlock(ModItems.TOMATO, ModItems.TOMATO_SEED));
@@ -43,6 +45,8 @@ public class ModBlocks {
 
     public static RegistryObject<BlockEntityType<PotBlockEntity>> POT_BE = BLOCK_ENTITIES.register("pot",
             () -> BlockEntityType.Builder.of(PotBlockEntity::new, POT.get()).build(null));
+    public static RegistryObject<BlockEntityType<StockpotBlockEntity>> STOCKPOT_BE = BLOCK_ENTITIES.register("stockpot",
+            () -> BlockEntityType.Builder.of(StockpotBlockEntity::new, STOCKPOT.get()).build(null));
     public static RegistryObject<BlockEntityType<FruitBasketBlockEntity>> FRUIT_BASKET_BE = BLOCK_ENTITIES.register("fruit_basket",
             () -> BlockEntityType.Builder.of(FruitBasketBlockEntity::new, FRUIT_BASKET.get()).build(null));
     public static RegistryObject<BlockEntityType<ChoppingBoardBlockEntity>> CHOPPING_BOARD_BE = BLOCK_ENTITIES.register("chopping_board",

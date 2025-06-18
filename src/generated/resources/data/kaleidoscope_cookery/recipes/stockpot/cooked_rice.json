@@ -1,0 +1,21 @@
+{
+  "type": "kaleidoscope_cookery:stockpot",
+  "cooking_texture": "kaleidoscope_cookery:stockpot/default_cooking",
+  "finished_texture": "kaleidoscope_cookery:stockpot/rice_finished",
+  "ingredients": [
+    {
+      "item": "kaleidoscope_cookery:rice"
+    },
+    {
+      "item": "kaleidoscope_cookery:rice"
+    },
+    {
+      "item": "kaleidoscope_cookery:rice"
+    }
+  ],
+  "result": {
+    "item": "kaleidoscope_cookery:cooked_rice"
+  },
+  "soup_base": "minecraft:water",
+  "time": 300
+}

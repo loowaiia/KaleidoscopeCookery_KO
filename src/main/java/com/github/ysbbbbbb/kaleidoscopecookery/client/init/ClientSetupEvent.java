@@ -5,6 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.client.gui.overlay.PotOverlay;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.block.ChoppingBoardBlockEntityRender;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.block.FruitBasketBlockEntityRender;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.block.PotBlockEntityRender;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.render.block.StockpotBlockEntityRender;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
@@ -27,6 +28,7 @@ public class ClientSetupEvent {
         BlockEntityRenderers.register(ModBlocks.POT_BE.get(), PotBlockEntityRender::new);
         BlockEntityRenderers.register(ModBlocks.FRUIT_BASKET_BE.get(), FruitBasketBlockEntityRender::new);
         BlockEntityRenderers.register(ModBlocks.CHOPPING_BOARD_BE.get(), ChoppingBoardBlockEntityRender::new);
+        BlockEntityRenderers.register(ModBlocks.STOCKPOT_BE.get(), StockpotBlockEntityRender::new);
     }
 
     @SubscribeEvent

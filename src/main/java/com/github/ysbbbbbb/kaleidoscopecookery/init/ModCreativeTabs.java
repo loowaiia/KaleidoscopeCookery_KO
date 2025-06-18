@@ -18,6 +18,8 @@ public class ModCreativeTabs {
             .displayItems((par, output) -> {
                 output.accept(ModItems.STOVE.get());
                 output.accept(ModItems.POT.get());
+                output.accept(ModItems.STOCKPOT.get());
+                output.accept(ModItems.STOCKPOT_LID.get());
                 output.accept(ModItems.OIL.get());
                 output.accept(ModItems.OIL_BLOCK.get());
                 output.accept(ModItems.IRON_KITCHEN_KNIFE.get());
@@ -41,6 +43,7 @@ public class ModCreativeTabs {
                 output.accept(ModItems.COOKED_LAMB_CHOPS.get());
                 output.accept(ModItems.COOKED_COW_OFFAL.get());
                 output.accept(ModItems.COOKED_PORK_BELLY.get());
+                output.accept(ModItems.COOKED_RICE.get());
                 output.accept(ModItems.COOK_STOOL_OAK.get());
                 output.accept(ModItems.COOK_STOOL_SPRUCE.get());
                 output.accept(ModItems.COOK_STOOL_ACACIA.get());

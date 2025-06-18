@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder.ChoppingBoardBuilder;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder.PotRecipeBuilder;
+import com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder.StockpotRecipeBuilder;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
@@ -189,6 +190,9 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .setCutCount(4).setModelId(modLoc("raw_cow_offal")).save(consumer);
         ChoppingBoardBuilder.builder().setIngredient(Items.PORKCHOP).setResult(ModItems.RAW_PORK_BELLY.get(), 2)
                 .setCutCount(4).setModelId(modLoc("raw_pork_belly")).save(consumer);
+
+        StockpotRecipeBuilder.builder().addInput(ModItems.RICE_SEED.get(), ModItems.RICE_SEED.get(), ModItems.RICE_SEED.get())
+                .setFinishedTexture(modLoc("stockpot/rice_finished")).setResult(ModItems.COOKED_RICE.get()).save(consumer);
 
         this.addFoodBiteRecipe(consumer);
     }

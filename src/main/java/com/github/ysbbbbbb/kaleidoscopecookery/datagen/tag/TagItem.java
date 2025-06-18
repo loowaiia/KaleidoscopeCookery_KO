@@ -50,6 +50,7 @@ public class TagItem extends ItemTagsProvider {
 
     private void addPotIngredient() {
         tag(POT_INGREDIENT).add(
+                ModItems.RICE_SEED.get(),
                 STONE,
                 GRANITE,
                 POLISHED_GRANITE,

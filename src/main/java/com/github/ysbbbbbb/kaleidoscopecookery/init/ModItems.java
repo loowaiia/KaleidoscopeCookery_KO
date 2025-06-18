@@ -15,6 +15,8 @@ public final class ModItems {
 
     public static RegistryObject<Item> STOVE = ITEMS.register("stove", () -> new BlockItem(ModBlocks.STOVE.get(), new Item.Properties()));
     public static RegistryObject<Item> POT = ITEMS.register("pot", () -> new BlockItem(ModBlocks.POT.get(), new Item.Properties()));
+    public static RegistryObject<Item> STOCKPOT = ITEMS.register("stockpot", () -> new BlockItem(ModBlocks.STOCKPOT.get(), new Item.Properties()));
+    public static RegistryObject<Item> STOCKPOT_LID = ITEMS.register("stockpot_lid", () -> new Item(new Item.Properties().stacksTo(1)));
     public static RegistryObject<Item> OIL = ITEMS.register("oil", () -> new Item(new Item.Properties()));
     public static RegistryObject<Item> OIL_BLOCK = ITEMS.register("oil_block", () -> new BlockItem(ModBlocks.OIL_BLOCK.get(), new Item.Properties()));
 
@@ -62,4 +64,5 @@ public final class ModItems {
     public static RegistryObject<Item> COOKED_LAMB_CHOPS = ITEMS.register("cooked_lamb_chops", () -> new Item(new Item.Properties().food(ModFoods.COOKED_LAMB_CHOPS)));
     public static RegistryObject<Item> COOKED_COW_OFFAL = ITEMS.register("cooked_cow_offal", () -> new Item(new Item.Properties().food(ModFoods.COOKED_COW_OFFAL)));
     public static RegistryObject<Item> COOKED_PORK_BELLY = ITEMS.register("cooked_pork_belly", () -> new Item(new Item.Properties().food(ModFoods.COOKED_PORK_BELLY)));
+    public static RegistryObject<Item> COOKED_RICE = ITEMS.register("cooked_rice", () -> new Item(new Item.Properties().food(ModFoods.COOKED_RICE)));
 }
