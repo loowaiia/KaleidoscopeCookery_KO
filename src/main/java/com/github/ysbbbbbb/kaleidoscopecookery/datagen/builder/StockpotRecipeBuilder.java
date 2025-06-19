@@ -10,6 +10,7 @@ import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -44,6 +45,14 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
     public StockpotRecipeBuilder addInput(ItemLike... itemLikes) {
         for (ItemLike itemLike : itemLikes) {
             this.ingredients.add(Ingredient.of(itemLike));
+        }
+        return this;
+    }
+
+    @SafeVarargs
+    public final StockpotRecipeBuilder addInput(TagKey<Item>... ingredients) {
+        for (TagKey<Item> tagKey : ingredients) {
+            this.ingredients.add(Ingredient.of(tagKey));
         }
         return this;
     }

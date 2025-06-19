@@ -32,11 +32,16 @@ public class FoodBiteRegistry {
     public static ResourceLocation SPICY_CHICKEN;
     public static ResourceLocation YAKITORI;
     public static ResourceLocation CRYSTAL_LAMB_CHOP;
-    public static ResourceLocation FROGSPAWN_JELLY;
     public static ResourceLocation NETHER_STYLE_SASHIMI;
     public static ResourceLocation PAN_SEARED_KNIGHT_STEAK;
     public static ResourceLocation STARGAZY_PIE;
     public static ResourceLocation SWEET_AND_SOUR_ENDER_PEARLS;
+    public static ResourceLocation BLAZE_LAMB_CHOP;
+    public static ResourceLocation FROST_LAMB_CHOP;
+    public static ResourceLocation END_STYLE_SASHIMI;
+    public static ResourceLocation DESERT_STYLE_SASHIMI;
+    public static ResourceLocation TUNDRA_STYLE_SASHIMI;
+    public static ResourceLocation COLD_STYLE_SASHIMI;
 
     public static void init() {
         FoodBiteRegistry registry = new FoodBiteRegistry();
@@ -84,9 +89,6 @@ public class FoodBiteRegistry {
                 .maxBites(3).setFood(3, 0.2f)
                 .addLootItems(Items.AMETHYST_SHARD));
 
-        FROGSPAWN_JELLY = registry.registerFoodData("frogspawn_jelly", FoodData
-                .maxBites(3).setFood(3, 0.2f));
-
         NETHER_STYLE_SASHIMI = registry.registerFoodData("nether_style_sashimi", FoodData
                 .maxBites(4).setFood(4, 0.2f)
                 .addLootItems(Items.CRIMSON_FUNGUS, Items.WARPED_FUNGUS));
@@ -100,6 +102,29 @@ public class FoodBiteRegistry {
 
         SWEET_AND_SOUR_ENDER_PEARLS = registry.registerFoodData("sweet_and_sour_ender_pearls", FoodData
                 .maxBites(3).setFood(3, 0.2f));
+
+        BLAZE_LAMB_CHOP = registry.registerFoodData("blaze_lamb_chop", FoodData
+                .maxBites(3).setFood(3, 0.2f)
+                .addLootItems(Items.BLAZE_ROD));
+
+        FROST_LAMB_CHOP = registry.registerFoodData("frost_lamb_chop", FoodData
+                .maxBites(3).setFood(3, 0.2f)
+                .addLootItems(Items.BLUE_ICE));
+
+        END_STYLE_SASHIMI = registry.registerFoodData("end_style_sashimi", FoodData
+                .maxBites(4).setFood(4, 0.2f)
+                .addLootItems(Items.CHORUS_FRUIT));
+
+        DESERT_STYLE_SASHIMI = registry.registerFoodData("desert_style_sashimi", FoodData
+                .maxBites(4).setFood(4, 0.2f)
+                .addLootItems(Items.CACTUS));
+
+        TUNDRA_STYLE_SASHIMI = registry.registerFoodData("tundra_style_sashimi", FoodData
+                .maxBites(4).setFood(4, 0.2f));
+
+        COLD_STYLE_SASHIMI = registry.registerFoodData("cold_style_sashimi", FoodData
+                .maxBites(4).setFood(4, 0.2f)
+                .addLootItems(Items.SNOWBALL, Items.SNOWBALL));
     }
 
     public ResourceLocation registerFoodData(ResourceLocation foodName, FoodData data) {

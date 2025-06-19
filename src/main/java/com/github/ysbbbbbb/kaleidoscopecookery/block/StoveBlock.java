@@ -1,6 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -112,7 +112,7 @@ public class StoveBlock extends HorizontalDirectionalBlock {
     public InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult pHit) {
         ItemStack itemInHand = player.getItemInHand(hand);
         // 点燃炉灶
-        if (!blockState.getValue(LIT) && itemInHand.is(TagItem.LIT_STOVE)) {
+        if (!blockState.getValue(LIT) && itemInHand.is(TagMod.LIT_STOVE)) {
             level.setBlockAndUpdate(pos, blockState.setValue(LIT, true));
             if (itemInHand.is(Items.FIRE_CHARGE)) {
                 level.playSound(player, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
@@ -124,7 +124,7 @@ public class StoveBlock extends HorizontalDirectionalBlock {
             return InteractionResult.SUCCESS;
         }
         // 熄灭
-        if (blockState.getValue(LIT) && itemInHand.is(TagItem.EXTINGUISH_STOVE)) {
+        if (blockState.getValue(LIT) && itemInHand.is(TagMod.EXTINGUISH_STOVE)) {
             level.setBlockAndUpdate(pos, blockState.setValue(LIT, false));
             level.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.8F);
             itemInHand.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));

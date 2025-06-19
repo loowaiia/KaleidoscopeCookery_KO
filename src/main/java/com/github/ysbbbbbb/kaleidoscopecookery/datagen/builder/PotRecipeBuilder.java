@@ -9,6 +9,7 @@ import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -17,7 +18,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -56,8 +56,22 @@ public class PotRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
+    @SafeVarargs
+    public final PotRecipeBuilder addInput(TagKey<Item>... tag) {
+        for (TagKey<Item> tagKey : tag) {
+            if (tagKey != null) {
+                this.ingredients.add(Ingredient.of(tagKey));
+            }
+        }
+        return this;
+    }
+
     public PotRecipeBuilder addInput(Ingredient... ingredients) {
-        this.ingredients.addAll(Arrays.asList(ingredients));
+        for (Ingredient ingredient : ingredients) {
+            if (ingredient != Ingredient.EMPTY) {
+                this.ingredients.add(ingredient);
+            }
+        }
         return this;
     }
 

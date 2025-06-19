@@ -7,6 +7,7 @@ import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -31,6 +32,11 @@ public class ChoppingBoardBuilder implements RecipeBuilder {
     }
 
     public ChoppingBoardBuilder setIngredient(ItemLike itemLike) {
+        this.ingredient = Ingredient.of(itemLike);
+        return this;
+    }
+
+    public ChoppingBoardBuilder setIngredient(TagKey<Item> itemLike) {
         this.ingredient = Ingredient.of(itemLike);
         return this;
     }

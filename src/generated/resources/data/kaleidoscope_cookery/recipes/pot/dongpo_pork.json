@@ -2,19 +2,19 @@
   "type": "kaleidoscope_cookery:pot",
   "ingredients": [
     {
-      "item": "minecraft:porkchop"
-    },
-    {
-      "item": "minecraft:porkchop"
-    },
-    {
-      "item": "minecraft:porkchop"
-    },
-    {
       "item": "minecraft:bamboo"
     },
     {
       "item": "minecraft:bamboo"
+    },
+    {
+      "tag": "forge:raw_pork"
+    },
+    {
+      "tag": "forge:raw_pork"
+    },
+    {
+      "tag": "forge:raw_pork"
     }
   ],
   "need_bowl": true,

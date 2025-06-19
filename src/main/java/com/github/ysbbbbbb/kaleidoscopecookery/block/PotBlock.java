@@ -5,6 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoundType;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -90,7 +91,7 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock,
 
         // 放油
         if (!state.getValue(HAS_OIL)) {
-            if (itemInHand.is(TagItem.OIL)) {
+            if (itemInHand.is(TagMod.OIL)) {
                 placeOil(state, level, pos, player, itemInHand, random);
                 return InteractionResult.SUCCESS;
             } else {

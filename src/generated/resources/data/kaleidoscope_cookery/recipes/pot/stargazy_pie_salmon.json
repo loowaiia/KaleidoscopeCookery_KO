@@ -5,19 +5,19 @@
       "item": "minecraft:pumpkin_pie"
     },
     {
-      "item": "minecraft:salmon"
+      "tag": "forge:raw_fishes/salmon"
     },
     {
-      "item": "minecraft:salmon"
+      "tag": "forge:raw_fishes/salmon"
     },
     {
-      "item": "minecraft:salmon"
+      "tag": "forge:raw_fishes/salmon"
     },
     {
-      "item": "minecraft:salmon"
+      "tag": "forge:raw_fishes/salmon"
     },
     {
-      "item": "minecraft:salmon"
+      "tag": "forge:raw_fishes/salmon"
     }
   ],
   "need_bowl": true,

@@ -2,16 +2,16 @@
   "type": "kaleidoscope_cookery:pot",
   "ingredients": [
     {
-      "item": "kaleidoscope_cookery:fried_egg"
+      "tag": "forge:cooked_eggs"
     },
     {
-      "item": "kaleidoscope_cookery:fried_egg"
+      "tag": "forge:cooked_eggs"
     },
     {
-      "item": "kaleidoscope_cookery:tomato"
+      "tag": "forge:crops/tomato"
     },
     {
-      "item": "kaleidoscope_cookery:tomato"
+      "tag": "forge:crops/tomato"
     }
   ],
   "need_bowl": true,

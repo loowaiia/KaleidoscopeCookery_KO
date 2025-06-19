@@ -4,6 +4,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.recipe.ChoppingBoardRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -87,7 +88,7 @@ public class ChoppingBoardBlockEntity extends BlockEntity {
         if (this.currentCutCount >= this.maxCutCount) {
             return false;
         }
-        if (player.getMainHandItem().is(TagItem.KITCHEN_KNIFE)) {
+        if (player.getMainHandItem().is(TagMod.KITCHEN_KNIFE)) {
             this.currentCutCount++;
             this.playParticlesSound();
             this.refresh();

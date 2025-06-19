@@ -2,10 +2,10 @@
   "type": "kaleidoscope_cookery:pot",
   "ingredients": [
     {
-      "item": "minecraft:cod"
+      "tag": "forge:raw_fishes/cod"
     },
     {
-      "item": "minecraft:salmon"
+      "tag": "forge:raw_fishes/salmon"
     }
   ],
   "need_bowl": true,

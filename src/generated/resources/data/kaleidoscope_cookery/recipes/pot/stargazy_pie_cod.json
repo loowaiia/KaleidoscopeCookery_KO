@@ -5,19 +5,19 @@
       "item": "minecraft:pumpkin_pie"
     },
     {
-      "item": "minecraft:cod"
+      "tag": "forge:raw_fishes/cod"
     },
     {
-      "item": "minecraft:cod"
+      "tag": "forge:raw_fishes/cod"
     },
     {
-      "item": "minecraft:cod"
+      "tag": "forge:raw_fishes/cod"
     },
     {
-      "item": "minecraft:cod"
+      "tag": "forge:raw_fishes/cod"
     },
     {
-      "item": "minecraft:cod"
+      "tag": "forge:raw_fishes/cod"
     }
   ],
   "need_bowl": true,

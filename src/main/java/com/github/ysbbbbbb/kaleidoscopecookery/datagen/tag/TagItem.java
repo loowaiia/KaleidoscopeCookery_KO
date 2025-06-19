@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagCommon;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -16,16 +17,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
+import static com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod.*;
 import static net.minecraft.world.item.Items.*;
 
 public class TagItem extends ItemTagsProvider {
-    public static final TagKey<Item> LIT_STOVE = TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "lit_stove"));
-    public static final TagKey<Item> EXTINGUISH_STOVE = TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "extinguish_stove"));
-    public static final TagKey<Item> OIL = TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "oil"));
     public static final TagKey<Item> POT_INGREDIENT = TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "pot_ingredient"));
-    public static final TagKey<Item> STRAW_HAT = TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "straw_hat"));
-    public static final TagKey<Item> KITCHEN_KNIFE = TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "kitchen_knife"));
-    public static final TagKey<Item> CHILI = TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "chili"));
 
     public TagItem(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pLookupProvider,
                    CompletableFuture<TagLookup<Block>> pBlockTags, @Nullable ExistingFileHelper existingFileHelper) {
@@ -34,18 +30,51 @@ public class TagItem extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        tag(LIT_STOVE).add(FLINT_AND_STEEL, FIRE_CHARGE);
-        tag(EXTINGUISH_STOVE).addTag(ItemTags.SHOVELS);
+        // 模组 tag
         tag(OIL).add(ModItems.OIL.get());
-        tag(ItemTags.SHOVELS).add(ModItems.KITCHEN_SHOVEL.get());
+        tag(LIT_STOVE).add(FLINT_AND_STEEL, FIRE_CHARGE);
+        tag(STRAW_HAT).add(ModItems.STRAW_HAT.get(),
+                ModItems.STRAW_HAT_FLOWER.get());
         tag(KITCHEN_KNIFE).add(ModItems.IRON_KITCHEN_KNIFE.get(),
                 ModItems.GOLD_KITCHEN_KNIFE.get(),
                 ModItems.DIAMOND_KITCHEN_KNIFE.get(),
                 ModItems.NETHERITE_KITCHEN_KNIFE.get());
-        tag(ItemTags.SWORDS).addTag(KITCHEN_KNIFE);
-        tag(STRAW_HAT).add(ModItems.STRAW_HAT.get(), ModItems.STRAW_HAT_FLOWER.get());
-        tag(CHILI).add(ModItems.RED_CHILI.get(), ModItems.GREEN_CHILI.get());
         addPotIngredient();
+
+        // 原版兼容
+        tag(ItemTags.SHOVELS).add(ModItems.KITCHEN_SHOVEL.get());
+        tag(ItemTags.SWORDS).addTag(KITCHEN_KNIFE);
+        tag(EXTINGUISH_STOVE).addTag(ItemTags.SHOVELS);
+
+        // 社区兼容
+        tag(TagCommon.CROPS_CHILI_PEPPER).add(ModItems.RED_CHILI.get(), ModItems.GREEN_CHILI.get());
+        tag(TagCommon.CROPS_TOMATO).add(ModItems.TOMATO.get());
+        tag(TagCommon.CROPS_LETTUCE).add(ModItems.LETTUCE.get());
+        tag(TagCommon.CROPS_RICE).add(ModItems.RICE_SEED.get());
+
+        tag(TagCommon.VEGETABLES_CHILI_PEPPER).add(ModItems.RED_CHILI.get(), ModItems.GREEN_CHILI.get());
+        tag(TagCommon.VEGETABLES_TOMATO).add(ModItems.TOMATO.get());
+        tag(TagCommon.VEGETABLES_LETTUCE).add(ModItems.LETTUCE.get());
+
+        tag(TagCommon.SEEDS_CHILI_PEPPER).add(ModItems.CHILI_SEED.get());
+        tag(TagCommon.SEEDS_TOMATO).add(ModItems.TOMATO_SEED.get());
+        tag(TagCommon.SEEDS_LETTUCE).add(ModItems.LETTUCE_SEED.get());
+        tag(TagCommon.SEEDS_RICE).add(ModItems.RICE_SEED.get());
+
+        tag(TagCommon.GRAIN_RICE).add(ModItems.RICE_SEED.get());
+
+        tag(TagCommon.COOKED_BEEF).add(ModItems.COOKED_COW_OFFAL.get(), COOKED_BEEF);
+        tag(TagCommon.COOKED_PORK).add(ModItems.COOKED_PORK_BELLY.get(), COOKED_PORKCHOP);
+        tag(TagCommon.COOKED_MUTTON).add(ModItems.COOKED_LAMB_CHOPS.get(), COOKED_MUTTON);
+        tag(TagCommon.COOKED_EGGS).add(ModItems.FRIED_EGG.get());
+        tag(TagCommon.COOKED_RICE).add(ModItems.COOKED_RICE.get());
+
+        tag(TagCommon.RAW_BEEF).add(ModItems.RAW_COW_OFFAL.get(), BEEF);
+        tag(TagCommon.RAW_CHICKEN).add(CHICKEN);
+        tag(TagCommon.RAW_PORK).add(ModItems.RAW_PORK_BELLY.get(), PORKCHOP);
+        tag(TagCommon.RAW_MUTTON).add(ModItems.RAW_LAMB_CHOPS.get(), MUTTON);
+        tag(TagCommon.EGGS).add(EGG, TURTLE_EGG);
+        tag(TagCommon.RAW_FISHES_TROPICAL).add(ModItems.SASHIMI.get());
     }
 
     private void addPotIngredient() {

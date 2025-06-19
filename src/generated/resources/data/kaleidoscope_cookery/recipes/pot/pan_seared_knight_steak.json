@@ -11,12 +11,6 @@
       "item": "minecraft:bone"
     },
     {
-      "item": "minecraft:beef"
-    },
-    {
-      "item": "minecraft:beef"
-    },
-    {
       "item": "minecraft:sweet_berries"
     },
     {
@@ -24,6 +18,12 @@
     },
     {
       "item": "minecraft:sweet_berries"
+    },
+    {
+      "tag": "forge:raw_beef"
+    },
+    {
+      "tag": "forge:raw_beef"
     }
   ],
   "need_bowl": true,

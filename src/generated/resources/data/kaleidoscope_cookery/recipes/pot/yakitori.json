@@ -2,22 +2,22 @@
   "type": "kaleidoscope_cookery:pot",
   "ingredients": [
     {
-      "tag": "kaleidoscope_cookery:chili"
+      "tag": "forge:crops/chilipepper"
     },
     {
-      "tag": "kaleidoscope_cookery:chili"
+      "tag": "forge:crops/chilipepper"
     },
     {
-      "item": "minecraft:chicken"
+      "tag": "forge:raw_chicken"
     },
     {
-      "item": "minecraft:chicken"
+      "tag": "forge:raw_chicken"
     },
     {
-      "item": "minecraft:chicken"
+      "tag": "forge:raw_chicken"
     },
     {
-      "item": "minecraft:chicken"
+      "tag": "forge:raw_chicken"
     }
   ],
   "need_bowl": true,

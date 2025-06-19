@@ -7,6 +7,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.loot.AdvanceBlockMatchTool;
 import com.github.ysbbbbbb.kaleidoscopecookery.loot.AdvanceEntityMatchTool;
 import com.google.common.collect.Sets;
@@ -130,7 +131,7 @@ public class LootTableGenerator {
         }
 
         private LootPoolSingletonContainer.Builder<?> getSeed(ItemLike item) {
-            ItemPredicate hasHat = ItemPredicate.Builder.item().of(TagItem.STRAW_HAT).build();
+            ItemPredicate hasHat = ItemPredicate.Builder.item().of(TagMod.STRAW_HAT).build();
             LootItemCondition.Builder hatMatches = AdvanceBlockMatchTool.toolMatches(EquipmentSlot.HEAD, hasHat);
             return LootItem.lootTableItem(item)
                     .when(LootItemRandomChanceCondition.randomChance(0.125F)).when(hatMatches)
@@ -192,7 +193,7 @@ public class LootTableGenerator {
             super.generate(output);
 
             // 厨具刀杀猪掉油
-            ItemPredicate hasKnife = ItemPredicate.Builder.item().of(TagItem.KITCHEN_KNIFE).build();
+            ItemPredicate hasKnife = ItemPredicate.Builder.item().of(TagMod.KITCHEN_KNIFE).build();
             LootItemCondition.Builder toolMatches = AdvanceEntityMatchTool.toolMatches(EquipmentSlot.MAINHAND, hasKnife);
             var count = SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F));
             var looting = LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F));

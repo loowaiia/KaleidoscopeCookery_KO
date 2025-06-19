@@ -11,7 +11,7 @@
       "item": "minecraft:amethyst_shard"
     },
     {
-      "item": "minecraft:mutton"
+      "tag": "forge:raw_mutton"
     }
   ],
   "need_bowl": true,

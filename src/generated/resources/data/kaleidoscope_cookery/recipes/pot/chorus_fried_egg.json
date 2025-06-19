@@ -5,7 +5,19 @@
       "item": "minecraft:chorus_fruit"
     },
     {
-      "item": "kaleidoscope_cookery:fried_egg"
+      "item": "minecraft:chorus_fruit"
+    },
+    {
+      "item": "minecraft:chorus_fruit"
+    },
+    {
+      "tag": "forge:cooked_eggs"
+    },
+    {
+      "tag": "forge:cooked_eggs"
+    },
+    {
+      "tag": "forge:cooked_eggs"
     }
   ],
   "need_bowl": true,

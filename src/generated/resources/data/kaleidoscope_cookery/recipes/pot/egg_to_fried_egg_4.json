@@ -1,0 +1,24 @@
+{
+  "type": "kaleidoscope_cookery:pot",
+  "ingredients": [
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:eggs"
+    }
+  ],
+  "need_bowl": false,
+  "result": {
+    "count": 4,
+    "item": "kaleidoscope_cookery:fried_egg"
+  },
+  "stir_fry_count": 3,
+  "time": 200
+}
