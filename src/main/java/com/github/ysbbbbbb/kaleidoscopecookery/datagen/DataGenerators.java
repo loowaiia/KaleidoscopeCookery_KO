@@ -47,5 +47,7 @@ public class DataGenerators {
         generator.addProvider(event.includeClient(), new BlockModelGenerator(pack, helper));
         generator.addProvider(event.includeClient(), new BlockStateGenerator(pack, helper));
         generator.addProvider(event.includeClient(), new ItemModelGenerator(pack, helper));
+
+        generator.addProvider(event.includeServer(), new SoundDefinitionsGenerator(pack, helper));
     }
 }

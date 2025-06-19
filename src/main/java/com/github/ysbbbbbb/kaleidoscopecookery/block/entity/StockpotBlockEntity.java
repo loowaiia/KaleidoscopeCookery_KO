@@ -1,10 +1,9 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.entity;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.block.StockpotBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.particle.StockpotParticleOptions;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import com.github.ysbbbbbb.kaleidoscopecookery.mixin.MobBucketItemAccessor;
 import com.github.ysbbbbbb.kaleidoscopecookery.recipe.StockpotRecipe;
@@ -16,9 +15,12 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
@@ -26,12 +28,14 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -45,7 +49,7 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
     public static final int COOKING = 2;
     public static final int FINISHED = 3;
 
-    public static final int MAX_TAKEOUT_COUNT = 3;
+    public static final int MAX_TAKEOUT_COUNT = 9;
 
     private static final String INPUT_ENTITY_TYPE = "InputEntityType";
     private static final String RESULT = "Result";
@@ -55,6 +59,9 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
     private static final String TAKEOUT_COUNT = "TakeoutCount";
     private static final String COOKING_TEXTURE = "CookingTexture";
     private static final String FINISHED_TEXTURE = "FinishedTexture";
+    private static final String SOUP_BASE_BUBBLE_COLOR = "SoupBaseBubbleColor";
+    private static final String COOKING_BUBBLE_COLOR = "CookingBubbleColor";
+    private static final String FINISHED_BUBBLE_COLOR = "FinishedBubbleColor";
 
     private NonNullList<ItemStack> items = NonNullList.withSize(StockpotRecipe.RECIPES_SIZE, ItemStack.EMPTY);
     // 由于原版没有很好的记录桶内生物类型的方式，这里使用一个 Item 来记录
@@ -66,6 +73,9 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
     private int takeoutCount = 0;
     private @Nullable ResourceLocation cookingTexture;
     private @Nullable ResourceLocation finishedTexture;
+    private int soupBaseBubbleColor = 0xFFFFFF;
+    private int cookingBubbleColor = StockpotRecipeSerializer.DEFAULT_COOKING_BUBBLE_COLOR;
+    private int finishedBubbleColor = StockpotRecipeSerializer.DEFAULT_FINISHED_BUBBLE_COLOR;
 
     // 仅用于客户端渲染缓存对象
     public Entity renderEntity = null;
@@ -81,13 +91,59 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
     }
 
     public void tick() {
-        // 没有盖子时，不进行任何 tick
-        if (level == null || !level.getBlockState(worldPosition).getValue(StockpotBlock.HAS_LID)) {
+        if (level == null) {
             return;
         }
         // 下方没有火源
-        if (!level.getBlockState(worldPosition.below()).hasProperty(BlockStateProperties.LIT) ||
-            !level.getBlockState(worldPosition.below()).getValue(BlockStateProperties.LIT)) {
+        BlockState belowState = level.getBlockState(worldPosition.below());
+        if (!belowState.hasProperty(BlockStateProperties.LIT) || !belowState.getValue(BlockStateProperties.LIT)) {
+            return;
+        }
+        // 盖子
+        Boolean hasLid = level.getBlockState(worldPosition).getValue(StockpotBlock.HAS_LID);
+
+        // 音效播放
+        if (status != PUT_SOUP_BASE && level.getGameTime() % 15 == 0) {
+            float volume = hasLid ? 0.075f : 0.2f;
+            float pitch = hasLid ? 0.1f + level.random.nextFloat() * 0.05f : 1f + level.random.nextFloat() * 0.1f;
+            level.playSound(null,
+                    worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5,
+                    ModSounds.BLOCK_STOCKPOT.get(), SoundSource.BLOCKS, volume, pitch);
+        }
+
+        // 没有盖子时，不进行任何 tick，只生成粒子
+        if (!hasLid) {
+            if (status != PUT_SOUP_BASE && level instanceof ServerLevel serverLevel && level.random.nextFloat() < 0.25F) {
+                int color = status == COOKING ? this.cookingBubbleColor : status == FINISHED ? this.finishedBubbleColor : this.soupBaseBubbleColor;
+                serverLevel.sendParticles(new StockpotParticleOptions(Vec3.fromRGB24(color).toVector3f(), 1f),
+                        worldPosition.getX() + 0.25 + (level.random.nextFloat() * 0.5F),
+                        worldPosition.getY() + 0.375,
+                        worldPosition.getZ() + 0.25 + (level.random.nextFloat() * 0.5F),
+                        2,
+                        (level.random.nextFloat() - 0.5) * 0.1F,
+                        0,
+                        (level.random.nextFloat() - 0.5) * 0.1F,
+                        0.01f
+                );
+            }
+            return;
+        }
+        // 有盖子时，生成白色粒子
+        if (status != PUT_SOUP_BASE && level instanceof ServerLevel serverLevel && level.random.nextFloat() < 0.05F) {
+            RandomSource random = serverLevel.random;
+            serverLevel.sendParticles(ModParticles.COOKING.get(),
+                    worldPosition.getX() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
+                    worldPosition.getY() + 0.375 + random.nextDouble() / 3,
+                    worldPosition.getZ() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
+                    1, 0, 0, 0, 0.05);
+        }
+
+        // 如果当前状态是放入素材，且素材不为空
+        // 因为 isEmpty() 可能耗时，所以每隔 5 tick 检查一次
+        if (status == PUT_INGREDIENT && this.level.getGameTime() % 5 == 0 && !this.isEmpty()) {
+            this.setRecipe(level);
+            status = COOKING;
+            this.refresh();
             return;
         }
 
@@ -98,8 +154,8 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
                 return;
             }
             status = FINISHED;
+            inputEntityType = null;
             currentTick = -1;
-            takeoutCount = MAX_TAKEOUT_COUNT;
             soupBase = Fluids.EMPTY;
             this.items.clear();
             this.refresh();
@@ -117,26 +173,10 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
 
         // 第一种情况，放上盖子
         if (!hasLid && mainHandItem.is(ModItems.STOCKPOT_LID.get())) {
-            // 开始检查是否处于可以煮的状态
-            if (status == PUT_INGREDIENT && !this.isEmpty()) {
-                level.getRecipeManager().getRecipeFor(ModRecipes.STOCKPOT_RECIPE, this, level).ifPresentOrElse(recipe -> {
-                    this.result = recipe.assemble(this, level.registryAccess());
-                    this.currentTick = recipe.getTime();
-                    this.cookingTexture = recipe.getCookingTexture();
-                    this.finishedTexture = recipe.getFinishedTexture();
-                }, () -> {
-                    this.result = FoodBiteRegistry.getItem(FoodBiteRegistry.SUSPICIOUS_STIR_FRY).getDefaultInstance();
-                    this.currentTick = StockpotRecipeSerializer.DEFAULT_TIME;
-                    this.cookingTexture = StockpotRecipeSerializer.DEFAULT_COOKING_TEXTURE;
-                    this.finishedTexture = StockpotRecipeSerializer.DEFAULT_FINISHED_TEXTURE;
-                });
-                status = COOKING;
-                this.refresh();
-            }
-            // 扣上盖子
             mainHandItem.shrink(1);
             this.setChanged();
             level.setBlockAndUpdate(worldPosition, blockState.setValue(StockpotBlock.HAS_LID, true));
+            player.playSound(SoundEvents.LANTERN_PLACE, 0.5F, 0.5F);
             return;
         }
 
@@ -146,7 +186,28 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
             player.setItemInHand(InteractionHand.MAIN_HAND, lid);
             this.setChanged();
             level.setBlockAndUpdate(worldPosition, blockState.setValue(StockpotBlock.HAS_LID, false));
+            player.playSound(SoundEvents.LANTERN_BREAK, 0.5F, 0.5F);
         }
+    }
+
+    private void setRecipe(Level levelIn) {
+        levelIn.getRecipeManager().getRecipeFor(ModRecipes.STOCKPOT_RECIPE, this, levelIn).ifPresentOrElse(recipe -> {
+            this.result = recipe.assemble(this, levelIn.registryAccess());
+            this.currentTick = recipe.getTime();
+            this.cookingTexture = recipe.getCookingTexture();
+            this.finishedTexture = recipe.getFinishedTexture();
+            this.cookingBubbleColor = recipe.getCookingBubbleColor();
+            this.finishedBubbleColor = recipe.getFinishedBubbleColor();
+            this.takeoutCount = Math.min(this.result.getCount(), MAX_TAKEOUT_COUNT);
+        }, () -> {
+            this.result = FoodBiteRegistry.getItem(FoodBiteRegistry.SUSPICIOUS_STIR_FRY).getDefaultInstance();
+            this.currentTick = StockpotRecipeSerializer.DEFAULT_TIME;
+            this.cookingTexture = StockpotRecipeSerializer.DEFAULT_COOKING_TEXTURE;
+            this.finishedTexture = StockpotRecipeSerializer.DEFAULT_FINISHED_TEXTURE;
+            this.cookingBubbleColor = StockpotRecipeSerializer.DEFAULT_COOKING_BUBBLE_COLOR;
+            this.finishedBubbleColor = StockpotRecipeSerializer.DEFAULT_FINISHED_BUBBLE_COLOR;
+            this.takeoutCount = 1;
+        });
     }
 
     public void onBucketClick(Player player) {
@@ -176,6 +237,15 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemUtils.createFilledResult(bucket, player, new ItemStack(Items.BUCKET)));
             this.soupBase = fluid;
             this.status = PUT_INGREDIENT;
+            // 仅判断水和熔岩
+            if (this.soupBase.is(FluidTags.WATER)) {
+                this.soupBaseBubbleColor = 0x3F76E4;
+            } else if (this.soupBase.is(FluidTags.LAVA)) {
+                this.soupBaseBubbleColor = 0xff7518;
+            } else {
+                // FIXME 该如何自定义？
+                this.soupBaseBubbleColor = 0xFFFFFF;
+            }
             this.refresh();
             return;
         }
@@ -254,11 +324,16 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
                 takeoutCount--;
                 if (takeoutCount <= 0) {
                     status = PUT_SOUP_BASE;
+                    this.inputEntityType = null;
                     this.items.clear();
                     this.result = ItemStack.EMPTY;
                     this.soupBase = Fluids.EMPTY;
                     this.cookingTexture = null;
                     this.finishedTexture = null;
+                    this.soupBaseBubbleColor = 0xffffff;
+                    this.cookingBubbleColor = StockpotRecipeSerializer.DEFAULT_COOKING_BUBBLE_COLOR;
+                    this.finishedBubbleColor = StockpotRecipeSerializer.DEFAULT_FINISHED_BUBBLE_COLOR;
+                    this.currentTick = -1;
                 }
                 this.refresh();
             }
@@ -293,6 +368,9 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
         if (this.finishedTexture != null) {
             tag.putString(FINISHED_TEXTURE, this.finishedTexture.toString());
         }
+        tag.putInt(SOUP_BASE_BUBBLE_COLOR, this.soupBaseBubbleColor);
+        tag.putInt(COOKING_BUBBLE_COLOR, this.cookingBubbleColor);
+        tag.putInt(FINISHED_BUBBLE_COLOR, this.finishedBubbleColor);
     }
 
     @Override
@@ -320,6 +398,9 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
         } else {
             this.finishedTexture = null;
         }
+        this.soupBaseBubbleColor = tag.getInt(SOUP_BASE_BUBBLE_COLOR);
+        this.cookingBubbleColor = tag.getInt(COOKING_BUBBLE_COLOR);
+        this.finishedBubbleColor = tag.getInt(FINISHED_BUBBLE_COLOR);
     }
 
     @Override
@@ -394,10 +475,6 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
 
     public int getStatus() {
         return status;
-    }
-
-    public int getCurrentTick() {
-        return currentTick;
     }
 
     public int getTakeoutCount() {

@@ -30,9 +30,12 @@ public class StockpotRecipe implements Recipe<StockpotBlockEntity> {
     private final Fluid soupBase;
     private final ResourceLocation cookingTexture;
     private final ResourceLocation finishedTexture;
+    private final int cookingBubbleColor;
+    private final int finishedBubbleColor;
 
     public StockpotRecipe(ResourceLocation id, List<Ingredient> ingredients, @Nullable EntityType<?> inputEntityType, ItemStack result,
-                          int time, Fluid soupBase, ResourceLocation cookingTexture, ResourceLocation finishedTexture) {
+                          int time, Fluid soupBase, ResourceLocation cookingTexture, ResourceLocation finishedTexture,
+                          int cookingBubbleColor, int finishedBubbleColor) {
         this.id = id;
         this.ingredients = NonNullList.of(Ingredient.EMPTY, fillInputs(ingredients));
         this.inputEntityType = inputEntityType;
@@ -41,6 +44,8 @@ public class StockpotRecipe implements Recipe<StockpotBlockEntity> {
         this.soupBase = soupBase;
         this.cookingTexture = cookingTexture;
         this.finishedTexture = finishedTexture;
+        this.cookingBubbleColor = cookingBubbleColor;
+        this.finishedBubbleColor = finishedBubbleColor;
     }
 
     @Override
@@ -112,6 +117,14 @@ public class StockpotRecipe implements Recipe<StockpotBlockEntity> {
     @Nullable
     public EntityType<?> getInputEntityType() {
         return inputEntityType;
+    }
+
+    public int getCookingBubbleColor() {
+        return cookingBubbleColor;
+    }
+
+    public int getFinishedBubbleColor() {
+        return finishedBubbleColor;
     }
 
     private Ingredient[] fillInputs(List<Ingredient> inputs) {

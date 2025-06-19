@@ -27,6 +27,8 @@ public class StockpotRecipeSerializer implements RecipeSerializer<StockpotRecipe
     public static final ResourceLocation DEFAULT_FINISHED_TEXTURE = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "stockpot/default_finished");
     public static final int DEFAULT_TIME = 300;
     public static final Fluid DEFAULT_SOUP_BASE = Fluids.WATER;
+    public static final int DEFAULT_COOKING_BUBBLE_COLOR = 0xCDBDA3;
+    public static final int DEFAULT_FINISHED_BUBBLE_COLOR = 0xCB8A6E;
 
     @Override
     public StockpotRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -45,7 +47,9 @@ public class StockpotRecipeSerializer implements RecipeSerializer<StockpotRecipe
         Fluid soupBase = getSoupBaseFromJson(json);
         ResourceLocation cookingTexture = new ResourceLocation(GsonHelper.getAsString(json, "cooking_texture", DEFAULT_COOKING_TEXTURE.toString()));
         ResourceLocation finishedTexture = new ResourceLocation(GsonHelper.getAsString(json, "finished_texture", DEFAULT_FINISHED_TEXTURE.toString()));
-        return new StockpotRecipe(recipeId, inputs, inputEntityType, result, time, soupBase, cookingTexture, finishedTexture);
+        int cookingBubbleColor = GsonHelper.getAsInt(json, "cooking_bubble_color", DEFAULT_COOKING_BUBBLE_COLOR);
+        int finishedBubbleColor = GsonHelper.getAsInt(json, "finished_bubble_color", DEFAULT_FINISHED_BUBBLE_COLOR);
+        return new StockpotRecipe(recipeId, inputs, inputEntityType, result, time, soupBase, cookingTexture, finishedTexture, cookingBubbleColor, finishedBubbleColor);
     }
 
     @Override
@@ -65,7 +69,10 @@ public class StockpotRecipeSerializer implements RecipeSerializer<StockpotRecipe
         Fluid soupBase = getSoupBaseFromNetwork(buf);
         ResourceLocation cookingTexture = buf.readResourceLocation();
         ResourceLocation finishedTexture = buf.readResourceLocation();
-        return new StockpotRecipe(recipeId, inputs, inputEntityType, result, time, soupBase, cookingTexture, finishedTexture);
+        int cookingBubbleColor = buf.readVarInt();
+        int finishedBubbleColor = buf.readVarInt();
+        return new StockpotRecipe(recipeId, inputs, inputEntityType, result, time, soupBase, cookingTexture, finishedTexture,
+                cookingBubbleColor, finishedBubbleColor);
     }
 
     @Override
@@ -83,6 +90,8 @@ public class StockpotRecipeSerializer implements RecipeSerializer<StockpotRecipe
         buffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.FLUIDS.getKey(recipe.getSoupBase())));
         buffer.writeResourceLocation(recipe.getCookingTexture());
         buffer.writeResourceLocation(recipe.getFinishedTexture());
+        buffer.writeVarInt(recipe.getCookingBubbleColor());
+        buffer.writeVarInt(recipe.getFinishedBubbleColor());
     }
 
     private Fluid getSoupBaseFromJson(JsonObject json) {

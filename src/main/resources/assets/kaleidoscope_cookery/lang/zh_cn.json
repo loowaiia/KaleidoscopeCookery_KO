@@ -79,5 +79,6 @@
   "tip.kaleidoscope_cookery.pot.done": "烹饪完成，料理已就绪!",
   "tip.kaleidoscope_cookery.pot.need_bowl": "请掏出碗来盛取!",
   "tip.kaleidoscope_cookery.pot.need_kitchen_shovel": "请用锅铲潜行盛取!",
-  "jei.kaleidoscope_cookery.pot.stir_fry_count": "至少翻炒 %s 次"
+  "jei.kaleidoscope_cookery.pot.stir_fry_count": "至少翻炒 %s 次",
+  "subtitles.kaleidoscope_cookery.block.stockpot": "汤锅声音"
 }

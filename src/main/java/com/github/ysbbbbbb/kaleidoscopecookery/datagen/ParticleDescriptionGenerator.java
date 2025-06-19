@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModParticles;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -14,5 +15,6 @@ public class ParticleDescriptionGenerator extends ParticleDescriptionProvider {
     @Override
     protected void addDescriptions() {
         this.spriteSet(ModParticles.COOKING.get(), new ResourceLocation("generic"), 8, true);
+        this.spriteSet(ModParticles.STOCKPOT.get(), new ResourceLocation(KaleidoscopeCookery.MOD_ID, "stockpot"), 5, false);
     }
 }

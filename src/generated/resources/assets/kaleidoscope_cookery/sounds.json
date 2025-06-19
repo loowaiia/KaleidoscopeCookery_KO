@@ -1,0 +1,14 @@
+{
+  "block.stockpot": {
+    "sounds": [
+      "kaleidoscope_cookery:block/stockpot/stockpot_0",
+      "kaleidoscope_cookery:block/stockpot/stockpot_1",
+      "kaleidoscope_cookery:block/stockpot/stockpot_2",
+      "kaleidoscope_cookery:block/stockpot/stockpot_3",
+      "kaleidoscope_cookery:block/stockpot/stockpot_4",
+      "kaleidoscope_cookery:block/stockpot/stockpot_5",
+      "kaleidoscope_cookery:block/stockpot/stockpot_6"
+    ],
+    "subtitle": "subtitles.kaleidoscope_cookery.block.stockpot"
+  }
+}

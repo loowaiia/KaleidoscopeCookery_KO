@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @SuppressWarnings("all")
 @Mixin(value = MobBucketItem.class)
 public interface MobBucketItemAccessor {
-    @Invoker("getFishType")
+    @Invoker(value = "getFishType", remap = false)
     EntityType<?> kaleidoscope$GetFishType();
 }

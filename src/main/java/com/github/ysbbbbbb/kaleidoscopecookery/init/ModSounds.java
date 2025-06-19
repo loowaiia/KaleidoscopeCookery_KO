@@ -1,10 +1,18 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, KaleidoscopeCookery.MOD_ID);
+
+    public static final RegistryObject<SoundEvent> BLOCK_STOCKPOT = registerSound("block.stockpot");
+
+    private static RegistryObject<SoundEvent> registerSound(String name) {
+        return SOUND_EVENTS.register(name, () -> SoundEvent.createFixedRangeEvent(new ResourceLocation(KaleidoscopeCookery.MOD_ID, name), 16.0F));
+    }
 }

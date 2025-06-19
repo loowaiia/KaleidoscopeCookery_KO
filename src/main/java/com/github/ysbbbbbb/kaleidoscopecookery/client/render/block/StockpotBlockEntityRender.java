@@ -55,7 +55,8 @@ public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBl
         } else if (status == StockpotBlockEntity.FINISHED) {
             int takeoutCount = stockpot.getTakeoutCount();
             TextureAtlasSprite sprite = atlas.apply(stockpot.getFinishedTexture());
-            renderSurface(sprite, 0xFFFFFFFF, poseStack, buffer, packedLight, 0.38f / 3 * takeoutCount);
+            int maxCount = Math.min(stockpot.getResult().getCount(), StockpotBlockEntity.MAX_TAKEOUT_COUNT);
+            renderSurface(sprite, 0xFFFFFFFF, poseStack, buffer, packedLight, 0.065f + 0.315f / maxCount * takeoutCount);
         }
     }
 

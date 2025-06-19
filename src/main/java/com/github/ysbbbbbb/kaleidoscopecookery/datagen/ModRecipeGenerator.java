@@ -192,7 +192,15 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .setCutCount(4).setModelId(modLoc("raw_pork_belly")).save(consumer);
 
         StockpotRecipeBuilder.builder().addInput(ModItems.RICE_SEED.get(), ModItems.RICE_SEED.get(), ModItems.RICE_SEED.get())
-                .setFinishedTexture(modLoc("stockpot/rice_finished")).setResult(ModItems.COOKED_RICE.get()).save(consumer);
+                .setFinishedTexture(modLoc("stockpot/rice_finished")).setResult(ModItems.COOKED_RICE.get(), 3)
+                .setFinishedBubbleColor(0xE9E3DB).setTime(300).save(consumer, "rice_3");
+        StockpotRecipeBuilder.builder().addInput(ModItems.RICE_SEED.get(), ModItems.RICE_SEED.get(), ModItems.RICE_SEED.get(), ModItems.RICE_SEED.get())
+                .setFinishedTexture(modLoc("stockpot/rice_finished")).setResult(ModItems.COOKED_RICE.get(), 4)
+                .setFinishedBubbleColor(0xE9E3DB).setTime(400).save(consumer, "rice_4");
+        StockpotRecipeBuilder.builder().addInput(ModItems.RICE_SEED.get(), ModItems.RICE_SEED.get(), ModItems.RICE_SEED.get(),
+                        ModItems.RICE_SEED.get(), ModItems.RICE_SEED.get())
+                .setFinishedTexture(modLoc("stockpot/rice_finished")).setResult(ModItems.COOKED_RICE.get(), 5)
+                .setFinishedBubbleColor(0xE9E3DB).setTime(500).save(consumer, "rice_5");
 
         this.addFoodBiteRecipe(consumer);
     }

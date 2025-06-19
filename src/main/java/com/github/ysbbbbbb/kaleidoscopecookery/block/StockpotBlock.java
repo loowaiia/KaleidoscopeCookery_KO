@@ -41,6 +41,8 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
     public static final BooleanProperty HAS_LID = BooleanProperty.create("has_lid");
     public static final VoxelShape AABB = Shapes.or(Block.box(2, 0, 2, 14, 5, 14),
             Block.box(1, 5, 1, 15, 7, 15));
+    public static final VoxelShape AABB_WITH_LID = Shapes.or(Block.box(2, 0, 2, 14, 9, 14),
+            Block.box(1, 5, 1, 15, 7, 15));
 
     public StockpotBlock() {
         super(Properties.of()
@@ -109,10 +111,7 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
         if (pLevel.isClientSide) {
             return createTickerHelper(pBlockEntityType, ModBlocks.STOCKPOT_BE.get(), (level, pos, state, pot) -> pot.clientTick());
         }
-        if (pState.getValue(HAS_LID)) {
-            return createTickerHelper(pBlockEntityType, ModBlocks.STOCKPOT_BE.get(), (level, pos, state, pot) -> pot.tick());
-        }
-        return null;
+        return createTickerHelper(pBlockEntityType, ModBlocks.STOCKPOT_BE.get(), (level, pos, state, pot) -> pot.tick());
     }
 
     @Override
@@ -135,6 +134,9 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
 
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        if (pState.getValue(HAS_LID)) {
+            return AABB_WITH_LID;
+        }
         return AABB;
     }
 }
