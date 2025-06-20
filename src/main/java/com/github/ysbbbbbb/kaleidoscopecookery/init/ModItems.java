@@ -55,7 +55,36 @@ public final class ModItems {
     public static RegistryObject<Item> RICE_PANICLE = ITEMS.register("rice_panicle", () -> new Item(new Item.Properties()));
     public static RegistryObject<Item> CATERPILLAR = ITEMS.register("caterpillar", () -> new Item(new Item.Properties().food(ModFoods.CATERPILLAR)));
     public static RegistryObject<Item> FRIED_EGG = ITEMS.register("fried_egg", () -> new Item(new Item.Properties().food(ModFoods.FRIED_EGG)));
-    public static RegistryObject<Item> SCRAMBLE_EGG_WITH_TOMATOES = ITEMS.register("scramble_egg_with_tomatoes", () -> new Item(new Item.Properties().food(ModFoods.SCRAMBLE_EGG_WITH_TOMATOES)));
+
+    public static RegistryObject<Item> SCRAMBLE_EGG_WITH_TOMATOES = ITEMS.register("scramble_egg_with_tomatoes", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> SCRAMBLE_EGG_WITH_TOMATOES_RICE_BOWL = ITEMS.register("scramble_egg_with_tomatoes_rice_bowl", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> STIR_FRIED_BEEF_OFFAL = ITEMS.register("stir_fried_beef_offal", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> STIR_FRIED_BEEF_OFFAL_RICE_BOWL = ITEMS.register("stir_fried_beef_offal_rice_bowl", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> BRAISED_BEEF = ITEMS.register("braised_beef", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> BRAISED_BEEF_RICE_BOWL = ITEMS.register("braised_beef_rice_bowl", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> STIR_FRIED_PORK_WITH_PEPPERS = ITEMS.register("stir_fried_pork_with_peppers", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> STIR_FRIED_PORK_WITH_PEPPERS_RICE_BOWL = ITEMS.register("stir_fried_pork_with_peppers_rice_bowl", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> SWEET_AND_SOUR_PORK = ITEMS.register("sweet_and_sour_pork", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> SWEET_AND_SOUR_PORK_RICE_BOWL = ITEMS.register("sweet_and_sour_pork_rice_bowl", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> COUNTRY_STYLE_MIXED_VEGETABLES = ITEMS.register("country_style_mixed_vegetables", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> FISH_FLAVORED_SHREDDED_PORK = ITEMS.register("fish_flavored_shredded_pork", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> FISH_FLAVORED_SHREDDED_PORK_RICE_BOWL = ITEMS.register("fish_flavored_shredded_pork_rice_bowl", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> BRAISED_FISH_RICE_BOWL = ITEMS.register("braised_fish_rice_bowl", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> SPICY_CHICKEN_RICE_BOWL = ITEMS.register("spicy_chicken_rice_bowl", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> SUSPICIOUS_STEW_RICE_BOWL = ITEMS.register("suspicious_stew_rice_bowl", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> EGG_FRIED_RICE = ITEMS.register("egg_fried_rice", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> DELICIOUS_EGG_FRIED_RICE = ITEMS.register("delicious_egg_fried_rice", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> PORK_BONE_SOUP = ITEMS.register("pork_bone_soup", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> SEAFOOD_MISO_SOUP = ITEMS.register("seafood_miso_soup", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> FEARSOME_THICK_SOUP = ITEMS.register("fearsome_thick_soup", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> LAMB_AND_RADISH_SOUP = ITEMS.register("lamb_and_radish_soup", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> BRAISED_BEEF_WITH_POTATOES = ITEMS.register("braised_beef_with_potatoes", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> WILD_MUSHROOM_RABBIT_SOUP = ITEMS.register("wild_mushroom_rabbit_soup", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> TOMATO_BEEF_BRISKET_SOUP = ITEMS.register("tomato_beef_brisket_soup", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> PUFFERFISH_SOUP = ITEMS.register("pufferfish_soup", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> BORSCHT = ITEMS.register("borscht", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> BEEF_MEATBALL_SOUP = ITEMS.register("beef_meatball_soup", () -> new BowlFoodOnlyItem(8, 0.8f));
+    public static RegistryObject<Item> CHICKEN_AND_MUSHROOM_STEW = ITEMS.register("chicken_and_mushroom_stew", () -> new BowlFoodOnlyItem(8, 0.8f));
 
     public static RegistryObject<Item> SASHIMI = ITEMS.register("sashimi", () -> new Item(new Item.Properties().food(ModFoods.SASHIMI)));
     public static RegistryObject<Item> RAW_LAMB_CHOPS = ITEMS.register("raw_lamb_chops", () -> new Item(new Item.Properties().food(ModFoods.RAW_LAMB_CHOPS)));

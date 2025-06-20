@@ -200,7 +200,7 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
             this.finishedBubbleColor = recipe.getFinishedBubbleColor();
             this.takeoutCount = Math.min(this.result.getCount(), MAX_TAKEOUT_COUNT);
         }, () -> {
-            this.result = FoodBiteRegistry.getItem(FoodBiteRegistry.SUSPICIOUS_STIR_FRY).getDefaultInstance();
+            this.result = Items.SUSPICIOUS_STEW.getDefaultInstance();
             this.currentTick = StockpotRecipeSerializer.DEFAULT_TIME;
             this.cookingTexture = StockpotRecipeSerializer.DEFAULT_COOKING_TEXTURE;
             this.finishedTexture = StockpotRecipeSerializer.DEFAULT_FINISHED_TEXTURE;
@@ -287,7 +287,7 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
                 return;
             }
 
-            if (mainHandItem.is(TagItem.POT_INGREDIENT)) {
+            if (mainHandItem.isEdible() || mainHandItem.is(TagItem.POT_INGREDIENT)) {
                 // 检查是否有足够的空间放入食材
                 for (int i = 0; i < this.getContainerSize(); i++) {
                     if (this.getItem(i).isEmpty()) {

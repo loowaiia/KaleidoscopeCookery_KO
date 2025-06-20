@@ -68,7 +68,7 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
     }
 
     public StockpotRecipeBuilder setResult(Item result) {
-        this.result = new ItemStack(result);
+        this.result = new ItemStack(result, 3);
         return this;
     }
 

@@ -1,0 +1,29 @@
+{
+  "type": "kaleidoscope_cookery:pot",
+  "ingredients": [
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:crops/lettuce"
+    },
+    {
+      "tag": "forge:crops/lettuce"
+    },
+    {
+      "tag": "forge:cooked_rice"
+    },
+    {
+      "item": "minecraft:carrot"
+    }
+  ],
+  "need_bowl": true,
+  "result": {
+    "item": "kaleidoscope_cookery:delicious_egg_fried_rice"
+  },
+  "stir_fry_count": 3,
+  "time": 200
+}

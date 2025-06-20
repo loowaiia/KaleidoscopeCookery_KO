@@ -95,14 +95,14 @@ public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBl
                 int random = stack.hashCode();
                 long time = random + System.currentTimeMillis();
                 float offsetX = (random % 100) * 0.002f;
-                float offsetZ = (float) (Math.sin(time * 0.0005) * 0.25);
+                float offsetZ = (float) (Math.sin(time * 0.0005) * 0.2);
                 float offsetY = random % 50 * 0.004f;
                 float yRot = (random % 2 == 0 ? -1 : 1) * 20 + random % 10;
 
                 poseStack.pushPose();
                 poseStack.mulPose(Axis.XP.rotationDegrees(85 + random % 10));
                 poseStack.scale(0.5f, 0.5f, 0.5f);
-                poseStack.translate(0.9 + offsetX, 0.9 + offsetY, -0.4 + offsetZ);
+                poseStack.translate(0.9 + offsetX, 0.9 + offsetY, -0.5 + offsetZ);
                 poseStack.mulPose(Axis.YP.rotationDegrees(yRot));
                 poseStack.mulPose(Axis.ZP.rotationDegrees(random % 360));
                 Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED,

@@ -33,6 +33,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeHooks;
 
@@ -48,6 +49,7 @@ public class RiceCropBlock extends BaseCropBlock implements LiquidBlockContainer
     public static final IntegerProperty LOCATION = IntegerProperty.create("location", DOWN, UP);
 
     private static final VoxelShape BASE_SHAPE = Block.box(2, 0, 2, 14, 16, 14);
+    private static final VoxelShape EMPTY_SHAPE = Shapes.empty();
     private static final VoxelShape[] SHAPE_BY_AGE = new VoxelShape[]{
             // 此时只有两格高
             Block.box(2, 0, 2, 14, 6, 14),
@@ -88,7 +90,8 @@ public class RiceCropBlock extends BaseCropBlock implements LiquidBlockContainer
 
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        level.setBlock(pos.above(), this.getStateForAge(0).setValue(LOCATION, MIDDLE), Block.UPDATE_ALL);
+        level.setBlock(pos.above(MIDDLE), this.getStateForAge(0).setValue(LOCATION, MIDDLE), Block.UPDATE_ALL);
+        level.setBlock(pos.above(UP), this.getStateForAge(0).setValue(LOCATION, UP), Block.UPDATE_ALL);
     }
 
     @Override
@@ -116,13 +119,7 @@ public class RiceCropBlock extends BaseCropBlock implements LiquidBlockContainer
 
         boolean downMatches = downState.is(this) && downState.getValue(LOCATION) == DOWN;
         boolean middleMatches = middleState.is(this) && middleState.getValue(LOCATION) == MIDDLE;
-        boolean upMatches;
-        if (isThreeBlock(downState)) {
-            // 当 age 大于 3 时，此时水稻是三格高
-            upMatches = upState.is(this) && upState.getValue(LOCATION) == UP;
-        } else {
-            upMatches = upState.isAir();
-        }
+        boolean upMatches = upState.is(this) && upState.getValue(LOCATION) == UP;
 
         return baseMatches && downMatches && middleMatches && upMatches;
     }
@@ -158,8 +155,11 @@ public class RiceCropBlock extends BaseCropBlock implements LiquidBlockContainer
         if (!isThreeBlock(state) && state.getValue(LOCATION) == MIDDLE) {
             return SHAPE_BY_AGE[state.getValue(AGE)];
         }
-        if (isThreeBlock(state) && state.getValue(LOCATION) == UP) {
-            return SHAPE_BY_AGE[state.getValue(AGE)];
+        if (state.getValue(LOCATION) == UP) {
+            if (isThreeBlock(state)) {
+                return SHAPE_BY_AGE[state.getValue(AGE)];
+            }
+            return EMPTY_SHAPE;
         }
         return BASE_SHAPE;
     }
@@ -197,9 +197,7 @@ public class RiceCropBlock extends BaseCropBlock implements LiquidBlockContainer
     private void setCropState(Level level, BlockPos startPos, int age) {
         level.setBlock(startPos, this.getStateForAge(age).setValue(WATERLOGGED, true), Block.UPDATE_CLIENTS);
         level.setBlock(startPos.above(MIDDLE), this.getStateForAge(age).setValue(LOCATION, MIDDLE), Block.UPDATE_CLIENTS);
-        if (isThreeBlock(level.getBlockState(startPos))) {
-            level.setBlock(startPos.above(UP), this.getStateForAge(age).setValue(LOCATION, UP), Block.UPDATE_CLIENTS);
-        }
+        level.setBlock(startPos.above(UP), this.getStateForAge(age).setValue(LOCATION, UP), Block.UPDATE_CLIENTS);
     }
 
     @Override

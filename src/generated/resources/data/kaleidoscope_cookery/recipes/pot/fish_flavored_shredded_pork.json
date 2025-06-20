@@ -1,0 +1,29 @@
+{
+  "type": "kaleidoscope_cookery:pot",
+  "ingredients": [
+    {
+      "tag": "forge:mushrooms"
+    },
+    {
+      "tag": "forge:mushrooms"
+    },
+    {
+      "tag": "forge:raw_pork"
+    },
+    {
+      "tag": "forge:raw_pork"
+    },
+    {
+      "tag": "forge:raw_pork"
+    },
+    {
+      "tag": "forge:crops/chilipepper"
+    }
+  ],
+  "need_bowl": true,
+  "result": {
+    "item": "kaleidoscope_cookery:fish_flavored_shredded_pork"
+  },
+  "stir_fry_count": 3,
+  "time": 200
+}

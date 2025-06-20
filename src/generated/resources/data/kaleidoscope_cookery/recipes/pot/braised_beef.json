@@ -1,0 +1,23 @@
+{
+  "type": "kaleidoscope_cookery:pot",
+  "ingredients": [
+    {
+      "tag": "forge:raw_beef"
+    },
+    {
+      "tag": "forge:raw_beef"
+    },
+    {
+      "tag": "forge:crops/chilipepper"
+    },
+    {
+      "tag": "forge:crops/chilipepper"
+    }
+  ],
+  "need_bowl": true,
+  "result": {
+    "item": "kaleidoscope_cookery:braised_beef"
+  },
+  "stir_fry_count": 3,
+  "time": 200
+}
