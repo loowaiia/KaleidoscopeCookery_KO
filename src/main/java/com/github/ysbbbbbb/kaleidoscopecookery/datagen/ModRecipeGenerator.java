@@ -13,6 +13,7 @@ import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -260,6 +261,8 @@ public class ModRecipeGenerator extends RecipeProvider {
                 TagCommon.CROPS_TOMATO, TagCommon.CROPS_TOMATO).setResult(ModItems.TOMATO_BEEF_BRISKET_SOUP.get()).save(consumer);
         StockpotRecipeBuilder.builder().addInput(Items.PUFFERFISH, Items.PUFFERFISH, Items.SEAGRASS)
                 .setResult(ModItems.PUFFERFISH_SOUP.get()).save(consumer);
+        StockpotRecipeBuilder.builder().addInput(Items.SEAGRASS).addInputEntityType(EntityType.PUFFERFISH)
+                .setResult(ModItems.PUFFERFISH_SOUP.get()).save(consumer,"pufferfish_soup_entity");
         StockpotRecipeBuilder.builder().addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.CROPS_TOMATO, TagCommon.CROPS_TOMATO, TagCommon.CROPS_LETTUCE)
                 .setResult(ModItems.BORSCHT.get()).save(consumer);
         StockpotRecipeBuilder.builder().addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.CROPS_TOMATO).addInput(Items.BEETROOT, Items.BEETROOT)

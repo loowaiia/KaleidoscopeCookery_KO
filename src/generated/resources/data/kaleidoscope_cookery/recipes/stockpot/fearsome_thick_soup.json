@@ -1,8 +1,8 @@
 {
   "type": "kaleidoscope_cookery:stockpot",
-  "cooking_bubble_color": 13483427,
+  "cooking_bubble_color": 16772291,
   "cooking_texture": "kaleidoscope_cookery:stockpot/default_cooking",
-  "finished_bubble_color": 13339246,
+  "finished_bubble_color": 16034443,
   "finished_texture": "kaleidoscope_cookery:stockpot/default_finished",
   "ingredients": [
     {

@@ -123,7 +123,7 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
                         (level.random.nextFloat() - 0.5) * 0.1F,
                         0,
                         (level.random.nextFloat() - 0.5) * 0.1F,
-                        0.01f
+                        0
                 );
             }
             return;
@@ -241,7 +241,7 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
             if (this.soupBase.is(FluidTags.WATER)) {
                 this.soupBaseBubbleColor = 0x3F76E4;
             } else if (this.soupBase.is(FluidTags.LAVA)) {
-                this.soupBaseBubbleColor = 0xff7518;
+                this.soupBaseBubbleColor = 0xFF9838;
             } else {
                 // FIXME 该如何自定义？
                 this.soupBaseBubbleColor = 0xFFFFFF;

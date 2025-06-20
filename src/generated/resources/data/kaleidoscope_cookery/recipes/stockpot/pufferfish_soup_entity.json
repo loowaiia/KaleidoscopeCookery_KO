@@ -6,24 +6,13 @@
   "finished_texture": "kaleidoscope_cookery:stockpot/default_finished",
   "ingredients": [
     {
-      "tag": "forge:raw_fishes/cod"
-    },
-    {
-      "tag": "forge:raw_fishes/cod"
-    },
-    {
-      "tag": "forge:raw_fishes/cod"
-    },
-    {
-      "item": "minecraft:kelp"
-    },
-    {
-      "item": "minecraft:bone_meal"
+      "item": "minecraft:seagrass"
     }
   ],
+  "input_entity_type": "minecraft:pufferfish",
   "result": {
     "count": 3,
-    "item": "kaleidoscope_cookery:seafood_miso_soup"
+    "item": "kaleidoscope_cookery:pufferfish_soup"
   },
   "soup_base": "minecraft:water",
   "time": 300

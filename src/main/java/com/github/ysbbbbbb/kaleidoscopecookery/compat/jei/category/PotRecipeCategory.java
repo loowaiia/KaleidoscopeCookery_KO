@@ -1,7 +1,6 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.compat.jei;
+package com.github.ysbbbbbb.kaleidoscopecookery.compat.jei.category;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.recipe.PotRecipe;
@@ -21,6 +20,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -31,15 +31,18 @@ import java.util.List;
 
 public class PotRecipeCategory implements IRecipeCategory<PotRecipe> {
     public static final RecipeType<PotRecipe> TYPE = RecipeType.create(KaleidoscopeCookery.MOD_ID, "pot", PotRecipe.class);
+    private static final ResourceLocation BG = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "textures/gui/jei/pot.png");
     private static final MutableComponent TITLE = Component.translatable("block.kaleidoscope_cookery.pot");
-    public static final int WIDTH = 150;
-    public static final int HEIGHT = 76;
+    public static final int WIDTH = 176;
+    public static final int HEIGHT = 102;
     private final IGuiHelper guiHelper;
+    private final IDrawable bgDraw;
     private final IDrawable slotDraw;
     private final IDrawable iconDraw;
 
     public PotRecipeCategory(IGuiHelper guiHelper) {
         this.slotDraw = guiHelper.getSlotDrawable();
+        this.bgDraw = guiHelper.createDrawable(BG, 0, 0, WIDTH, HEIGHT);
         this.iconDraw = guiHelper.createDrawableItemLike(ModItems.POT.get());
         this.guiHelper = guiHelper;
     }
@@ -56,19 +59,12 @@ public class PotRecipeCategory implements IRecipeCategory<PotRecipe> {
 
     @Override
     public void draw(PotRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        this.bgDraw.draw(guiGraphics);
         Component stirFryCount = Component.translatable("jei.kaleidoscope_cookery.pot.stir_fry_count", recipe.getStirFryCount());
-        drawCenteredString(guiGraphics, stirFryCount, WIDTH / 2, 66);
+        drawCenteredString(guiGraphics, stirFryCount, WIDTH / 2, 85);
         if (recipe.isNeedBowl()) {
-            guiHelper.createDrawableItemLike(Items.BOWL).draw(guiGraphics, 128, 5);
+            guiHelper.createDrawableItemLike(Items.BOWL).draw(guiGraphics, 133, 18);
         }
-        int scale = 3;
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(0, -1.5, 0);
-        guiGraphics.pose().scale(scale, scale, 1);
-        guiHelper.createDrawableItemLike(ModBlocks.STOVE.get()).draw(guiGraphics, 70 / scale, 12 / scale);
-        guiGraphics.pose().translate(0.5, 0, 8);
-        guiHelper.createDrawableItemLike(ModBlocks.POT.get()).draw(guiGraphics, 70 / scale, -14 / scale);
-        guiGraphics.pose().popPose();
     }
 
     private void drawCenteredString(GuiGraphics guiGraphics, Component text, int centerX, int y) {
@@ -82,11 +78,11 @@ public class PotRecipeCategory implements IRecipeCategory<PotRecipe> {
         NonNullList<Ingredient> inputs = recipe.getIngredients();
         ItemStack output = recipe.getResult();
         for (int i = 0; i < inputs.size(); i++) {
-            int xOffset = (i % 3) * 18 + 5;
-            int yOffset = (i / 3) * 18 + 5;
+            int xOffset = (i % 3) * 18 + 15;
+            int yOffset = (i / 3) * 18 + 24;
             builder.addSlot(RecipeIngredientRole.INPUT, xOffset, yOffset).addIngredients(inputs.get(i)).setBackground(slotDraw, -1, -1);
         }
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 128, 41).addItemStack(output).setBackground(slotDraw, -1, -1);
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 143, 60).addItemStack(output).setBackground(slotDraw, -1, -1);
     }
 
     @Override

@@ -27,8 +27,8 @@ public class StockpotRecipeSerializer implements RecipeSerializer<StockpotRecipe
     public static final ResourceLocation DEFAULT_FINISHED_TEXTURE = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "stockpot/default_finished");
     public static final int DEFAULT_TIME = 300;
     public static final Fluid DEFAULT_SOUP_BASE = Fluids.WATER;
-    public static final int DEFAULT_COOKING_BUBBLE_COLOR = 0xCDBDA3;
-    public static final int DEFAULT_FINISHED_BUBBLE_COLOR = 0xCB8A6E;
+    public static final int DEFAULT_COOKING_BUBBLE_COLOR = 0xFFECC3;
+    public static final int DEFAULT_FINISHED_BUBBLE_COLOR = 0xF4AA8B;
 
     @Override
     public StockpotRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
