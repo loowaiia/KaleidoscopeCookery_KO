@@ -30,11 +30,15 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class StockpotBlock extends HorizontalDirectionalBlock implements EntityBlock, SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -80,7 +84,7 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
             return InteractionResult.PASS;
         }
         ItemStack stack = player.getMainHandItem();
-        if (stack.isEmpty() || stack.is(ModItems.STOCKPOT_LID.get())) {
+        if (state.getValue(HAS_LID) || stack.is(ModItems.STOCKPOT_LID.get())) {
             stockpot.onLitClick(player);
         }
         if (stack.getItem() instanceof BucketItem) {
@@ -138,5 +142,22 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
             return AABB_WITH_LID;
         }
         return AABB;
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState pState, LootParams.Builder pParams) {
+        List<ItemStack> drops = super.getDrops(pState, pParams);
+        if (pState.getValue(HAS_LID)) {
+            drops.add(new ItemStack(ModItems.STOCKPOT_LID.get()));
+        }
+        BlockEntity parameter = pParams.getParameter(LootContextParams.BLOCK_ENTITY);
+        if (parameter instanceof StockpotBlockEntity stockpotBlock && stockpotBlock.getStatus() == StockpotBlockEntity.PUT_INGREDIENT) {
+            stockpotBlock.getItems().forEach(stack -> {
+                if (!stack.isEmpty()) {
+                    drops.add(stack);
+                }
+            });
+        }
+        return drops;
     }
 }

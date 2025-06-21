@@ -4,7 +4,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.block.StockpotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.particle.StockpotParticleOptions;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.*;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import com.github.ysbbbbbb.kaleidoscopecookery.mixin.MobBucketItemAccessor;
 import com.github.ysbbbbbb.kaleidoscopecookery.recipe.StockpotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.recipe.serializer.StockpotRecipeSerializer;
@@ -26,6 +25,7 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
@@ -181,9 +181,18 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
         }
 
         // 第二种情况，取下盖子
-        if (hasLid && mainHandItem.isEmpty()) {
+        if (hasLid) {
             ItemStack lid = ModItems.STOCKPOT_LID.get().getDefaultInstance();
-            player.setItemInHand(InteractionHand.MAIN_HAND, lid);
+            if (mainHandItem.isEmpty()) {
+                player.setItemInHand(InteractionHand.MAIN_HAND, lid);
+            } else {
+                ItemEntity entity = new ItemEntity(level, worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, lid);
+                entity.setPickUpDelay(10);
+                entity.setDeltaMovement(Vec3.ZERO);
+                if (!level.isClientSide) {
+                    level.addFreshEntity(entity);
+                }
+            }
             this.setChanged();
             level.setBlockAndUpdate(worldPosition, blockState.setValue(StockpotBlock.HAS_LID, false));
             player.playSound(SoundEvents.LANTERN_BREAK, 0.5F, 0.5F);
@@ -292,6 +301,12 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
                 for (int i = 0; i < this.getContainerSize(); i++) {
                     if (this.getItem(i).isEmpty()) {
                         this.setItem(i, mainHandItem.split(1));
+                        level.playSound(null, player.getX(), player.getY() + 0.5, player.getZ(),
+                                SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F,
+                                ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                        if (this.soupBase.getFluidType().getTemperature() > 500) {
+                            player.hurt(level.damageSources().inFire(), 1);
+                        }
                         this.refresh();
                         return;
                     }

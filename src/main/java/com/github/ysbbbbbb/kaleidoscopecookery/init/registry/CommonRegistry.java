@@ -2,8 +2,10 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init.registry;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.BowlFoodBlockItem;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -14,6 +16,7 @@ import net.minecraftforge.registries.RegisterEvent;
 public class CommonRegistry {
     @SubscribeEvent
     public static void onSetupEvent(FMLCommonSetupEvent event) {
+        addComposter();
     }
 
     @SubscribeEvent
@@ -33,5 +36,18 @@ public class CommonRegistry {
                 }
             });
         }
+    }
+
+    private static void addComposter() {
+        ComposterBlock.COMPOSTABLES.put(ModItems.TOMATO_SEED.get(), 0.3F);
+        ComposterBlock.COMPOSTABLES.put(ModItems.CHILI_SEED.get(), 0.3F);
+        ComposterBlock.COMPOSTABLES.put(ModItems.LETTUCE_SEED.get(), 0.3F);
+        ComposterBlock.COMPOSTABLES.put(ModItems.RICE_SEED.get(), 0.3F);
+        ComposterBlock.COMPOSTABLES.put(ModItems.TOMATO.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(ModItems.RED_CHILI.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(ModItems.GREEN_CHILI.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(ModItems.LETTUCE.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(ModItems.RICE_PANICLE.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(ModItems.CATERPILLAR.get(), 1.0F);
     }
 }

@@ -11,6 +11,7 @@ public class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, KaleidoscopeCookery.MOD_ID);
 
     public static final RegistryObject<SoundEvent> BLOCK_STOCKPOT = registerSound("block.stockpot");
+    public static final RegistryObject<SoundEvent> BLOCK_PADDY = registerSound("block.paddy");
 
     private static RegistryObject<SoundEvent> registerSound(String name) {
         return SOUND_EVENTS.register(name, () -> SoundEvent.createFixedRangeEvent(new ResourceLocation(KaleidoscopeCookery.MOD_ID, name), 16.0F));

@@ -1,17 +1,21 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.crop;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.AbstractFish;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -20,17 +24,17 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LevelEvent;
-import net.minecraft.world.level.block.LiquidBlockContainer;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -41,7 +45,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class RiceCropBlock extends BaseCropBlock implements LiquidBlockContainer {
+public class RiceCropBlock extends BaseCropBlock implements SimpleWaterloggedBlock {
     public static final int UP = 2;
     public static final int MIDDLE = 1;
     public static final int DOWN = 0;
@@ -73,6 +77,9 @@ public class RiceCropBlock extends BaseCropBlock implements LiquidBlockContainer
 
     @Override
     public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor levelAccessor, BlockPos currentPos, BlockPos facingPos) {
+        if (state.getValue(WATERLOGGED)) {
+            levelAccessor.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
+        }
         return !state.canSurvive(levelAccessor, currentPos) ? Blocks.AIR.defaultBlockState() : state;
     }
 
@@ -174,6 +181,10 @@ public class RiceCropBlock extends BaseCropBlock implements LiquidBlockContainer
     }
 
     @Override
+    public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
+    }
+
+    @Override
     public void randomTick(BlockState state, ServerLevel serverLevel, BlockPos pos, RandomSource random) {
         if (!serverLevel.isAreaLoaded(pos, 1)) {
             return;
@@ -181,11 +192,24 @@ public class RiceCropBlock extends BaseCropBlock implements LiquidBlockContainer
         if (state.getValue(LOCATION) != DOWN) {
             return;
         }
+        if (serverLevel.isNight()) {
+            serverLevel.playSound(null, pos.above(), ModSounds.BLOCK_PADDY.get(),
+                    SoundSource.BLOCKS,
+                    serverLevel.getRandom().nextFloat() * 0.2F + 0.2F,
+                    serverLevel.getRandom().nextFloat() * 0.1F + 0.9F
+            );
+        }
         if (serverLevel.getRawBrightness(pos, 0) >= 9) {
             int age = this.getAge(state);
             if (age < this.getMaxAge()) {
                 // 生长速度慢 2 倍
                 float speed = getGrowthSpeed(this, serverLevel, pos) / 2;
+                // 如果稻田附加 3x3 区域有鱼，那么速度翻倍
+                List<AbstractFish> fish = serverLevel.getEntitiesOfClass(AbstractFish.class, new AABB(pos).inflate(1, 0, 1));
+                if (!fish.isEmpty()) {
+                    float size = (float) (Math.log(fish.size()) / Math.log(2));
+                    speed = speed + speed * size;
+                }
                 if (ForgeHooks.onCropsGrowPre(serverLevel, pos, state, random.nextInt((int) (25.0F / speed) + 1) == 0)) {
                     setCropState(serverLevel, pos, age + 1);
                     ForgeHooks.onCropsGrowPost(serverLevel, pos, state);
@@ -231,20 +255,23 @@ public class RiceCropBlock extends BaseCropBlock implements LiquidBlockContainer
     }
 
     @Override
-    public boolean canPlaceLiquid(BlockGetter blockGetter, BlockPos pos, BlockState state, Fluid fluid) {
-        return false;
-    }
-
-    @Override
-    public boolean placeLiquid(LevelAccessor levelAccessor, BlockPos pos, BlockState state, FluidState fluidState) {
-        return false;
-    }
-
-    @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder pParams) {
         if (state.getValue(LOCATION) != DOWN) {
             return Collections.emptyList();
         }
         return super.getDrops(state, pParams);
+    }
+
+    @Override
+    public ItemStack pickupBlock(LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
+        if (pState.getValue(BlockStateProperties.WATERLOGGED)) {
+            pLevel.setBlock(pPos, pState.setValue(BlockStateProperties.WATERLOGGED, false), Block.UPDATE_ALL);
+            if (pState.getValue(LOCATION) == DOWN) {
+                pLevel.destroyBlock(pPos, true);
+            }
+            return new ItemStack(Items.WATER_BUCKET);
+        } else {
+            return ItemStack.EMPTY;
+        }
     }
 }

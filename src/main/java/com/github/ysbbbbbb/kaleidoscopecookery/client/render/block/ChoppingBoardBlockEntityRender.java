@@ -45,7 +45,7 @@ public class ChoppingBoardBlockEntityRender implements BlockEntityRenderer<Chopp
         poseStack.pushPose();
         int rotation = choppingBoard.getBlockState().getValue(ChoppingBoardBlock.FACING).get2DDataValue();
         poseStack.translate(0.5D, 0, 0.5D);
-        poseStack.mulPose(Axis.YN.rotationDegrees(rotation * 90));
+        poseStack.mulPose(Axis.YP.rotationDegrees(rotation * 90));
         poseStack.translate(-0.5D, 0.125, -0.5D);
         BakedModel model = itemRenderer.getItemModelShaper().getModelManager().getModel(cacheModel);
         RenderType renderType = Sheets.cutoutBlockSheet();

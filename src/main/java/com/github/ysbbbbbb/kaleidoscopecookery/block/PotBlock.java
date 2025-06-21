@@ -1,7 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.PotBlockEntity;
-import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoundType;

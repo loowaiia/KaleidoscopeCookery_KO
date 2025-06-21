@@ -22,16 +22,16 @@ public class ChiliCropBlock extends BaseCropBlock {
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (pState.getValue(AGE) >= this.getMaxAge()) {
             if (!pLevel.isClientSide) {
-                ItemEntity entity = new ItemEntity(pLevel, pPos.getX(), pPos.getY(), pPos.getZ(), this.result.get().getDefaultInstance());
+                ItemEntity entity = new ItemEntity(pLevel, pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5, this.result.get().getDefaultInstance());
                 entity.setPickUpDelay(10);
                 pLevel.addFreshEntity(entity);
                 // 20% 几率掉落青椒
                 if (pLevel.getRandom().nextInt(5) == 0) {
-                    ItemEntity extra = new ItemEntity(pLevel, pPos.getX(), pPos.getY(), pPos.getZ(), ModItems.GREEN_CHILI.get().getDefaultInstance());
+                    ItemEntity extra = new ItemEntity(pLevel, pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5, ModItems.GREEN_CHILI.get().getDefaultInstance());
                     extra.setPickUpDelay(10);
                     pLevel.addFreshEntity(extra);
                 }
-                pLevel.playSound(null, pPos.getX(), pPos.getY(), pPos.getZ(), SoundEvents.CROP_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
+                pLevel.playSound(null, pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5, SoundEvents.CROP_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
                 pLevel.setBlock(pPos, this.getStateForAge(5), Block.UPDATE_CLIENTS);
             }
             return InteractionResult.SUCCESS;

@@ -20,6 +20,11 @@ public class SoundDefinitionsGenerator extends SoundDefinitionsProvider {
             stockpotSound.with(sound("block/stockpot/stockpot_" + i));
         }
         this.add(ModSounds.BLOCK_STOCKPOT.get(), stockpotSound);
+
+        SoundDefinition paddySound = definition().subtitle(subtitle("block.paddy"))
+                .with(sound("block/paddy/paddy_0"))
+                .with(sound("block/paddy/paddy_1"));
+        this.add(ModSounds.BLOCK_PADDY.get(), paddySound);
     }
 
     protected static SoundDefinition.Sound sound(final String name) {

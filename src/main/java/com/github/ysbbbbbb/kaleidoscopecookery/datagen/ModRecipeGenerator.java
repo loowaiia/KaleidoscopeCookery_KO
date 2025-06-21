@@ -149,6 +149,21 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .unlockedBy("has_rice_seed", has(ModItems.RICE_SEED.get()))
                 .save(consumer);
 
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ModItems.CHILI_SEED.get(), 1)
+                .requires(ModItems.GREEN_CHILI.get())
+                .unlockedBy("has_chili", has(ModItems.GREEN_CHILI.get()))
+                .save(consumer,"chili_seed_from_green_chili");
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ModItems.CHILI_SEED.get(), 1)
+                .requires(ModItems.RED_CHILI.get())
+                .unlockedBy("has_chili", has(ModItems.RED_CHILI.get()))
+                .save(consumer,"chili_seed_from_red_chili");
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ModItems.TOMATO_SEED.get(), 1)
+                .requires(ModItems.TOMATO.get())
+                .unlockedBy("has_tomato", has(ModItems.TOMATO.get()))
+                .save(consumer);
+
         netheriteSmithing(consumer, ModItems.DIAMOND_KITCHEN_KNIFE.get(), RecipeCategory.TOOLS, ModItems.NETHERITE_KITCHEN_KNIFE.get());
 
         simpleCookingRecipe(ModItems.RAW_LAMB_CHOPS.get(), ModItems.COOKED_LAMB_CHOPS.get(), 0.35F, consumer);
@@ -262,7 +277,7 @@ public class ModRecipeGenerator extends RecipeProvider {
         StockpotRecipeBuilder.builder().addInput(Items.PUFFERFISH, Items.PUFFERFISH, Items.SEAGRASS)
                 .setResult(ModItems.PUFFERFISH_SOUP.get()).save(consumer);
         StockpotRecipeBuilder.builder().addInput(Items.SEAGRASS).addInputEntityType(EntityType.PUFFERFISH)
-                .setResult(ModItems.PUFFERFISH_SOUP.get()).save(consumer,"pufferfish_soup_entity");
+                .setResult(ModItems.PUFFERFISH_SOUP.get()).save(consumer, "pufferfish_soup_entity");
         StockpotRecipeBuilder.builder().addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.CROPS_TOMATO, TagCommon.CROPS_TOMATO, TagCommon.CROPS_LETTUCE)
                 .setResult(ModItems.BORSCHT.get()).save(consumer);
         StockpotRecipeBuilder.builder().addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.CROPS_TOMATO).addInput(Items.BEETROOT, Items.BEETROOT)

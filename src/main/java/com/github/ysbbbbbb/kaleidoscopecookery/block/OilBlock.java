@@ -29,6 +29,16 @@ public class OilBlock extends Block {
     }
 
     @Override
+    public boolean isStickyBlock(BlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean canStickTo(BlockState state, BlockState other) {
+        return false;
+    }
+
+    @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         if (random.nextInt(50) != 0) {
             return;
