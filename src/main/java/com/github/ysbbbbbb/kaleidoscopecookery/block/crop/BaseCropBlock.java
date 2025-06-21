@@ -5,7 +5,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
@@ -49,10 +48,8 @@ public class BaseCropBlock extends CropBlock {
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (pState.getValue(AGE) >= this.getMaxAge()) {
             if (!pLevel.isClientSide) {
-                ItemEntity entity = new ItemEntity(pLevel, pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5, this.result.get().getDefaultInstance());
+                Block.popResource(pLevel, pPos, this.result.get().getDefaultInstance());
                 pLevel.playSound(null, pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5, SoundEvents.CROP_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
-                entity.setPickUpDelay(10);
-                pLevel.addFreshEntity(entity);
                 pLevel.setBlock(pPos, this.getStateForAge(5), Block.UPDATE_CLIENTS);
             }
             return InteractionResult.SUCCESS;

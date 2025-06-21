@@ -186,12 +186,7 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
             if (mainHandItem.isEmpty()) {
                 player.setItemInHand(InteractionHand.MAIN_HAND, lid);
             } else {
-                ItemEntity entity = new ItemEntity(level, worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, lid);
-                entity.setPickUpDelay(10);
-                entity.setDeltaMovement(Vec3.ZERO);
-                if (!level.isClientSide) {
-                    level.addFreshEntity(entity);
-                }
+                Block.popResource(level, worldPosition, lid);
             }
             this.setChanged();
             level.setBlockAndUpdate(worldPosition, blockState.setValue(StockpotBlock.HAS_LID, false));

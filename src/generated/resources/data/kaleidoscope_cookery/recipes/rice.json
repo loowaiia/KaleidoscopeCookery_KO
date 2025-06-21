@@ -3,10 +3,10 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "kaleidoscope_cookery:rice"
+      "item": "kaleidoscope_cookery:rice_panicle"
     }
   ],
   "result": {
-    "item": "kaleidoscope_cookery:rice_panicle"
+    "item": "kaleidoscope_cookery:rice"
   }
 }

@@ -40,7 +40,7 @@ public class StrawHatModel extends EntityModel<Entity> {
 
     @Override
     public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        poseStack.scale(1.15f, 1.15f, 1.15f);
+        poseStack.scale(1.275f, 1.275f, 1.275f);
         head.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 

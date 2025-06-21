@@ -139,25 +139,49 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.CHOPPING_BOARD.get())
+                .pattern("PPP")
+                .pattern("PPP")
+                .define('P', ItemTags.WOODEN_PRESSURE_PLATES)
+                .unlockedBy("has_wood", has(Items.OAK_PLANKS))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.STOCKPOT.get())
+                .pattern("B B")
+                .pattern("I I")
+                .pattern("III")
+                .define('B', Items.BRICK)
+                .define('I', Tags.Items.INGOTS_IRON)
+                .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.STOCKPOT_LID.get())
+                .pattern(" B ")
+                .pattern("III")
+                .define('B', Items.BRICK)
+                .define('I', Tags.Items.INGOTS_IRON)
+                .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
+                .save(consumer);
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ModItems.OIL.get(), 9)
                 .requires(ModItems.OIL_BLOCK.get())
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ModItems.RICE_PANICLE.get(), 1)
-                .requires(ModItems.RICE_SEED.get())
-                .unlockedBy("has_rice_seed", has(ModItems.RICE_SEED.get()))
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ModItems.RICE_SEED.get(), 1)
+                .requires(ModItems.RICE_PANICLE.get())
+                .unlockedBy("has_rice_panicle", has(ModItems.RICE_PANICLE.get()))
                 .save(consumer);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ModItems.CHILI_SEED.get(), 1)
                 .requires(ModItems.GREEN_CHILI.get())
                 .unlockedBy("has_chili", has(ModItems.GREEN_CHILI.get()))
-                .save(consumer,"chili_seed_from_green_chili");
+                .save(consumer, "chili_seed_from_green_chili");
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ModItems.CHILI_SEED.get(), 1)
                 .requires(ModItems.RED_CHILI.get())
                 .unlockedBy("has_chili", has(ModItems.RED_CHILI.get()))
-                .save(consumer,"chili_seed_from_red_chili");
+                .save(consumer, "chili_seed_from_red_chili");
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ModItems.TOMATO_SEED.get(), 1)
                 .requires(ModItems.TOMATO.get())

@@ -1,8 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.entity;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.recipe.ChoppingBoardRecipe;
@@ -18,7 +16,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -136,14 +133,7 @@ public class ChoppingBoardBlockEntity extends BlockEntity {
         if (this.currentCutCount < this.maxCutCount) {
             return false;
         }
-        ItemEntity entityItem = new ItemEntity(this.level,
-                this.worldPosition.getX() + 0.5,
-                this.worldPosition.getY() + 0.25,
-                this.worldPosition.getZ() + 0.5,
-                this.result.copy());
-        entityItem.setPickUpDelay(10);
-        entityItem.setDeltaMovement(0, 0.1, 0);
-        this.level.addFreshEntity(entityItem);
+        Block.popResource(level, worldPosition, this.result.copy());
         this.modelId = null;
         this.result = ItemStack.EMPTY;
         this.currentCutStack = ItemStack.EMPTY;

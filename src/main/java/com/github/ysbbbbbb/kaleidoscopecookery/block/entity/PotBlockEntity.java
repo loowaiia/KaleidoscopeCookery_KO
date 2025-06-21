@@ -27,7 +27,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -185,14 +184,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
                     8, 0, 0, 0, 0.05);
 
             int count = 1 + random.nextInt(3);
-            ItemEntity itemEntity = new ItemEntity(serverLevel,
-                    worldPosition.getX() + 0.5,
-                    worldPosition.getY() + 0.25,
-                    worldPosition.getZ() + 0.5,
-                    new ItemStack(Items.CHARCOAL, count));
-            itemEntity.setDeltaMovement(0, 0.2, 0);
-            itemEntity.setPickUpDelay(10);
-            level.addFreshEntity(itemEntity);
+            Block.popResource(level, worldPosition, new ItemStack(Items.CHARCOAL, count));
         }
     }
 

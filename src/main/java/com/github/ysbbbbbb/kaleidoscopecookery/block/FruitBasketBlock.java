@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -84,9 +83,7 @@ public class FruitBasketBlock extends HorizontalDirectionalBlock implements Enti
             if (!level.isClientSide) {
                 ItemStack stack = ModItems.FRUIT_BASKET.get().getDefaultInstance();
                 blockEntity.saveToItem(stack);
-                ItemEntity itemEntity = new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack);
-                itemEntity.setDefaultPickUpDelay();
-                level.addFreshEntity(itemEntity);
+                Block.popResource(level, pos, stack);
             }
         }
         super.playerWillDestroy(level, pos, state, player);

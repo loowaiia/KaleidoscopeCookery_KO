@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_rice_seed": {
+    "has_ingot_iron": {
       "conditions": {
         "items": [
           {
             "items": [
-              "kaleidoscope_cookery:rice"
+              "minecraft:iron_ingot"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "kaleidoscope_cookery:rice_panicle"
+        "recipe": "kaleidoscope_cookery:stockpot_lid"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_rice_seed",
+      "has_ingot_iron",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "kaleidoscope_cookery:rice_panicle"
+      "kaleidoscope_cookery:stockpot_lid"
     ]
   },
   "sends_telemetry_event": false
