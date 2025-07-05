@@ -1,9 +1,9 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.EnamelBasinBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.RiceCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
-import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
@@ -20,6 +20,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -30,6 +31,7 @@ import net.minecraft.world.level.storage.loot.entries.EmptyLootItem;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
+import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.functions.LootingEnchantFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
@@ -98,6 +100,26 @@ public class LootTableGenerator {
                     LootTable.lootTable().withPool(ricePanicle).withPool(extraRiceSeeds)));
 
             FoodBiteRegistry.FOOD_DATA_MAP.forEach(this::dropFoodBite);
+
+            this.add(ModBlocks.ENAMEL_BASIN.get(), createEnamelBasinLootTable());
+        }
+
+        private LootTable.Builder createEnamelBasinLootTable() {
+            LootPool.Builder oilDrop = LootPool.lootPool();
+            for (int i = 1; i <= EnamelBasinBlock.MAX_OIL_COUNT; i++) {
+                StatePropertiesPredicate.Builder property = StatePropertiesPredicate.Builder.properties().hasProperty(EnamelBasinBlock.OIL_COUNT, i);
+                LootItemCondition.Builder condition = LootItemBlockStatePropertyCondition
+                        .hasBlockStateProperties(ModBlocks.ENAMEL_BASIN.get())
+                        .setProperties(property);
+                int dropCount = i / 2;
+                if (dropCount > 0) {
+                    LootItemConditionalFunction.Builder<?> count = SetItemCountFunction.setCount(ConstantValue.exactly(dropCount));
+                    oilDrop.add(LootItem.lootTableItem(ModItems.OIL.get()).when(condition).apply(count));
+                }
+            }
+            LootPool.Builder bucketDrop = LootPool.lootPool().add(LootItem.lootTableItem(Items.BUCKET));
+            return LootTable.lootTable().withPool(oilDrop.when(ExplosionCondition.survivesExplosion()))
+                    .withPool(bucketDrop.when(ExplosionCondition.survivesExplosion()));
         }
 
         private LootItemCondition.Builder createCropBuilder(Block cropBlock) {

@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen.model;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenShovelItem;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -27,12 +28,12 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent("stove", modLoc("block/stove"));
         withExistingParent("pot", modLoc("block/pot"));
         withExistingParent("stockpot", modLoc("block/stockpot"));
+        withExistingParent("enamel_basin", modLoc("block/enamel_basin/base"));
 
         handheldItem(ModItems.IRON_KITCHEN_KNIFE.get());
         handheldItem(ModItems.GOLD_KITCHEN_KNIFE.get());
         handheldItem(ModItems.DIAMOND_KITCHEN_KNIFE.get());
         handheldItem(ModItems.NETHERITE_KITCHEN_KNIFE.get());
-        handheldItem(ModItems.KITCHEN_SHOVEL.get());
 
         basicItem(ModItems.OIL.get());
         basicItem(ModItems.FRIED_EGG.get());
@@ -86,6 +87,15 @@ public class ItemModelGenerator extends ItemModelProvider {
         basicItem(ModItems.LETTUCE.get());
         basicItem(ModItems.LETTUCE_SEED.get());
         basicItem(ModItems.CATERPILLAR.get());
+
+        ResourceLocation shovel = ForgeRegistries.ITEMS.getKey(ModItems.KITCHEN_SHOVEL.get());
+        if (shovel != null) {
+            ItemModelBuilder shovelNoOil = handheldItem(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "kitchen_shovel_no_oil"));
+            ItemModelBuilder shovelHasOil = handheldItem(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "kitchen_shovel_has_oil"));
+            getBuilder(shovel.toString())
+                    .override().model(shovelNoOil).predicate(KitchenShovelItem.HAS_OIL_PROPERTY, 0).end()
+                    .override().model(shovelHasOil).predicate(KitchenShovelItem.HAS_OIL_PROPERTY, 1).end();
+        }
 
         FoodBiteRegistry.FOOD_DATA_MAP.forEach((key, value) -> {
             Item item = ForgeRegistries.ITEMS.getValue(key);

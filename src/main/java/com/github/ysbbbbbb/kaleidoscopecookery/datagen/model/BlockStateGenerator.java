@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen.model;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.EnamelBasinBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.PotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.StockpotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.StoveBlock;
@@ -12,12 +13,15 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.function.Function;
 
 public class BlockStateGenerator extends BlockStateProvider {
     public BlockStateGenerator(PackOutput output, ExistingFileHelper exFileHelper) {
@@ -79,6 +83,28 @@ public class BlockStateGenerator extends BlockStateProvider {
         crop(ModBlocks.LETTUCE_CROP, "lettuce");
 
         riceCrop();
+
+        variantBlock(ModBlocks.ENAMEL_BASIN.get(), blockState -> {
+            if (blockState.getValue(EnamelBasinBlock.HAS_LID)) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/enamel_basin/base"));
+            }
+            int oilCount = blockState.getValue(EnamelBasinBlock.OIL_COUNT);
+            if (oilCount <= 0) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/enamel_basin/empty"));
+            }
+            if (oilCount <= 4) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/enamel_basin/low"));
+            }
+            if (oilCount <= 8) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/enamel_basin/middle"));
+            }
+            return new ModelFile.UncheckedModelFile(modLoc("block/enamel_basin/high"));
+        });
+    }
+
+    public void variantBlock(Block block, Function<BlockState, ModelFile> modelFunc) {
+        getVariantBuilder(block).forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(modelFunc.apply(state)).build());
     }
 
     public void crop(RegistryObject<Block> block, String name) {

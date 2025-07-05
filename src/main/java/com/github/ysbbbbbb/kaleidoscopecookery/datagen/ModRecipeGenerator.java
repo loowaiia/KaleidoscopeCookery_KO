@@ -163,6 +163,15 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.ENAMEL_BASIN.get())
+                .pattern("OOO")
+                .pattern("OOO")
+                .pattern(" B ")
+                .define('O', TagMod.OIL)
+                .define('B', Items.BUCKET)
+                .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
+                .save(consumer);
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ModItems.OIL.get(), 9)
                 .requires(ModItems.OIL_BLOCK.get())
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))

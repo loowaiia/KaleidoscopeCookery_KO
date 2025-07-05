@@ -5,6 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoundType;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenShovelItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -91,12 +92,17 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock,
         // 放油
         if (!state.getValue(HAS_OIL)) {
             if (itemInHand.is(TagMod.OIL)) {
-                placeOil(state, level, pos, player, itemInHand, random);
+                placeOil(state, level, pos, player, random);
+                itemInHand.shrink(1);
                 return InteractionResult.SUCCESS;
-            } else {
-                sendBarMessage(player, Component.translatable("tip.kaleidoscope_cookery.pot.need_oil"));
-                return InteractionResult.FAIL;
             }
+            if (itemInHand.is(ModItems.KITCHEN_SHOVEL.get()) && KitchenShovelItem.hasOil(itemInHand)) {
+                placeOil(state, level, pos, player, random);
+                KitchenShovelItem.setHasOil(itemInHand, false);
+                return InteractionResult.SUCCESS;
+            }
+            sendBarMessage(player, Component.translatable("tip.kaleidoscope_cookery.pot.need_oil"));
+            return InteractionResult.FAIL;
         }
 
         // 炒菜等内容
@@ -130,8 +136,7 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock,
         pot.addIngredient(itemInHand, player);
     }
 
-    private void placeOil(BlockState pState, Level level, BlockPos pos, Player player, ItemStack itemInHand, RandomSource random) {
-        itemInHand.shrink(1);
+    private void placeOil(BlockState pState, Level level, BlockPos pos, Player player, RandomSource random) {
         level.setBlockAndUpdate(pos, pState.setValue(HAS_OIL, true).setValue(SHOW_OIL, true));
         level.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1F,
                 (random.nextFloat() - random.nextFloat()) * 0.8F);

@@ -7,7 +7,10 @@ import com.github.ysbbbbbb.kaleidoscopecookery.client.render.block.FruitBasketBl
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.block.PotBlockEntityRender;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.block.StockpotBlockEntityRender;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenShovelItem;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
@@ -20,7 +23,9 @@ import static net.minecraftforge.client.gui.overlay.VanillaGuiOverlay.CROSSHAIR;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT, modid = KaleidoscopeCookery.MOD_ID)
 public class ClientSetupEvent {
     @SubscribeEvent
+    @SuppressWarnings("all")
     public static void onClientSetup(FMLClientSetupEvent event) {
+        event.enqueueWork(() -> ItemProperties.register(ModItems.KITCHEN_SHOVEL.get(), KitchenShovelItem.HAS_OIL_PROPERTY, KitchenShovelItem::getTexture));
     }
 
     @SubscribeEvent
