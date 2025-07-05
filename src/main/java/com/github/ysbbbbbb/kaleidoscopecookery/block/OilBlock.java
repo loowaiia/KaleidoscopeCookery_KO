@@ -1,11 +1,13 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -26,6 +28,11 @@ public class OilBlock extends Block {
 
     private static boolean never(BlockState state, BlockGetter world, BlockPos pos, EntityType<?> entityType) {
         return false;
+    }
+
+    @Override
+    public boolean isFireSource(BlockState state, LevelReader level, BlockPos pos, Direction side) {
+        return side == Direction.UP;
     }
 
     @Override

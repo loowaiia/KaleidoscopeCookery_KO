@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "equipment",
+  "category": "misc",
   "key": {
     "I": {
       "tag": "forge:ingots/iron"
@@ -13,12 +13,11 @@
     }
   },
   "pattern": [
-    "I  ",
-    " N ",
-    "  S"
+    "SSS",
+    "INI"
   ],
   "result": {
-    "item": "kaleidoscope_cookery:kitchen_shovel"
+    "item": "kaleidoscope_cookery:kitchenware_racks"
   },
   "show_notification": true
 }

@@ -106,9 +106,11 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .save(consumer);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.KITCHEN_SHOVEL.get())
-                .pattern("#")
-                .pattern("S")
-                .define('#', Tags.Items.INGOTS_IRON)
+                .pattern("I  ")
+                .pattern(" N ")
+                .pattern("  S")
+                .define('I', Tags.Items.INGOTS_IRON)
+                .define('N', Tags.Items.NUGGETS_IRON)
                 .define('S', Items.STICK)
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
@@ -169,6 +171,15 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .pattern(" B ")
                 .define('O', TagMod.OIL)
                 .define('B', Items.BUCKET)
+                .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.KITCHENWARE_RACKS.get())
+                .pattern("SSS")
+                .pattern("INI")
+                .define('S', Items.STICK)
+                .define('I', Tags.Items.INGOTS_IRON)
+                .define('N', Tags.Items.NUGGETS_IRON)
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
 

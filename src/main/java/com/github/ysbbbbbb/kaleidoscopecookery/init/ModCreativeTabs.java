@@ -29,6 +29,7 @@ public class ModCreativeTabs {
                 output.accept(ModItems.OIL.get());
                 output.accept(ModItems.OIL_BLOCK.get());
                 output.accept(ModItems.ENAMEL_BASIN.get());
+                output.accept(ModItems.KITCHENWARE_RACKS.get());
                 output.accept(ModItems.TOMATO_SEED.get());
                 output.accept(ModItems.CHILI_SEED.get());
                 output.accept(ModItems.LETTUCE_SEED.get());

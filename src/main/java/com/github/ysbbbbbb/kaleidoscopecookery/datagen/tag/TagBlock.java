@@ -25,6 +25,7 @@ public class TagBlock extends BlockTagsProvider {
                 ModBlocks.COOK_STOOL_BIRCH.get(), ModBlocks.COOK_STOOL_CHERRY.get(),
                 ModBlocks.COOK_STOOL_CRIMSON.get(), ModBlocks.COOK_STOOL_DARK_OAK.get(),
                 ModBlocks.COOK_STOOL_JUNGLE.get(), ModBlocks.COOK_STOOL_MANGROVE.get(),
-                ModBlocks.COOK_STOOL_WARPED.get());
+                ModBlocks.COOK_STOOL_WARPED.get(), ModBlocks.KITCHENWARE_RACKS.get(),
+                ModBlocks.CHOPPING_BOARD.get());
     }
 }

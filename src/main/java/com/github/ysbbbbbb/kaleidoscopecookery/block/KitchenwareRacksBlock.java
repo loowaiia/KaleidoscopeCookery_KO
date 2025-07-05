@@ -1,7 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.ChoppingBoardBlockEntity;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.KitchenwareRacksBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -14,7 +13,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -23,21 +21,29 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class ChoppingBoardBlock extends HorizontalDirectionalBlock implements EntityBlock, SimpleWaterloggedBlock {
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    public static final VoxelShape NORTH_SOUTH = Block.box(1, 0, 2, 15, 2, 14);
-    public static final VoxelShape EAST_WEST = Block.box(2, 0, 1, 14, 2, 15);
+import java.util.List;
 
-    public ChoppingBoardBlock() {
-        super(BlockBehaviour.Properties.of()
+public class KitchenwareRacksBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock, EntityBlock {
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
+    public static final VoxelShape NORTH = Block.box(1, 9, 14, 15, 14, 16);
+    public static final VoxelShape SOUTH = Block.box(1, 9, 0, 15, 14, 2);
+    public static final VoxelShape EAST = Block.box(0, 9, 1, 2, 14, 15);
+    public static final VoxelShape WEST = Block.box(14, 9, 1, 16, 14, 15);
+
+    public KitchenwareRacksBlock() {
+        super(Properties.of()
                 .mapColor(MapColor.WOOD)
                 .instrument(NoteBlockInstrument.BASS)
-                .strength(2.0F)
+                .strength(2.0F, 3.0F)
                 .sound(SoundType.WOOD)
                 .ignitedByLava());
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(WATERLOGGED, false));
@@ -52,33 +58,19 @@ public class ChoppingBoardBlock extends HorizontalDirectionalBlock implements En
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (level.getBlockEntity(pos) instanceof ChoppingBoardBlockEntity choppingBoard) {
-            if (choppingBoard.onPutOn(player.getItemInHand(hand))) {
-                return InteractionResult.SUCCESS;
-            }
-            ItemStack mainHandItem = player.getMainHandItem();
-            if (hand == InteractionHand.OFF_HAND) {
-                return InteractionResult.PASS;
-            }
-            if (choppingBoard.onCut(player)) {
-                return InteractionResult.SUCCESS;
-            }
-            if (choppingBoard.onTakeOut(player)) {
-                return InteractionResult.SUCCESS;
-            }
-            if (mainHandItem.is(TagMod.KITCHEN_KNIFE) && player.getOffhandItem().isEmpty()) {
-                choppingBoard.playParticlesSound();
-                return InteractionResult.SUCCESS;
-            }
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (hand != InteractionHand.MAIN_HAND) {
+            return InteractionResult.PASS;
         }
-        return super.use(blockState, level, pos, player, hand, hit);
-    }
-
-    @Override
-    @Nullable
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new ChoppingBoardBlockEntity(pos, state);
+        ItemStack mainHandItem = player.getMainHandItem();
+        // 依据点击的左右侧区分
+        Vec3 location = hit.getLocation().subtract(Vec3.atCenterOf(pos))
+                .yRot((float) Math.toRadians(state.getValue(FACING).getOpposite().toYRot()));
+        boolean isLeftClick = location.x > 0;
+        if (level.getBlockEntity(pos) instanceof KitchenwareRacksBlockEntity racks && racks.onClick(player, mainHandItem, isLeftClick)) {
+            return InteractionResult.SUCCESS;
+        }
+        return super.use(state, level, pos, player, hand, hit);
     }
 
     @Override
@@ -101,9 +93,32 @@ public class ChoppingBoardBlock extends HorizontalDirectionalBlock implements En
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        if (state.getValue(FACING).getAxis() == Direction.Axis.Z) {
-            return NORTH_SOUTH;
+        return switch (state.getValue(FACING)) {
+            case SOUTH -> SOUTH;
+            case EAST -> EAST;
+            case WEST -> WEST;
+            default -> NORTH;
+        };
+    }
+
+    @Override
+    @Nullable
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return new KitchenwareRacksBlockEntity(pPos, pState);
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState pState, LootParams.Builder pParams) {
+        List<ItemStack> drops = super.getDrops(pState, pParams);
+        BlockEntity parameter = pParams.getParameter(LootContextParams.BLOCK_ENTITY);
+        if (parameter instanceof KitchenwareRacksBlockEntity racks) {
+            if (!racks.getItemLeft().isEmpty()) {
+                drops.add(racks.getItemLeft());
+            }
+            if (!racks.getItemRight().isEmpty()) {
+                drops.add(racks.getItemRight());
+            }
         }
-        return EAST_WEST;
+        return drops;
     }
 }

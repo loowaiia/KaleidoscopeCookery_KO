@@ -118,6 +118,7 @@ public class ItemModelGenerator extends ItemModelProvider {
 
         withExistingParent("chopping_board", modLoc("block/chopping_board"));
         withExistingParent("oil_block", modLoc("block/oil_block"));
+        withExistingParent("kitchenware_racks", modLoc("block/kitchenware_racks"));
 
         ItemModelBuilder fruitBasketFull = new ItemModelBuilder(modLoc("fruit_basket"), this.existingFileHelper)
                 .parent(new ModelFile.UncheckedModelFile(modLoc("item/fruit_basket_full")));
