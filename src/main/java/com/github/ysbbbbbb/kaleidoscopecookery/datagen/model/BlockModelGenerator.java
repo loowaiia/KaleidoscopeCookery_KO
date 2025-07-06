@@ -22,6 +22,11 @@ public class BlockModelGenerator extends BlockModelProvider {
         cube("stove", stoveTop, stoveTop, modLoc("block/stove_front"), stoveSide, stoveSide, stoveSide).texture("particle", stoveSide);
         cube("stove_lit", stoveTopLit, stoveTopLit, modLoc("block/stove_front_lit"), stoveSide, stoveSide, stoveSide).texture("particle", stoveSide);
 
+        cross("block/chili_ristra/head", modLoc("block/chili_ristra/head")).renderType("cutout");
+        cross("block/chili_ristra/body", modLoc("block/chili_ristra/body")).renderType("cutout");
+        cross("block/chili_ristra/head_sheared", modLoc("block/chili_ristra/head_sheared")).renderType("cutout");
+        cross("block/chili_ristra/body_sheared", modLoc("block/chili_ristra/body_sheared")).renderType("cutout");
+
         cookStool("oak");
         cookStool("spruce");
         cookStool("acacia");

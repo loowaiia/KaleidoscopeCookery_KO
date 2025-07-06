@@ -30,7 +30,7 @@ public class KitchenwareRacksBlockEntityRender implements BlockEntityRenderer<Ki
 
         if (!itemLeft.isEmpty()) {
             poseStack.pushPose();
-            poseStack.translate(-0.2, 0.25, -0.3);
+            poseStack.translate(-0.2, 0.4375, -0.3);
             poseStack.scale(0.75f, 0.75f, 0.75f);
             poseStack.mulPose(Axis.XN.rotationDegrees(180));
             poseStack.mulPose(Axis.YN.rotationDegrees(-25));
@@ -39,7 +39,7 @@ public class KitchenwareRacksBlockEntityRender implements BlockEntityRenderer<Ki
             poseStack.popPose();
         }
         if (!itemRight.isEmpty()) {
-            poseStack.translate(0.2, 0.25, -0.3);
+            poseStack.translate(0.2, 0.4375, -0.3);
             poseStack.scale(0.75f, 0.75f, 0.75f);
             poseStack.mulPose(Axis.XN.rotationDegrees(180));
             poseStack.mulPose(Axis.YN.rotationDegrees(-25));

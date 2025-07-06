@@ -1,10 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen.model;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.EnamelBasinBlock;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.PotBlock;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.StockpotBlock;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.StoveBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.RiceCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
@@ -100,6 +97,20 @@ public class BlockStateGenerator extends BlockStateProvider {
                 return new ModelFile.UncheckedModelFile(modLoc("block/enamel_basin/middle"));
             }
             return new ModelFile.UncheckedModelFile(modLoc("block/enamel_basin/high"));
+        });
+
+        variantBlock(ModBlocks.CHILI_RISTRA.get(), blockState -> {
+            if (blockState.getValue(ChiliRistraBlock.IS_HEAD)) {
+                if (blockState.getValue(ChiliRistraBlock.SHEARED)) {
+                    return new ModelFile.UncheckedModelFile(modLoc("block/chili_ristra/head_sheared"));
+                }
+                return new ModelFile.UncheckedModelFile(modLoc("block/chili_ristra/head"));
+            } else {
+                if (blockState.getValue(ChiliRistraBlock.SHEARED)) {
+                    return new ModelFile.UncheckedModelFile(modLoc("block/chili_ristra/body_sheared"));
+                }
+                return new ModelFile.UncheckedModelFile(modLoc("block/chili_ristra/body"));
+            }
         });
     }
 

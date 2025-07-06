@@ -88,6 +88,12 @@ public class ItemModelGenerator extends ItemModelProvider {
         basicItem(ModItems.LETTUCE_SEED.get());
         basicItem(ModItems.CATERPILLAR.get());
 
+        ResourceLocation chileRistra = ForgeRegistries.ITEMS.getKey(ModItems.CHILI_RISTRA.get());
+        if (chileRistra != null) {
+            getBuilder(chileRistra.toString()).parent(new ModelFile.UncheckedModelFile("item/generated"))
+                    .texture("layer0", new ResourceLocation(KaleidoscopeCookery.MOD_ID, "block/chili_ristra/head"));
+        }
+
         ResourceLocation shovel = ForgeRegistries.ITEMS.getKey(ModItems.KITCHEN_SHOVEL.get());
         if (shovel != null) {
             ItemModelBuilder shovelNoOil = handheldItem(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "kitchen_shovel_no_oil"));

@@ -183,6 +183,14 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.CHILI_RISTRA.get())
+                .pattern("CC ")
+                .pattern("CC ")
+                .pattern("CC ")
+                .define('C', ModItems.RED_CHILI.get())
+                .unlockedBy("has_red_chili", has(ModItems.RED_CHILI.get()))
+                .save(consumer);
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ModItems.OIL.get(), 9)
                 .requires(ModItems.OIL_BLOCK.get())
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))

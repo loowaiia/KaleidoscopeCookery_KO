@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.ChiliRistraBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.EnamelBasinBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.RiceCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
@@ -103,6 +104,24 @@ public class LootTableGenerator {
             FoodBiteRegistry.FOOD_DATA_MAP.forEach(this::dropFoodBite);
 
             this.add(ModBlocks.ENAMEL_BASIN.get(), createEnamelBasinLootTable());
+            this.add(ModBlocks.CHILI_RISTRA.get(), createChiliRistraLootTable());
+        }
+
+        private LootTable.Builder createChiliRistraLootTable() {
+            LootPool.Builder builder = LootPool.lootPool();
+
+            StatePropertiesPredicate.Builder isSheared = StatePropertiesPredicate.Builder.properties().hasProperty(ChiliRistraBlock.SHEARED, true);
+            LootItemCondition.Builder condition = LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.CHILI_RISTRA.get()).setProperties(isSheared);
+
+            LootItemConditionalFunction.Builder<?> normalDrop = SetItemCountFunction.setCount(ConstantValue.exactly(6));
+            LootItemConditionalFunction.Builder<?> shearedDrop = SetItemCountFunction.setCount(ConstantValue.exactly(3));
+
+            LootPoolSingletonContainer.Builder<?> normalLoot = LootItem.lootTableItem(ModItems.RED_CHILI.get()).apply(normalDrop);
+            LootPoolSingletonContainer.Builder<?> shearedLoot = LootItem.lootTableItem(ModItems.RED_CHILI.get()).apply(shearedDrop);
+
+            builder.add(shearedLoot.when(condition).otherwise(normalLoot));
+
+            return LootTable.lootTable().withPool(builder.when(ExplosionCondition.survivesExplosion()));
         }
 
         private LootTable.Builder createEnamelBasinLootTable() {
