@@ -27,5 +27,6 @@ public class TagBlock extends BlockTagsProvider {
                 ModBlocks.COOK_STOOL_JUNGLE.get(), ModBlocks.COOK_STOOL_MANGROVE.get(),
                 ModBlocks.COOK_STOOL_WARPED.get(), ModBlocks.KITCHENWARE_RACKS.get(),
                 ModBlocks.CHOPPING_BOARD.get());
+        this.tag(BlockTags.MINEABLE_WITH_HOE).add(ModBlocks.STRAW_BLOCK.get());
     }
 }

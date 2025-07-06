@@ -33,8 +33,10 @@ public class ModCreativeTabs {
                 output.accept(ModItems.TOMATO_SEED.get());
                 output.accept(ModItems.CHILI_SEED.get());
                 output.accept(ModItems.LETTUCE_SEED.get());
+                output.accept(ModItems.WILD_RICE_SEED.get());
                 output.accept(ModItems.RICE_SEED.get());
                 output.accept(ModItems.CHILI_RISTRA.get());
+                output.accept(ModItems.STRAW_BLOCK.get());
                 output.accept(ModItems.COOK_STOOL_OAK.get());
                 output.accept(ModItems.COOK_STOOL_SPRUCE.get());
                 output.accept(ModItems.COOK_STOOL_ACACIA.get());

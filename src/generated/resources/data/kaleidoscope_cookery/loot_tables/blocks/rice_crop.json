@@ -39,7 +39,7 @@
             },
             {
               "type": "minecraft:item",
-              "name": "kaleidoscope_cookery:rice"
+              "name": "kaleidoscope_cookery:wild_rice"
             }
           ]
         }
@@ -61,7 +61,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "kaleidoscope_cookery:rice"
+          "name": "kaleidoscope_cookery:wild_rice"
         }
       ],
       "functions": [

@@ -191,12 +191,25 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .unlockedBy("has_red_chili", has(ModItems.RED_CHILI.get()))
                 .save(consumer);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.STRAW_BLOCK.get())
+                .pattern("RRR")
+                .pattern("RRR")
+                .pattern("RRR")
+                .define('R', ModItems.RICE_PANICLE.get())
+                .unlockedBy("has_rice_panicle", has(ModItems.RICE_PANICLE.get()))
+                .save(consumer);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ModItems.RICE_PANICLE.get(), 9)
+                .requires(ModItems.STRAW_BLOCK.get())
+                .unlockedBy("has_rice_panicle", has(ModItems.RICE_PANICLE.get()))
+                .save(consumer);
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ModItems.OIL.get(), 9)
                 .requires(ModItems.OIL_BLOCK.get())
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ModItems.RICE_SEED.get(), 1)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ModItems.RICE_SEED.get(), 3)
                 .requires(ModItems.RICE_PANICLE.get())
                 .unlockedBy("has_rice_panicle", has(ModItems.RICE_PANICLE.get()))
                 .save(consumer);

@@ -74,6 +74,7 @@ public class LootTableGenerator {
             dropSelf(ModBlocks.COOK_STOOL_WARPED.get());
             dropSelf(ModBlocks.STOCKPOT.get());
             dropSelf(ModBlocks.KITCHENWARE_RACKS.get());
+            dropSelf(ModBlocks.STRAW_BLOCK.get());
 
             this.add(ModBlocks.TOMATO_CROP.get(), createCropDrops(ModBlocks.TOMATO_CROP.get(), ModItems.TOMATO.get(),
                     ModItems.TOMATO_SEED.get(), createCropBuilder(ModBlocks.TOMATO_CROP.get())));
@@ -90,7 +91,7 @@ public class LootTableGenerator {
             this.add(ModBlocks.LETTUCE_CROP.get(), createCropDrops(ModBlocks.LETTUCE_CROP.get(), ModItems.LETTUCE.get(), ModItems.LETTUCE_SEED.get(), lettuceBuilder)
                     .withPool(LootPool.lootPool().when(lettuceBuilder).add(caterpillar)));
 
-            Item riceSeed = ModItems.RICE_SEED.get();
+            Item riceSeed = ModItems.WILD_RICE_SEED.get();
             LootItemCondition.Builder riceCropBuilder = createRiceCropBuilder();
             var countFunction = SetItemCountFunction.setCount(UniformGenerator.between(2, 4));
             LootPool.Builder ricePanicle = LootPool.lootPool().add(LootItem.lootTableItem(ModItems.RICE_PANICLE.get())
@@ -167,7 +168,7 @@ public class LootTableGenerator {
             var tomato = getSeed(ModItems.TOMATO_SEED.get());
             var chili = getSeed(ModItems.CHILI_SEED.get());
             var lettuce = getSeed(ModItems.LETTUCE_SEED.get());
-            var rice = getSeed(ModItems.RICE_SEED.get());
+            var rice = getSeed(ModItems.WILD_RICE_SEED.get());
             LootTable.Builder dropSeed = LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
                     .add(tomato).add(chili).add(lettuce).add(rice));
             output.accept(modLoc("straw_hat_seed_drop"), dropSeed);

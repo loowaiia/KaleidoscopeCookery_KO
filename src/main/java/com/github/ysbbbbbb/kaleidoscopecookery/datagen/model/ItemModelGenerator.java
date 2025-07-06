@@ -72,6 +72,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         basicItem(ModItems.STRAW_HAT_FLOWER.get());
         basicItem(ModItems.TOMATO_SEED.get());
         basicItem(ModItems.RICE_SEED.get());
+        basicItem(ModItems.WILD_RICE_SEED.get());
         basicItem(ModItems.RICE_PANICLE.get());
         basicItem(ModItems.SASHIMI.get());
         basicItem(ModItems.RAW_LAMB_CHOPS.get());
@@ -125,6 +126,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent("chopping_board", modLoc("block/chopping_board"));
         withExistingParent("oil_block", modLoc("block/oil_block"));
         withExistingParent("kitchenware_racks", modLoc("block/kitchenware_racks"));
+        withExistingParent("straw_block", modLoc("block/straw_block"));
 
         ItemModelBuilder fruitBasketFull = new ItemModelBuilder(modLoc("fruit_basket"), this.existingFileHelper)
                 .parent(new ModelFile.UncheckedModelFile(modLoc("item/fruit_basket_full")));
