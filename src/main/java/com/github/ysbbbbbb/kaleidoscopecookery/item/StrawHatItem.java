@@ -4,6 +4,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.client.model.StrawHatModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -47,7 +48,9 @@ public class StrawHatItem extends ArmorItem {
                 if (cachedModel == null) {
                     cachedModel = new StrawHatModel(Minecraft.getInstance().getEntityModels().bakeLayer(StrawHatModel.LAYER_LOCATION));
                 }
-                cachedModel.getHead().copyFrom(original.head);
+                ModelPart head = cachedModel.getHead();
+                head.copyFrom(original.head);
+                //head.y = head.y - 5;
                 return cachedModel;
             }
         });

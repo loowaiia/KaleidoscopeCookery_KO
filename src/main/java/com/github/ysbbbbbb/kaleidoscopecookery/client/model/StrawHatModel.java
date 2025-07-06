@@ -14,22 +14,20 @@ import net.minecraft.world.entity.Entity;
 public class StrawHatModel extends EntityModel<Entity> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "straw_hat"), "main");
     private final ModelPart head;
-    private final ModelPart bone;
 
     public StrawHatModel(ModelPart root) {
         this.head = root.getChild("head");
-        this.bone = this.head.getChild("bone");
     }
 
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
 
-        PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-        PartDefinition bone = head.addOrReplaceChild("bone", CubeListBuilder.create().texOffs(-10, 17).addBox(-7.5F, 0.0F, -7.5F, 15.0F, 0.0F, 15.0F, new CubeDeformation(0.01F))
-                .texOffs(32, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 4.0F, 8.0F, new CubeDeformation(0.0F))
-                .texOffs(0, 42).addBox(-4.0F, -3.25F, -4.0F, 8.0F, 4.0F, 8.0F, new CubeDeformation(0.25F)), PartPose.offsetAndRotation(0.0F, -5.0F, 0.0F, -0.0873F, 0.0F, -0.0873F));
+        PartDefinition bone = head.addOrReplaceChild("bone", CubeListBuilder.create().texOffs(-10, 17).addBox(-7.5F, -4.0F, -7.5F, 15.0F, 0.0F, 15.0F, new CubeDeformation(0.01F))
+                .texOffs(32, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 4.0F, 8.0F, new CubeDeformation(0.0F))
+                .texOffs(0, 42).addBox(-4.0F, -7.25F, -4.0F, 8.0F, 4.0F, 8.0F, new CubeDeformation(0.25F)), PartPose.offsetAndRotation(0.3F, 0.5F, 0.0F, -0.0873F, 0.0F, -0.0873F));
 
         return LayerDefinition.create(meshdefinition, 64, 64);
     }

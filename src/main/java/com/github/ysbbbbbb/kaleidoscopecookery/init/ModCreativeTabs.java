@@ -52,6 +52,9 @@ public class ModCreativeTabs {
                 output.accept(ModItems.SCARECROW.get());
                 output.accept(ModItems.STRAW_HAT.get());
                 output.accept(ModItems.STRAW_HAT_FLOWER.get());
+                output.accept(ModItems.FARMER_CHEST_PLATE.get());
+                output.accept(ModItems.FARMER_LEGGINGS.get());
+                output.accept(ModItems.FARMER_BOOTS.get());
             }).build());
 
     public static RegistryObject<CreativeModeTab> COOKERY_FOOD_TAB = TABS.register("cookery_food", () -> CreativeModeTab.builder()

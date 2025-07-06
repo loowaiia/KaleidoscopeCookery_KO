@@ -2,10 +2,8 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.*;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemNameBlockItem;
-import net.minecraft.world.item.Tiers;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.armor.FarmerArmorMaterial;
+import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -35,6 +33,9 @@ public final class ModItems {
     public static RegistryObject<Item> SCARECROW = ITEMS.register("scarecrow", ScarecrowItem::new);
     public static RegistryObject<Item> STRAW_HAT = ITEMS.register("straw_hat", () -> new StrawHatItem(false));
     public static RegistryObject<Item> STRAW_HAT_FLOWER = ITEMS.register("straw_hat_flower", () -> new StrawHatItem(true));
+    public static final RegistryObject<Item> FARMER_CHEST_PLATE = ITEMS.register("farmer_chest_plate", () -> new ArmorItem(FarmerArmorMaterial.INSTANCE, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    public static final RegistryObject<Item> FARMER_LEGGINGS = ITEMS.register("farmer_leggings", () -> new ArmorItem(FarmerArmorMaterial.INSTANCE, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+    public static final RegistryObject<Item> FARMER_BOOTS = ITEMS.register("farmer_boots", () -> new ArmorItem(FarmerArmorMaterial.INSTANCE, ArmorItem.Type.BOOTS, new Item.Properties()));
 
     public static RegistryObject<Item> TOMATO_SEED = ITEMS.register("tomato_seed", () -> new ItemNameBlockItem(ModBlocks.TOMATO_CROP.get(), new Item.Properties()));
     public static RegistryObject<Item> CHILI_SEED = ITEMS.register("chili_seed", () -> new ItemNameBlockItem(ModBlocks.CHILI_CROP.get(), new Item.Properties()));

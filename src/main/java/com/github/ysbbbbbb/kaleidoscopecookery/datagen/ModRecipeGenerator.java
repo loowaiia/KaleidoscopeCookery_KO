@@ -199,6 +199,32 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .unlockedBy("has_rice_panicle", has(ModItems.RICE_PANICLE.get()))
                 .save(consumer);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.FARMER_CHEST_PLATE.get())
+                .pattern("I I")
+                .pattern("LLL")
+                .pattern("LLL")
+                .define('I', Tags.Items.INGOTS_IRON)
+                .define('L', Items.LEATHER)
+                .unlockedBy("has_leather", has(Items.LEATHER))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.FARMER_LEGGINGS.get())
+                .pattern("LIL")
+                .pattern("L L")
+                .pattern("L L")
+                .define('I', Tags.Items.INGOTS_IRON)
+                .define('L', Items.LEATHER)
+                .unlockedBy("has_leather", has(Items.LEATHER))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.FARMER_BOOTS.get())
+                .pattern("I I")
+                .pattern("L L")
+                .define('I', Tags.Items.INGOTS_IRON)
+                .define('L', Items.LEATHER)
+                .unlockedBy("has_leather", has(Items.LEATHER))
+                .save(consumer);
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ModItems.RICE_PANICLE.get(), 9)
                 .requires(ModItems.STRAW_BLOCK.get())
                 .unlockedBy("has_rice_panicle", has(ModItems.RICE_PANICLE.get()))

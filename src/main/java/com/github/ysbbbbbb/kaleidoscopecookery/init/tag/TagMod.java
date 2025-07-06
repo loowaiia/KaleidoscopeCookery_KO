@@ -28,6 +28,10 @@ public interface TagMod {
      * 可以当本模组菜刀的物品
      */
     TagKey<Item> KITCHEN_KNIFE = itemTag("kitchen_knife");
+    /**
+     * 农夫套装
+     */
+    TagKey<Item> FARMER_ARMOR = itemTag("farmer_armor");
 
     static TagKey<Item> itemTag(String name) {
         return TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, name));

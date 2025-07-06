@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +39,10 @@ public class TagItem extends ItemTagsProvider {
                 ModItems.GOLD_KITCHEN_KNIFE.get(),
                 ModItems.DIAMOND_KITCHEN_KNIFE.get(),
                 ModItems.NETHERITE_KITCHEN_KNIFE.get());
+        tag(FARMER_ARMOR).add(ModItems.FARMER_CHEST_PLATE.get(),
+                        ModItems.FARMER_LEGGINGS.get(),
+                        ModItems.FARMER_BOOTS.get())
+                .addTag(STRAW_HAT);
         addPotIngredient();
 
         // 原版兼容
