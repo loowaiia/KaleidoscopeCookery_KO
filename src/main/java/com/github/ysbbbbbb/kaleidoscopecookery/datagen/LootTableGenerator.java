@@ -61,6 +61,7 @@ public class LootTableGenerator {
             dropSelf(ModBlocks.STOVE.get());
             dropSelf(ModBlocks.POT.get());
             dropSelf(ModBlocks.CHOPPING_BOARD.get());
+
             dropSelf(ModBlocks.COOK_STOOL_OAK.get());
             dropSelf(ModBlocks.COOK_STOOL_SPRUCE.get());
             dropSelf(ModBlocks.COOK_STOOL_ACACIA.get());
@@ -72,6 +73,19 @@ public class LootTableGenerator {
             dropSelf(ModBlocks.COOK_STOOL_JUNGLE.get());
             dropSelf(ModBlocks.COOK_STOOL_MANGROVE.get());
             dropSelf(ModBlocks.COOK_STOOL_WARPED.get());
+
+            dropSelf(ModBlocks.CHAIR_OAK.get());
+            dropSelf(ModBlocks.CHAIR_SPRUCE.get());
+            dropSelf(ModBlocks.CHAIR_ACACIA.get());
+            dropSelf(ModBlocks.CHAIR_BAMBOO.get());
+            dropSelf(ModBlocks.CHAIR_BIRCH.get());
+            dropSelf(ModBlocks.CHAIR_CHERRY.get());
+            dropSelf(ModBlocks.CHAIR_CRIMSON.get());
+            dropSelf(ModBlocks.CHAIR_DARK_OAK.get());
+            dropSelf(ModBlocks.CHAIR_JUNGLE.get());
+            dropSelf(ModBlocks.CHAIR_MANGROVE.get());
+            dropSelf(ModBlocks.CHAIR_WARPED.get());
+
             dropSelf(ModBlocks.STOCKPOT.get());
             dropSelf(ModBlocks.KITCHENWARE_RACKS.get());
             dropSelf(ModBlocks.STRAW_BLOCK.get());

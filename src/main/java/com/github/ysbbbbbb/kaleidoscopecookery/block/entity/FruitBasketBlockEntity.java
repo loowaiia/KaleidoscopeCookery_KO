@@ -75,7 +75,6 @@ public class FruitBasketBlockEntity extends BlockEntity {
         this.items.deserializeNBT(tag.getCompound(ITEMS));
     }
 
-
     @Override
     public CompoundTag getUpdateTag() {
         return saveWithoutMetadata();

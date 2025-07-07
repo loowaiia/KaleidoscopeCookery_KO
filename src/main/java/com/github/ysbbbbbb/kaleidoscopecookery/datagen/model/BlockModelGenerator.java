@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen.model;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
@@ -29,28 +30,40 @@ public class BlockModelGenerator extends BlockModelProvider {
 
         cubeColumn("straw_block", modLoc("block/straw_block_side"), modLoc("block/straw_block_end"));
 
-        cookStool("oak");
-        cookStool("spruce");
-        cookStool("acacia");
-        cookStool("bamboo");
-        cookStool("birch");
-        cookStool("cherry");
-        cookStool("crimson");
-        cookStool("dark_oak");
-        cookStool("jungle");
-        cookStool("mangrove");
-        cookStool("warped");
+        wood("oak");
+        wood("spruce");
+        wood("acacia");
+        wood("bamboo");
+        wood("birch");
+        wood("cherry");
+        wood("crimson");
+        wood("dark_oak");
+        wood("jungle");
+        wood("mangrove");
+        wood("warped");
 
         crop("tomato", 8);
         crop("chili", 8);
         crop("lettuce", 8);
 
         riceCrop();
+        carpet();
     }
 
-    public void cookStool(String name) {
-        String path = "block/cook_stool/" + name;
-        withExistingParent(path, modLoc("block/cook_stool/cook_stool")).texture("particle", modLoc(path));
+    public void wood(String name) {
+        String cookStool = "block/cook_stool/" + name;
+        withExistingParent(cookStool, modLoc("block/cook_stool/cook_stool")).texture("particle", modLoc(cookStool));
+
+        String chair = "block/chair/" + name;
+        withExistingParent(chair, modLoc("block/chair/chair")).texture("particle", modLoc(chair));
+    }
+
+    public void carpet() {
+        for (DyeColor color : DyeColor.values()) {
+            String name = color.getName();
+            String carpet = "block/carpet/chair/" + name;
+            withExistingParent(carpet, modLoc("block/carpet/chair/chair_carpet")).texture("particle", modLoc(carpet));
+        }
     }
 
     public void crop(String name, int stage) {

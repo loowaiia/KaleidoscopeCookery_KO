@@ -26,7 +26,12 @@ public class TagBlock extends BlockTagsProvider {
                 ModBlocks.COOK_STOOL_CRIMSON.get(), ModBlocks.COOK_STOOL_DARK_OAK.get(),
                 ModBlocks.COOK_STOOL_JUNGLE.get(), ModBlocks.COOK_STOOL_MANGROVE.get(),
                 ModBlocks.COOK_STOOL_WARPED.get(), ModBlocks.KITCHENWARE_RACKS.get(),
-                ModBlocks.CHOPPING_BOARD.get());
+                ModBlocks.CHAIR_OAK.get(), ModBlocks.CHAIR_SPRUCE.get(),
+                ModBlocks.CHAIR_ACACIA.get(), ModBlocks.CHAIR_BAMBOO.get(),
+                ModBlocks.CHAIR_BIRCH.get(), ModBlocks.CHAIR_CHERRY.get(),
+                ModBlocks.CHAIR_CRIMSON.get(), ModBlocks.CHAIR_DARK_OAK.get(),
+                ModBlocks.CHAIR_JUNGLE.get(), ModBlocks.CHAIR_MANGROVE.get(),
+                ModBlocks.CHAIR_WARPED.get(), ModBlocks.CHOPPING_BOARD.get());
         this.tag(BlockTags.MINEABLE_WITH_HOE).add(ModBlocks.STRAW_BLOCK.get());
     }
 }

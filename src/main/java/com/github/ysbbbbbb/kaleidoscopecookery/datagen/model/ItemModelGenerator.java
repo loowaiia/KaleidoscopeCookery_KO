@@ -126,6 +126,18 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent("cook_stool_mangrove", modLoc("block/cook_stool/mangrove"));
         withExistingParent("cook_stool_warped", modLoc("block/cook_stool/warped"));
 
+        withExistingParent("chair_oak", modLoc("block/chair/oak"));
+        withExistingParent("chair_spruce", modLoc("block/chair/spruce"));
+        withExistingParent("chair_acacia", modLoc("block/chair/acacia"));
+        withExistingParent("chair_bamboo", modLoc("block/chair/bamboo"));
+        withExistingParent("chair_birch", modLoc("block/chair/birch"));
+        withExistingParent("chair_cherry", modLoc("block/chair/cherry"));
+        withExistingParent("chair_crimson", modLoc("block/chair/crimson"));
+        withExistingParent("chair_dark_oak", modLoc("block/chair/dark_oak"));
+        withExistingParent("chair_jungle", modLoc("block/chair/jungle"));
+        withExistingParent("chair_mangrove", modLoc("block/chair/mangrove"));
+        withExistingParent("chair_warped", modLoc("block/chair/warped"));
+
         withExistingParent("chopping_board", modLoc("block/chopping_board"));
         withExistingParent("oil_block", modLoc("block/oil_block"));
         withExistingParent("kitchenware_racks", modLoc("block/kitchenware_racks"));

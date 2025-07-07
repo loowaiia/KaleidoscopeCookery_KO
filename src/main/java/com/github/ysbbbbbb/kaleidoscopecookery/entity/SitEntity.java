@@ -28,6 +28,11 @@ public class SitEntity extends Entity {
         this.setPos(pos.getX() + 0.5, pos.getY() + 0.4375, pos.getZ() + 0.5);
     }
 
+    public SitEntity(Level worldIn, BlockPos pos, double y) {
+        this(TYPE, worldIn);
+        this.setPos(pos.getX() + 0.5, pos.getY() + y, pos.getZ() + 0.5);
+    }
+
     @Override
     public double getPassengersRidingOffset() {
         return -0.25;

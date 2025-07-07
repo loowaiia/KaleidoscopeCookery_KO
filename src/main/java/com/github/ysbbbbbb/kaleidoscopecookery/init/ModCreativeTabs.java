@@ -48,6 +48,17 @@ public class ModCreativeTabs {
                 output.accept(ModItems.COOK_STOOL_JUNGLE.get());
                 output.accept(ModItems.COOK_STOOL_MANGROVE.get());
                 output.accept(ModItems.COOK_STOOL_WARPED.get());
+                output.accept(ModItems.CHAIR_OAK.get());
+                output.accept(ModItems.CHAIR_SPRUCE.get());
+                output.accept(ModItems.CHAIR_ACACIA.get());
+                output.accept(ModItems.CHAIR_BAMBOO.get());
+                output.accept(ModItems.CHAIR_BIRCH.get());
+                output.accept(ModItems.CHAIR_CHERRY.get());
+                output.accept(ModItems.CHAIR_CRIMSON.get());
+                output.accept(ModItems.CHAIR_DARK_OAK.get());
+                output.accept(ModItems.CHAIR_JUNGLE.get());
+                output.accept(ModItems.CHAIR_MANGROVE.get());
+                output.accept(ModItems.CHAIR_WARPED.get());
                 output.accept(ModItems.FRUIT_BASKET.get());
                 output.accept(ModItems.SCARECROW.get());
                 output.accept(ModItems.STRAW_HAT.get());

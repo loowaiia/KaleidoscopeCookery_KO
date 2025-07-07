@@ -273,6 +273,18 @@ public class ModRecipeGenerator extends RecipeProvider {
         addCookStool(ModItems.COOK_STOOL_MANGROVE, Blocks.MANGROVE_PLANKS).save(consumer);
         addCookStool(ModItems.COOK_STOOL_WARPED, Blocks.WARPED_PLANKS).save(consumer);
 
+        addChair(ModItems.CHAIR_OAK, Blocks.OAK_FENCE, Blocks.OAK_SLAB).save(consumer);
+        addChair(ModItems.CHAIR_SPRUCE, Blocks.SPRUCE_FENCE, Blocks.SPRUCE_SLAB).save(consumer);
+        addChair(ModItems.CHAIR_ACACIA, Blocks.ACACIA_FENCE, Blocks.ACACIA_SLAB).save(consumer);
+        addChair(ModItems.CHAIR_BAMBOO, Blocks.BAMBOO_BLOCK, Blocks.BAMBOO_SLAB).save(consumer);
+        addChair(ModItems.CHAIR_BIRCH, Blocks.BIRCH_FENCE, Blocks.BIRCH_SLAB).save(consumer);
+        addChair(ModItems.CHAIR_CHERRY, Blocks.CHERRY_FENCE, Blocks.CHERRY_SLAB).save(consumer);
+        addChair(ModItems.CHAIR_CRIMSON, Blocks.CRIMSON_FENCE, Blocks.CRIMSON_SLAB).save(consumer);
+        addChair(ModItems.CHAIR_DARK_OAK, Blocks.DARK_OAK_FENCE, Blocks.DARK_OAK_SLAB).save(consumer);
+        addChair(ModItems.CHAIR_JUNGLE, Blocks.JUNGLE_FENCE, Blocks.JUNGLE_SLAB).save(consumer);
+        addChair(ModItems.CHAIR_MANGROVE, Blocks.MANGROVE_FENCE, Blocks.MANGROVE_SLAB).save(consumer);
+        addChair(ModItems.CHAIR_WARPED, Blocks.WARPED_FENCE, Blocks.WARPED_SLAB).save(consumer);
+
         PotRecipeBuilder.builder().addInput(Items.POTATO).setResult(Items.BAKED_POTATO).save(consumer);
         PotRecipeBuilder.builder().addInput(Items.KELP).setResult(Items.DRIED_KELP).save(consumer);
         PotRecipeBuilder.builder().addInput(Items.CHORUS_FRUIT).setResult(Items.POPPED_CHORUS_FRUIT).save(consumer);
@@ -548,6 +560,16 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .pattern("# #")
                 .define('#', wood)
                 .unlockedBy("has_wood", has(wood));
+    }
+
+    private ShapedRecipeBuilder addChair(RegistryObject<Item> result, Block fence, Block slab) {
+        return ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, result.get())
+                .pattern("F  ")
+                .pattern("SSS")
+                .pattern("F F")
+                .define('F', fence)
+                .define('S', slab)
+                .unlockedBy("has_fence", has(fence));
     }
 
     public ResourceLocation modLoc(String path) {

@@ -75,6 +75,18 @@ public class BlockStateGenerator extends BlockStateProvider {
         cookStool(ModBlocks.COOK_STOOL_MANGROVE, "mangrove");
         cookStool(ModBlocks.COOK_STOOL_WARPED, "warped");
 
+        chair(ModBlocks.CHAIR_OAK, "oak");
+        chair(ModBlocks.CHAIR_SPRUCE, "spruce");
+        chair(ModBlocks.CHAIR_ACACIA, "acacia");
+        chair(ModBlocks.CHAIR_BAMBOO, "bamboo");
+        chair(ModBlocks.CHAIR_BIRCH, "birch");
+        chair(ModBlocks.CHAIR_CHERRY, "cherry");
+        chair(ModBlocks.CHAIR_CRIMSON, "crimson");
+        chair(ModBlocks.CHAIR_DARK_OAK, "dark_oak");
+        chair(ModBlocks.CHAIR_JUNGLE, "jungle");
+        chair(ModBlocks.CHAIR_MANGROVE, "mangrove");
+        chair(ModBlocks.CHAIR_WARPED, "warped");
+
         simpleBlock(ModBlocks.OIL_BLOCK.get());
 
         crop(ModBlocks.TOMATO_CROP, "tomato");
@@ -152,6 +164,10 @@ public class BlockStateGenerator extends BlockStateProvider {
 
     public void cookStool(RegistryObject<Block> block, String name) {
         horizontalBlock(block.get(), new ModelFile.UncheckedModelFile(modLoc("block/cook_stool/" + name)));
+    }
+
+    public void chair(RegistryObject<Block> block, String name) {
+        horizontalBlock(block.get(), new ModelFile.UncheckedModelFile(modLoc("block/chair/" + name)));
     }
 
     public void addFoodBiteBlock(Block block, ResourceLocation id) {

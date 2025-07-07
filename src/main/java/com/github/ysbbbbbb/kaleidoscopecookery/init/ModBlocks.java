@@ -45,6 +45,18 @@ public class ModBlocks {
     public static RegistryObject<Block> COOK_STOOL_MANGROVE = BLOCKS.register("cook_stool_mangrove", CookStoolBlock::new);
     public static RegistryObject<Block> COOK_STOOL_WARPED = BLOCKS.register("cook_stool_warped", CookStoolBlock::new);
 
+    public static RegistryObject<Block> CHAIR_OAK = BLOCKS.register("chair_oak", ChairBlock::new);
+    public static RegistryObject<Block> CHAIR_SPRUCE = BLOCKS.register("chair_spruce", ChairBlock::new);
+    public static RegistryObject<Block> CHAIR_ACACIA = BLOCKS.register("chair_acacia", ChairBlock::new);
+    public static RegistryObject<Block> CHAIR_BAMBOO = BLOCKS.register("chair_bamboo", ChairBlock::new);
+    public static RegistryObject<Block> CHAIR_BIRCH = BLOCKS.register("chair_birch", ChairBlock::new);
+    public static RegistryObject<Block> CHAIR_CHERRY = BLOCKS.register("chair_cherry", ChairBlock::new);
+    public static RegistryObject<Block> CHAIR_CRIMSON = BLOCKS.register("chair_crimson", ChairBlock::new);
+    public static RegistryObject<Block> CHAIR_DARK_OAK = BLOCKS.register("chair_dark_oak", ChairBlock::new);
+    public static RegistryObject<Block> CHAIR_JUNGLE = BLOCKS.register("chair_jungle", ChairBlock::new);
+    public static RegistryObject<Block> CHAIR_MANGROVE = BLOCKS.register("chair_mangrove", ChairBlock::new);
+    public static RegistryObject<Block> CHAIR_WARPED = BLOCKS.register("chair_warped", ChairBlock::new);
+
     public static RegistryObject<BlockEntityType<PotBlockEntity>> POT_BE = BLOCK_ENTITIES.register("pot",
             () -> BlockEntityType.Builder.of(PotBlockEntity::new, POT.get()).build(null));
     public static RegistryObject<BlockEntityType<StockpotBlockEntity>> STOCKPOT_BE = BLOCK_ENTITIES.register("stockpot",
@@ -55,4 +67,9 @@ public class ModBlocks {
             () -> BlockEntityType.Builder.of(ChoppingBoardBlockEntity::new, CHOPPING_BOARD.get()).build(null));
     public static RegistryObject<BlockEntityType<KitchenwareRacksBlockEntity>> KITCHENWARE_RACKS_BE = BLOCK_ENTITIES.register("kitchenware_racks",
             () -> BlockEntityType.Builder.of(KitchenwareRacksBlockEntity::new, KITCHENWARE_RACKS.get()).build(null));
+    public static RegistryObject<BlockEntityType<ChairBlockEntity>> CHAIR_BE = BLOCK_ENTITIES.register("chair", () -> BlockEntityType.Builder.of(ChairBlockEntity::new,
+            CHAIR_OAK.get(), CHAIR_SPRUCE.get(), CHAIR_ACACIA.get(), CHAIR_BAMBOO.get(),
+            CHAIR_BIRCH.get(), CHAIR_CHERRY.get(), CHAIR_CRIMSON.get(), CHAIR_DARK_OAK.get(),
+            CHAIR_JUNGLE.get(), CHAIR_MANGROVE.get(), CHAIR_WARPED.get()
+    ).build(null));
 }
