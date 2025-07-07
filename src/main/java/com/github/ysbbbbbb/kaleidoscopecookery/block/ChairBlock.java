@@ -197,7 +197,7 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
     @Override
     public List<ItemStack> getDrops(BlockState pState, LootParams.Builder pParams) {
         List<ItemStack> drops = super.getDrops(pState, pParams);
-        BlockEntity parameter = pParams.getParameter(LootContextParams.BLOCK_ENTITY);
+        BlockEntity parameter = pParams.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (pState.getValue(HAS_CARPET) && parameter instanceof ChairBlockEntity chair) {
             Item carpet = getCarpetByColor(chair.getColor());
             drops.add(new ItemStack(carpet));
