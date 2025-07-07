@@ -7,6 +7,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 public class ChairBlockEntity extends BlockEntity {
     private static final String COLOR_TAG = "CarpetColor";
@@ -40,6 +41,11 @@ public class ChairBlockEntity extends BlockEntity {
 
     public DyeColor getColor() {
         return this.color;
+    }
+
+    @Override
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.worldPosition);
     }
 
     public void setColor(DyeColor color) {

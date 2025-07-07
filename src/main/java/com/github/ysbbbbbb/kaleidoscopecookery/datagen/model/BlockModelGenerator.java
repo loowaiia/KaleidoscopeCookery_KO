@@ -56,13 +56,32 @@ public class BlockModelGenerator extends BlockModelProvider {
 
         String chair = "block/chair/" + name;
         withExistingParent(chair, modLoc("block/chair/chair")).texture("particle", modLoc(chair));
+
+        String tableSingle = "block/table/" + name + "_single";
+        ResourceLocation tableTexture = modLoc("block/table/" + name);
+        withExistingParent(tableSingle, modLoc("block/table/single")).texture("particle", tableTexture);
+        String tableSide = "block/table/" + name + "_side";
+        withExistingParent(tableSide, modLoc("block/table/side")).texture("particle", tableTexture);
+        String tableMiddle = "block/table/" + name + "_middle";
+        withExistingParent(tableMiddle, modLoc("block/table/middle")).texture("particle", tableTexture);
     }
 
     public void carpet() {
         for (DyeColor color : DyeColor.values()) {
             String name = color.getName();
-            String carpet = "block/carpet/chair/" + name;
-            withExistingParent(carpet, modLoc("block/carpet/chair/chair_carpet")).texture("particle", modLoc(carpet));
+
+            String chairCarpet = "block/carpet/chair/" + name;
+            withExistingParent(chairCarpet, modLoc("block/carpet/chair/chair_carpet")).texture("particle", modLoc(chairCarpet));
+
+            ResourceLocation tableCarpetTexture = modLoc("block/carpet/table/" + name);
+            String tableCarpetSingle = "block/carpet/table/" + name + "_single";
+            withExistingParent(tableCarpetSingle, modLoc("block/carpet/table/single")).texture("particle", tableCarpetTexture);
+            String tableCarpetLeft = "block/carpet/table/" + name + "_left";
+            withExistingParent(tableCarpetLeft, modLoc("block/carpet/table/left")).texture("particle", tableCarpetTexture);
+            String tableCarpetRight = "block/carpet/table/" + name + "_right";
+            withExistingParent(tableCarpetRight, modLoc("block/carpet/table/right")).texture("particle", tableCarpetTexture);
+            String tableCarpetMiddle = "block/carpet/table/" + name + "_middle";
+            withExistingParent(tableCarpetMiddle, modLoc("block/carpet/table/middle")).texture("particle", tableCarpetTexture);
         }
     }
 

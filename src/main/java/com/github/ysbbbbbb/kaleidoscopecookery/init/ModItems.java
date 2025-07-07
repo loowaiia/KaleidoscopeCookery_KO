@@ -67,6 +67,18 @@ public final class ModItems {
     public static RegistryObject<Item> CHAIR_MANGROVE = ITEMS.register("chair_mangrove", () -> new BlockItem(ModBlocks.CHAIR_MANGROVE.get(), new Item.Properties()));
     public static RegistryObject<Item> CHAIR_WARPED = ITEMS.register("chair_warped", () -> new BlockItem(ModBlocks.CHAIR_WARPED.get(), new Item.Properties()));
 
+    public static RegistryObject<Item> TABLE_OAK = ITEMS.register("table_oak", () -> new BlockItem(ModBlocks.TABLE_OAK.get(), new Item.Properties()));
+    public static RegistryObject<Item> TABLE_SPRUCE = ITEMS.register("table_spruce", () -> new BlockItem(ModBlocks.TABLE_SPRUCE.get(), new Item.Properties()));
+    public static RegistryObject<Item> TABLE_ACACIA = ITEMS.register("table_acacia", () -> new BlockItem(ModBlocks.TABLE_ACACIA.get(), new Item.Properties()));
+    public static RegistryObject<Item> TABLE_BAMBOO = ITEMS.register("table_bamboo", () -> new BlockItem(ModBlocks.TABLE_BAMBOO.get(), new Item.Properties()));
+    public static RegistryObject<Item> TABLE_BIRCH = ITEMS.register("table_birch", () -> new BlockItem(ModBlocks.TABLE_BIRCH.get(), new Item.Properties()));
+    public static RegistryObject<Item> TABLE_CHERRY = ITEMS.register("table_cherry", () -> new BlockItem(ModBlocks.TABLE_CHERRY.get(), new Item.Properties()));
+    public static RegistryObject<Item> TABLE_CRIMSON = ITEMS.register("table_crimson", () -> new BlockItem(ModBlocks.TABLE_CRIMSON.get(), new Item.Properties()));
+    public static RegistryObject<Item> TABLE_DARK_OAK = ITEMS.register("table_dark_oak", () -> new BlockItem(ModBlocks.TABLE_DARK_OAK.get(), new Item.Properties()));
+    public static RegistryObject<Item> TABLE_JUNGLE = ITEMS.register("table_jungle", () -> new BlockItem(ModBlocks.TABLE_JUNGLE.get(), new Item.Properties()));
+    public static RegistryObject<Item> TABLE_MANGROVE = ITEMS.register("table_mangrove", () -> new BlockItem(ModBlocks.TABLE_MANGROVE.get(), new Item.Properties()));
+    public static RegistryObject<Item> TABLE_WARPED = ITEMS.register("table_warped", () -> new BlockItem(ModBlocks.TABLE_WARPED.get(), new Item.Properties()));
+
     public static RegistryObject<Item> TOMATO = ITEMS.register("tomato", () -> new Item(new Item.Properties().food(ModFoods.TOMATO)));
     public static RegistryObject<Item> RED_CHILI = ITEMS.register("red_chili", () -> new Item(new Item.Properties().food(ModFoods.CHILI)));
     public static RegistryObject<Item> GREEN_CHILI = ITEMS.register("green_chili", () -> new Item(new Item.Properties().food(ModFoods.CHILI)));

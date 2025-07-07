@@ -6,6 +6,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.RiceCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
+import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -86,6 +87,18 @@ public class BlockStateGenerator extends BlockStateProvider {
         chair(ModBlocks.CHAIR_JUNGLE, "jungle");
         chair(ModBlocks.CHAIR_MANGROVE, "mangrove");
         chair(ModBlocks.CHAIR_WARPED, "warped");
+
+        table(ModBlocks.TABLE_OAK, "oak");
+        table(ModBlocks.TABLE_SPRUCE, "spruce");
+        table(ModBlocks.TABLE_ACACIA, "acacia");
+        table(ModBlocks.TABLE_BAMBOO, "bamboo");
+        table(ModBlocks.TABLE_BIRCH, "birch");
+        table(ModBlocks.TABLE_CHERRY, "cherry");
+        table(ModBlocks.TABLE_CRIMSON, "crimson");
+        table(ModBlocks.TABLE_DARK_OAK, "dark_oak");
+        table(ModBlocks.TABLE_JUNGLE, "jungle");
+        table(ModBlocks.TABLE_MANGROVE, "mangrove");
+        table(ModBlocks.TABLE_WARPED, "warped");
 
         simpleBlock(ModBlocks.OIL_BLOCK.get());
 
@@ -168,6 +181,31 @@ public class BlockStateGenerator extends BlockStateProvider {
 
     public void chair(RegistryObject<Block> block, String name) {
         horizontalBlock(block.get(), new ModelFile.UncheckedModelFile(modLoc("block/chair/" + name)));
+    }
+
+    private void table(RegistryObject<Block> block, String name) {
+        ModelFile.UncheckedModelFile sideModel = new ModelFile.UncheckedModelFile(modLoc("block/table/%s_side".formatted(name)));
+        getVariantBuilder(block.get()).forAllStates(blockState -> {
+            int position = blockState.getValue(TableBlock.POSITION);
+            if (position == TableBlock.SINGLE) {
+                return ConfiguredModel.builder()
+                        .modelFile(new ModelFile.UncheckedModelFile(modLoc("block/table/%s_single".formatted(name))))
+                        .build();
+            }
+            if (position == TableBlock.LEFT) {
+                int rotation = blockState.getValue(TableBlock.AXIS) == Direction.Axis.X ? 180 : 270;
+                return ConfiguredModel.builder().modelFile(sideModel).rotationY(rotation).build();
+            }
+            if (position == TableBlock.RIGHT) {
+                int rotation = blockState.getValue(TableBlock.AXIS) == Direction.Axis.X ? 0 : 90;
+                return ConfiguredModel.builder().modelFile(sideModel).rotationY(rotation).build();
+            }
+            int rotation = blockState.getValue(TableBlock.AXIS) == Direction.Axis.X ? 0 : 90;
+            return ConfiguredModel.builder()
+                    .modelFile(new ModelFile.UncheckedModelFile(modLoc("block/table/%s_middle".formatted(name))))
+                    .rotationY(rotation)
+                    .build();
+        });
     }
 
     public void addFoodBiteBlock(Block block, ResourceLocation id) {

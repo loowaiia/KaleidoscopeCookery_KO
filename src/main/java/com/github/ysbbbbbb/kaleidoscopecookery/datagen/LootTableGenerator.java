@@ -86,6 +86,18 @@ public class LootTableGenerator {
             dropSelf(ModBlocks.CHAIR_MANGROVE.get());
             dropSelf(ModBlocks.CHAIR_WARPED.get());
 
+            dropSelf(ModBlocks.TABLE_OAK.get());
+            dropSelf(ModBlocks.TABLE_SPRUCE.get());
+            dropSelf(ModBlocks.TABLE_ACACIA.get());
+            dropSelf(ModBlocks.TABLE_BAMBOO.get());
+            dropSelf(ModBlocks.TABLE_BIRCH.get());
+            dropSelf(ModBlocks.TABLE_CHERRY.get());
+            dropSelf(ModBlocks.TABLE_CRIMSON.get());
+            dropSelf(ModBlocks.TABLE_DARK_OAK.get());
+            dropSelf(ModBlocks.TABLE_JUNGLE.get());
+            dropSelf(ModBlocks.TABLE_MANGROVE.get());
+            dropSelf(ModBlocks.TABLE_WARPED.get());
+
             dropSelf(ModBlocks.STOCKPOT.get());
             dropSelf(ModBlocks.KITCHENWARE_RACKS.get());
             dropSelf(ModBlocks.STRAW_BLOCK.get());
