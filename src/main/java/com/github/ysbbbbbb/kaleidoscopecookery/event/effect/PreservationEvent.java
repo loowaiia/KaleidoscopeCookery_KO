@@ -19,7 +19,7 @@ public class PreservationEvent {
     public static void onEatFood(LivingEntityUseItemEvent.Finish event) {
         ItemStack stack = event.getItem();
         LivingEntity entity = event.getEntity();
-        if (entity.hasEffect(ModEffects.VIGOR.get()) && stack.is(TagMod.PRESERVATION_FOOD)) {
+        if (entity.hasEffect(ModEffects.PRESERVATION.get()) && stack.is(TagMod.PRESERVATION_FOOD)) {
             FoodProperties foodProperties = stack.getFoodProperties(entity);
             if (foodProperties == null) {
                 return;
