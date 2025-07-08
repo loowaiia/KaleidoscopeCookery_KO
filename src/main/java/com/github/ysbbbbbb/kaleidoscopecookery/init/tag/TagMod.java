@@ -32,6 +32,18 @@ public interface TagMod {
      * 农夫套装
      */
     TagKey<Item> FARMER_ARMOR = itemTag("farmer_armor");
+    /**
+     * 保鲜效果能够作用的食物
+     */
+    TagKey<Item> PRESERVATION_FOOD = itemTag("preservation_food");
+    /**
+     * 寒带疾行效果可以提速的方块
+     */
+    TagKey<Block> TUNDRA_STRIDER_SPEED_BLOCKS = blockTag("tundra_strider_speed_blocks");
+    /**
+     * 温暖效果下，认为是热源的方块
+     */
+    TagKey<Block> WARMTH_HEAT_SOURCE_BLOCKS = blockTag("warmth_heat_source_blocks");
 
     static TagKey<Item> itemTag(String name) {
         return TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, name));

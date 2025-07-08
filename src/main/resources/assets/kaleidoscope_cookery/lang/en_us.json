@@ -69,6 +69,14 @@
   "block.kaleidoscope_cookery.kitchenware_racks": "Kitchenware Racks",
   "block.kaleidoscope_cookery.chili_ristra": "Chili Ristra",
   "block.kaleidoscope_cookery.straw_block": "Straw Bale",
+  "effect.kaleidoscope_cookery.flatulence": "Flatulence",
+  "effect.kaleidoscope_cookery.tundra_strider": "Tundra Strider",
+  "effect.kaleidoscope_cookery.warmth": "Warmth",
+  "effect.kaleidoscope_cookery.satiated_shield": "Satiated Shield",
+  "effect.kaleidoscope_cookery.vigor": "Vigor",
+  "effect.kaleidoscope_cookery.sulfur": "Sulfur",
+  "effect.kaleidoscope_cookery.mustard": "Mustard",
+  "effect.kaleidoscope_cookery.preservation": "Preservation",
   "item.kaleidoscope_cookery.oil": "Oil",
   "item.kaleidoscope_cookery.iron_kitchen_knife": "Iron Kitchen Knife",
   "item.kaleidoscope_cookery.gold_kitchen_knife": "Gold Kitchen Knife",
@@ -144,5 +152,6 @@
   "tip.kaleidoscope_cookery.pot.need_kitchen_shovel": "Need sneak and right click with a kitchen shovel to take it out!",
   "jei.kaleidoscope_cookery.pot.stir_fry_count": "Stir-fry at least %s times",
   "subtitles.kaleidoscope_cookery.block.stockpot": "Stockpot Sounds",
-  "subtitles.kaleidoscope_cookery.block.paddy": "Paddy Sounds"
+  "subtitles.kaleidoscope_cookery.block.paddy": "Paddy Sounds",
+  "subtitles.kaleidoscope_cookery.entity.fart": "Fart Sounds"
 }

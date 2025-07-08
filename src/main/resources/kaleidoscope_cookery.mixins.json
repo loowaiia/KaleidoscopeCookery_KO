@@ -4,9 +4,7 @@
   "package": "com.github.ysbbbbbb.kaleidoscopecookery.mixin",
   "compatibilityLevel": "JAVA_17",
   "refmap": "kaleidoscope_cookery.refmap.json",
-  "mixins": [
-    "MobBucketItemAccessor"
-  ],
+  "mixins": ["LivingEntityMixin", "MobBucketItemAccessor", "PowderSnowBlockMixin"],
   "client": [
   ],
   "injectors": {

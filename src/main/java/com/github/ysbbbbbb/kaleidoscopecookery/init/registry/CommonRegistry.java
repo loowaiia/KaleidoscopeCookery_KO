@@ -4,6 +4,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.BowlFoodBlockItem;
+import com.github.ysbbbbbb.kaleidoscopecookery.network.NetworkHandler;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,7 +17,8 @@ import net.minecraftforge.registries.RegisterEvent;
 public class CommonRegistry {
     @SubscribeEvent
     public static void onSetupEvent(FMLCommonSetupEvent event) {
-        addComposter();
+        event.enqueueWork(CommonRegistry::addComposter);
+        event.enqueueWork(NetworkHandler::init);
     }
 
     @SubscribeEvent
@@ -42,6 +44,7 @@ public class CommonRegistry {
         ComposterBlock.COMPOSTABLES.put(ModItems.TOMATO_SEED.get(), 0.3F);
         ComposterBlock.COMPOSTABLES.put(ModItems.CHILI_SEED.get(), 0.3F);
         ComposterBlock.COMPOSTABLES.put(ModItems.LETTUCE_SEED.get(), 0.3F);
+        ComposterBlock.COMPOSTABLES.put(ModItems.WILD_RICE_SEED.get(), 0.3F);
         ComposterBlock.COMPOSTABLES.put(ModItems.RICE_SEED.get(), 0.3F);
         ComposterBlock.COMPOSTABLES.put(ModItems.TOMATO.get(), 0.65F);
         ComposterBlock.COMPOSTABLES.put(ModItems.RED_CHILI.get(), 0.65F);

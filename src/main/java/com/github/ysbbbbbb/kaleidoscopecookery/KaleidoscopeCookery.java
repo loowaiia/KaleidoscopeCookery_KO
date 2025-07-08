@@ -26,6 +26,7 @@ public class KaleidoscopeCookery {
         ModBlocks.BLOCK_ENTITIES.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModEntities.ENTITY_TYPES.register(modEventBus);
+        ModEffects.EFFECTS.register(modEventBus);
         ModPoi.POI_TYPES.register(modEventBus);
         ModVillager.VILLAGER_PROFESSION.register(modEventBus);
         ModCreativeTabs.TABS.register(modEventBus);

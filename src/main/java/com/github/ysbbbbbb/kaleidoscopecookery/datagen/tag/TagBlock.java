@@ -2,9 +2,11 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -43,5 +45,10 @@ public class TagBlock extends BlockTagsProvider {
 
                 ModBlocks.KITCHENWARE_RACKS.get(), ModBlocks.CHOPPING_BOARD.get());
         this.tag(BlockTags.MINEABLE_WITH_HOE).add(ModBlocks.STRAW_BLOCK.get());
+        this.tag(TagMod.TUNDRA_STRIDER_SPEED_BLOCKS).add(
+                Blocks.SNOW, Blocks.SNOW_BLOCK, Blocks.POWDER_SNOW,
+                Blocks.PACKED_ICE, Blocks.ICE, Blocks.FROSTED_ICE, Blocks.BLUE_ICE
+        );
+        this.tag(TagMod.WARMTH_HEAT_SOURCE_BLOCKS).add(Blocks.FIRE, Blocks.LAVA, Blocks.MAGMA_BLOCK);
     }
 }

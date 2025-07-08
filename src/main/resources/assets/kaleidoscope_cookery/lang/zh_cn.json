@@ -69,6 +69,14 @@
   "block.kaleidoscope_cookery.kitchenware_racks": "厨具架",
   "block.kaleidoscope_cookery.chili_ristra": "辣椒串串",
   "block.kaleidoscope_cookery.straw_block": "稻草捆",
+  "effect.kaleidoscope_cookery.flatulence": "胀气",
+  "effect.kaleidoscope_cookery.tundra_strider": "寒带疾行",
+  "effect.kaleidoscope_cookery.warmth": "温暖",
+  "effect.kaleidoscope_cookery.satiated_shield": "饱腹代偿",
+  "effect.kaleidoscope_cookery.vigor": "活力",
+  "effect.kaleidoscope_cookery.sulfur": "硫磺",
+  "effect.kaleidoscope_cookery.mustard": "芥末",
+  "effect.kaleidoscope_cookery.preservation": "保鲜",
   "item.kaleidoscope_cookery.oil": "油脂",
   "item.kaleidoscope_cookery.iron_kitchen_knife": "铁菜刀",
   "item.kaleidoscope_cookery.gold_kitchen_knife": "金菜刀",
@@ -144,5 +152,6 @@
   "tip.kaleidoscope_cookery.pot.need_kitchen_shovel": "请用锅铲潜行盛取!",
   "jei.kaleidoscope_cookery.pot.stir_fry_count": "至少翻炒 %s 次",
   "subtitles.kaleidoscope_cookery.block.stockpot": "汤锅：咕嘟",
-  "subtitles.kaleidoscope_cookery.block.paddy": "稻田：虫鸣"
+  "subtitles.kaleidoscope_cookery.block.paddy": "稻田：虫鸣",
+  "subtitles.kaleidoscope_cookery.entity.fart": "放屁"
 }

@@ -25,6 +25,12 @@ public class SoundDefinitionsGenerator extends SoundDefinitionsProvider {
                 .with(sound("block/paddy/paddy_0"))
                 .with(sound("block/paddy/paddy_1"));
         this.add(ModSounds.BLOCK_PADDY.get(), paddySound);
+
+        SoundDefinition fartSound = definition().subtitle(subtitle("entity.fart"))
+                .with(sound("entity/fart/fart_0"))
+                .with(sound("entity/fart/fart_1"))
+                .with(sound("entity/fart/fart_2"));
+        this.add(ModSounds.ENTITY_FART.get(), fartSound);
     }
 
     protected static SoundDefinition.Sound sound(final String name) {
