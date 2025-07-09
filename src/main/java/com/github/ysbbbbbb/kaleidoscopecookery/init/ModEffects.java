@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.effect.BaseEffect;
+import com.github.ysbbbbbb.kaleidoscopecookery.effect.SulfurEffect;
 import com.github.ysbbbbbb.kaleidoscopecookery.effect.VigorEffect;
 import com.github.ysbbbbbb.kaleidoscopecookery.effect.WarmthEffect;
 import net.minecraft.core.registries.Registries;
@@ -17,7 +18,7 @@ public class ModEffects {
     public static final RegistryObject<MobEffect> WARMTH = EFFECTS.register("warmth", () -> new WarmthEffect(0xFF5F0E));
     public static final RegistryObject<MobEffect> SATIATED_SHIELD = EFFECTS.register("satiated_shield", () -> new BaseEffect(0xFF1313));
     public static final RegistryObject<MobEffect> VIGOR = EFFECTS.register("vigor", () -> new VigorEffect(0x84C322));
-    public static final RegistryObject<MobEffect> SULFUR = EFFECTS.register("sulfur", () -> new BaseEffect(0xE8B75E));
+    public static final RegistryObject<MobEffect> SULFUR = EFFECTS.register("sulfur", () -> new SulfurEffect(0xE8B75E));
     public static final RegistryObject<MobEffect> MUSTARD = EFFECTS.register("mustard", () -> new BaseEffect(0x5A6D09));
     public static final RegistryObject<MobEffect> PRESERVATION = EFFECTS.register("preservation", () -> new BaseEffect(0xAEC639));
 }
