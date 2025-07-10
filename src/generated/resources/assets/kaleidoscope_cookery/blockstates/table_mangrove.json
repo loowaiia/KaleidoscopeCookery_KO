@@ -7,24 +7,28 @@
       "model": "kaleidoscope_cookery:block/table/mangrove_single"
     },
     "axis=x,has_carpet=false,position=1,waterlogged=false": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_side",
+      "model": "kaleidoscope_cookery:block/table/mangrove_left",
       "y": 180
     },
     "axis=x,has_carpet=false,position=1,waterlogged=true": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_side",
+      "model": "kaleidoscope_cookery:block/table/mangrove_left",
       "y": 180
     },
     "axis=x,has_carpet=false,position=2,waterlogged=false": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_middle"
+      "model": "kaleidoscope_cookery:block/table/mangrove_middle",
+      "y": 180
     },
     "axis=x,has_carpet=false,position=2,waterlogged=true": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_middle"
+      "model": "kaleidoscope_cookery:block/table/mangrove_middle",
+      "y": 180
     },
     "axis=x,has_carpet=false,position=3,waterlogged=false": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_side"
+      "model": "kaleidoscope_cookery:block/table/mangrove_right",
+      "y": 180
     },
     "axis=x,has_carpet=false,position=3,waterlogged=true": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_side"
+      "model": "kaleidoscope_cookery:block/table/mangrove_right",
+      "y": 180
     },
     "axis=x,has_carpet=true,position=0,waterlogged=false": {
       "model": "kaleidoscope_cookery:block/table/mangrove_single"
@@ -33,24 +37,28 @@
       "model": "kaleidoscope_cookery:block/table/mangrove_single"
     },
     "axis=x,has_carpet=true,position=1,waterlogged=false": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_side",
+      "model": "kaleidoscope_cookery:block/table/mangrove_left",
       "y": 180
     },
     "axis=x,has_carpet=true,position=1,waterlogged=true": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_side",
+      "model": "kaleidoscope_cookery:block/table/mangrove_left",
       "y": 180
     },
     "axis=x,has_carpet=true,position=2,waterlogged=false": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_middle"
+      "model": "kaleidoscope_cookery:block/table/mangrove_middle",
+      "y": 180
     },
     "axis=x,has_carpet=true,position=2,waterlogged=true": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_middle"
+      "model": "kaleidoscope_cookery:block/table/mangrove_middle",
+      "y": 180
     },
     "axis=x,has_carpet=true,position=3,waterlogged=false": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_side"
+      "model": "kaleidoscope_cookery:block/table/mangrove_right",
+      "y": 180
     },
     "axis=x,has_carpet=true,position=3,waterlogged=true": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_side"
+      "model": "kaleidoscope_cookery:block/table/mangrove_right",
+      "y": 180
     },
     "axis=z,has_carpet=false,position=0,waterlogged=false": {
       "model": "kaleidoscope_cookery:block/table/mangrove_single"
@@ -59,28 +67,28 @@
       "model": "kaleidoscope_cookery:block/table/mangrove_single"
     },
     "axis=z,has_carpet=false,position=1,waterlogged=false": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_side",
+      "model": "kaleidoscope_cookery:block/table/mangrove_left",
       "y": 270
     },
     "axis=z,has_carpet=false,position=1,waterlogged=true": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_side",
+      "model": "kaleidoscope_cookery:block/table/mangrove_left",
       "y": 270
     },
     "axis=z,has_carpet=false,position=2,waterlogged=false": {
       "model": "kaleidoscope_cookery:block/table/mangrove_middle",
-      "y": 90
+      "y": 270
     },
     "axis=z,has_carpet=false,position=2,waterlogged=true": {
       "model": "kaleidoscope_cookery:block/table/mangrove_middle",
-      "y": 90
+      "y": 270
     },
     "axis=z,has_carpet=false,position=3,waterlogged=false": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_side",
-      "y": 90
+      "model": "kaleidoscope_cookery:block/table/mangrove_right",
+      "y": 270
     },
     "axis=z,has_carpet=false,position=3,waterlogged=true": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_side",
-      "y": 90
+      "model": "kaleidoscope_cookery:block/table/mangrove_right",
+      "y": 270
     },
     "axis=z,has_carpet=true,position=0,waterlogged=false": {
       "model": "kaleidoscope_cookery:block/table/mangrove_single"
@@ -89,28 +97,28 @@
       "model": "kaleidoscope_cookery:block/table/mangrove_single"
     },
     "axis=z,has_carpet=true,position=1,waterlogged=false": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_side",
+      "model": "kaleidoscope_cookery:block/table/mangrove_left",
       "y": 270
     },
     "axis=z,has_carpet=true,position=1,waterlogged=true": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_side",
+      "model": "kaleidoscope_cookery:block/table/mangrove_left",
       "y": 270
     },
     "axis=z,has_carpet=true,position=2,waterlogged=false": {
       "model": "kaleidoscope_cookery:block/table/mangrove_middle",
-      "y": 90
+      "y": 270
     },
     "axis=z,has_carpet=true,position=2,waterlogged=true": {
       "model": "kaleidoscope_cookery:block/table/mangrove_middle",
-      "y": 90
+      "y": 270
     },
     "axis=z,has_carpet=true,position=3,waterlogged=false": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_side",
-      "y": 90
+      "model": "kaleidoscope_cookery:block/table/mangrove_right",
+      "y": 270
     },
     "axis=z,has_carpet=true,position=3,waterlogged=true": {
-      "model": "kaleidoscope_cookery:block/table/mangrove_side",
-      "y": 90
+      "model": "kaleidoscope_cookery:block/table/mangrove_right",
+      "y": 270
     }
   }
 }

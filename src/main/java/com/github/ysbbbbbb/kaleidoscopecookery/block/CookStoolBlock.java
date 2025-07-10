@@ -63,6 +63,7 @@ public class CookStoolBlock extends HorizontalDirectionalBlock implements Simple
             entitySit.setYRot(state.getValue(FACING).toYRot());
             level.addFreshEntity(entitySit);
             player.startRiding(entitySit, true);
+            return InteractionResult.SUCCESS;
         }
         return super.use(state, level, pos, player, hand, hit);
     }

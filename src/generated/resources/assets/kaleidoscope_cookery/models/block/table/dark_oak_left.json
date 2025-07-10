@@ -1,5 +1,5 @@
 {
-  "parent": "kaleidoscope_cookery:block/table/side",
+  "parent": "kaleidoscope_cookery:block/table/left",
   "textures": {
     "particle": "kaleidoscope_cookery:block/table/dark_oak"
   }

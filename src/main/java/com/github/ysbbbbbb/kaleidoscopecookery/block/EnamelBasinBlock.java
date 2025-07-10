@@ -91,6 +91,21 @@ public class EnamelBasinBlock extends Block implements SimpleWaterloggedBlock {
             level.setBlockAndUpdate(pos, state.setValue(HAS_LID, true));
             return InteractionResult.SUCCESS;
         }
+        // 手持油脂时，消耗油脂添加进去
+        if (mainHandItem.is(ModItems.OIL.get())) {
+            int value = state.getValue(OIL_COUNT);
+            // 如果油已经满了，不能再放油
+            if (value >= MAX_OIL_COUNT) {
+                return InteractionResult.FAIL;
+            }
+            // 尝试直接放满
+            int needCount = MAX_OIL_COUNT - value;
+            int consumeCount = Math.min(needCount, mainHandItem.getCount());
+            level.playSound(player, pos, SoundEvents.HONEY_BLOCK_BREAK, SoundSource.BLOCKS, 0.8f, 0.8f);
+            mainHandItem.shrink(consumeCount);
+            level.setBlockAndUpdate(pos, state.setValue(OIL_COUNT, value + consumeCount));
+            return InteractionResult.SUCCESS;
+        }
         // 当用铲子右击时
         if (mainHandItem.is(ModItems.KITCHEN_SHOVEL.get())) {
             return onShovelClick(state, level, pos, player, mainHandItem);
@@ -146,6 +161,16 @@ public class EnamelBasinBlock extends Block implements SimpleWaterloggedBlock {
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return pState.getValue(HAS_LID) ? AABB : AABB_NO_LID;
+    }
+
+    @Override
+    public boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        return state.getValue(OIL_COUNT);
     }
 }
 

@@ -43,6 +43,7 @@ import java.util.List;
 public class StockpotBlock extends HorizontalDirectionalBlock implements EntityBlock, SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty HAS_LID = BooleanProperty.create("has_lid");
+    public static final BooleanProperty HAS_BASE = BooleanProperty.create("has_base");
     public static final VoxelShape AABB = Shapes.or(Block.box(2, 0, 2, 14, 5, 14),
             Block.box(1, 5, 1, 15, 7, 15));
     public static final VoxelShape AABB_WITH_LID = Shapes.or(Block.box(2, 0, 2, 14, 9, 14),
@@ -56,7 +57,8 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.SOUTH)
                 .setValue(WATERLOGGED, false)
-                .setValue(HAS_LID, false));
+                .setValue(HAS_LID, false)
+                .setValue(HAS_BASE, false));
     }
 
     @Nullable
@@ -67,11 +69,15 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
     }
 
     @Override
-    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
+    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState neighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos neighborPos) {
         if (pState.getValue(WATERLOGGED)) {
             pLevel.scheduleTick(pPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
         }
-        return super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
+        // 如果下方是不完整方块，则添加基座
+        if (pDirection == Direction.DOWN) {
+            return pState.setValue(HAS_BASE, !neighborState.isFaceSturdy(pLevel, neighborPos, Direction.UP));
+        }
+        return super.updateShape(pState, pDirection, neighborState, pLevel, pPos, neighborPos);
     }
 
     @Override
@@ -122,8 +128,14 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
+        BlockState blockState = this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
                 .setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
+        // 如果下方是不完整方块，则添加基座
+        BlockState state = context.getLevel().getBlockState(context.getClickedPos().below());
+        if (!state.isFaceSturdy(context.getLevel(), context.getClickedPos().below(), Direction.UP)) {
+            return blockState.setValue(HAS_BASE, true);
+        }
+        return blockState;
     }
 
     @Override
@@ -133,7 +145,7 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED, HAS_LID);
+        builder.add(FACING, WATERLOGGED, HAS_LID, HAS_BASE);
     }
 
     @Override

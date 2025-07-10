@@ -1,6 +1,8 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.TableBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.BlockDrop;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -31,6 +33,8 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.items.ItemStackHandler;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -72,7 +76,7 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
         ItemStack itemInHand = player.getItemInHand(hand);
         if (hand == InteractionHand.MAIN_HAND) {
             if (itemInHand.is(ItemTags.WOOL_CARPETS)) {
-                return useWithCarpets(state, level, pos, itemInHand);
+                return useWithCarpets(state, level, pos, player, itemInHand);
             } else if (level.getBlockEntity(pos) instanceof TableBlockEntity table) {
                 return useWithOther(level, pos, player, hand, table, itemInHand);
             }
@@ -82,39 +86,40 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
 
     @NotNull
     private InteractionResult useWithOther(Level level, BlockPos pos, Player player, InteractionHand hand, TableBlockEntity table, ItemStack itemInHand) {
-        ItemStack tableItem = table.getItemStack();
-        boolean handEmpty = itemInHand.isEmpty();
-        boolean tableHasItem = !tableItem.isEmpty();
+        ItemStackHandler tableItems = table.getItems();
+        Pair<Integer, ItemStack> lastStack = ItemUtils.getLastStack(tableItems);
+        Integer tableIndex = lastStack.getLeft();
+        ItemStack tableItem = lastStack.getRight();
 
-        if (tableHasItem && handEmpty) {
-            // 玩家手为空，桌子有物品：取出桌子物品
+        boolean handEmpty = itemInHand.isEmpty();
+
+        // 玩家手为空，桌子有物品：取出桌子物品
+        if (handEmpty && !tableItem.isEmpty()) {
             level.playSound(player, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, player.getSoundSource(), 1.0F, 1.0F);
-            popResource(level, pos.above(), tableItem.copy());
-            table.setItemStack(ItemStack.EMPTY);
+            BlockDrop.popResource(level, pos, 0.75, tableItem.copy());
+            tableItems.setStackInSlot(tableIndex, ItemStack.EMPTY);
             table.setChanged();
             return InteractionResult.SUCCESS;
-        } else if (!handEmpty && !tableHasItem) {
-            // 玩家手有物品，桌子为空：放入物品
-            table.setItemStack(itemInHand.copy());
-            table.setChanged();
-            player.setItemInHand(hand, ItemStack.EMPTY);
-            level.playSound(player, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, player.getSoundSource(), 1.0F, 1.0F);
-            return InteractionResult.SUCCESS;
-        } else if (!handEmpty && tableHasItem) {
-            // 玩家手有物品，桌子也有物品：先取出桌子物品，再放入新物品
-            popResource(level, pos.above(), tableItem.copy());
-            table.setItemStack(itemInHand.copy());
+        }
+
+        // 玩家手有物品，并且可以放入物品时
+        if (!handEmpty && tableIndex < (tableItems.getSlots() - 1)) {
+            if (tableItem.isEmpty()) {
+                tableItems.setStackInSlot(tableIndex, itemInHand.copy());
+            } else {
+                tableItems.setStackInSlot(tableIndex + 1, itemInHand.copy());
+            }
             table.setChanged();
             player.setItemInHand(hand, ItemStack.EMPTY);
             level.playSound(player, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, player.getSoundSource(), 1.0F, 1.0F);
             return InteractionResult.SUCCESS;
         }
-        // 玩家手为空，桌子也为空：无操作
+
         return InteractionResult.PASS;
     }
 
     @NotNull
-    private InteractionResult useWithCarpets(BlockState state, Level level, BlockPos pos, ItemStack itemInHand) {
+    private InteractionResult useWithCarpets(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemInHand) {
         @Nullable DyeColor dyeColor = getColorByCarpet(itemInHand.getItem());
         boolean hasCarpet = state.getValue(HAS_CARPET);
         if (dyeColor == null) {
@@ -125,6 +130,7 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
         if (!hasCarpet) {
             level.setBlockAndUpdate(pos, state.setValue(HAS_CARPET, true));
             if (level.getBlockEntity(pos) instanceof TableBlockEntity tableBlockEntity) {
+                level.playSound(null, pos, SoundType.WOOL.getPlaceSound(), player.getSoundSource(), 1.0F, 1.0F);
                 tableBlockEntity.setColor(dyeColor);
                 tableBlockEntity.setChanged();
                 itemInHand.shrink(1);
@@ -137,7 +143,8 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
             // 掉落原地毯
             DyeColor originalColor = tableBlockEntity.getColor();
             ItemStack carpetItem = getCarpetByColor(originalColor).getDefaultInstance();
-            popResource(level, pos.above(), carpetItem);
+            BlockDrop.popResource(level, pos, 0.75, carpetItem);
+            level.playSound(null, pos, SoundType.WOOL.getPlaceSound(), player.getSoundSource(), 1.0F, 1.0F);
 
             tableBlockEntity.setColor(dyeColor);
             tableBlockEntity.setChanged();
@@ -158,8 +165,9 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
                 Item carpet = getCarpetByColor(table.getColor());
                 drops.add(new ItemStack(carpet));
             }
-            if (!table.getItemStack().isEmpty()) {
-                drops.add(table.getItemStack().copy());
+            ItemStackHandler items = table.getItems();
+            for (int i = 0; i < items.getSlots(); i++) {
+                drops.add(items.getStackInSlot(i).copy());
             }
         }
         return drops;
@@ -209,7 +217,23 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
         if (state.getValue(WATERLOGGED)) {
             level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-        // 只要有邻居变化，重新计算连接状态
+        // 如果是东西方向变化，先判断南北有没有桌子，有那么不需要改变状态
+        if (direction.getAxis() == Direction.Axis.X) {
+            BlockState northState = level.getBlockState(pos.north());
+            BlockState southState = level.getBlockState(pos.south());
+            if (northState.is(this) || southState.is(this)) {
+                return state;
+            }
+        }
+        // 如果是南北方向变化，先判断东西有没有桌子，有那么不需要改变状态
+        if (direction.getAxis() == Direction.Axis.Z) {
+            BlockState westState = level.getBlockState(pos.west());
+            BlockState eastState = level.getBlockState(pos.east());
+            if (westState.is(this) || eastState.is(this)) {
+                return state;
+            }
+        }
+        // 其他情况需要重新计算连接状态
         return getConnectedState(level, pos, state);
     }
 

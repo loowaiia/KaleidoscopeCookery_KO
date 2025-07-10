@@ -80,7 +80,7 @@ public class ModCreativeTabs {
             }).build());
 
     public static RegistryObject<CreativeModeTab> COOKERY_FOOD_TAB = TABS.register("cookery_food", () -> CreativeModeTab.builder()
-            .title(Component.translatable("item_group.kaleidoscope_cookery.cookery_main.name"))
+            .title(Component.translatable("item_group.kaleidoscope_cookery.cookery_food.name"))
             .icon(() -> ModItems.RED_CHILI.get().getDefaultInstance())
             .withTabsBefore(COOKERY_MAIN_TAB.getId())
             .displayItems((par, output) -> {

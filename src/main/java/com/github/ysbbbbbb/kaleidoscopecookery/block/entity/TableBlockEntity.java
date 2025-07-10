@@ -5,18 +5,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraftforge.items.ItemStackHandler;
 
 public class TableBlockEntity extends BlockEntity {
     private static final String COLOR_TAG = "CarpetColor";
-    private static final String SHOW_ITEM = "ShowItem";
+    private static final String SHOW_ITEMS = "ShowItems";
 
     private DyeColor color = DyeColor.WHITE;
-    private ItemStack itemStack = ItemStack.EMPTY;
+    private ItemStackHandler items = new ItemStackHandler(4);
 
     public TableBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlocks.TABLE_BE.get(), pos, blockState);
@@ -26,14 +25,18 @@ public class TableBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         tag.putInt(COLOR_TAG, this.color.getId());
-        tag.put(SHOW_ITEM, this.itemStack.serializeNBT());
+        tag.put(SHOW_ITEMS, this.items.serializeNBT());
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        this.color = DyeColor.byId(tag.getInt(COLOR_TAG));
-        this.itemStack = ItemStack.of(tag.getCompound(SHOW_ITEM));
+        if (tag.contains(COLOR_TAG)) {
+            this.color = DyeColor.byId(tag.getInt(COLOR_TAG));
+        }
+        if (tag.contains(SHOW_ITEMS)) {
+            this.items.deserializeNBT(tag.getCompound(SHOW_ITEMS));
+        }
     }
 
     @Override
@@ -59,11 +62,7 @@ public class TableBlockEntity extends BlockEntity {
         this.color = color;
     }
 
-    public ItemStack getItemStack() {
-        return itemStack;
-    }
-
-    public void setItemStack(ItemStack itemStack) {
-        this.itemStack = itemStack;
+    public ItemStackHandler getItems() {
+        return items;
     }
 }

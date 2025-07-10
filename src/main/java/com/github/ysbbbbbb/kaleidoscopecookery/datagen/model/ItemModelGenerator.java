@@ -28,7 +28,6 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent("stove", modLoc("block/stove"));
         withExistingParent("pot", modLoc("block/pot"));
         withExistingParent("stockpot", modLoc("block/stockpot"));
-        withExistingParent("enamel_basin", modLoc("block/enamel_basin/base"));
 
         handheldItem(ModItems.IRON_KITCHEN_KNIFE.get());
         handheldItem(ModItems.GOLD_KITCHEN_KNIFE.get());
@@ -91,6 +90,8 @@ public class ItemModelGenerator extends ItemModelProvider {
         basicItem(ModItems.LETTUCE.get());
         basicItem(ModItems.LETTUCE_SEED.get());
         basicItem(ModItems.CATERPILLAR.get());
+        basicItem(ModItems.ENAMEL_BASIN.get());
+        basicItem(ModItems.KITCHENWARE_RACKS.get());
 
         ResourceLocation chileRistra = ForgeRegistries.ITEMS.getKey(ModItems.CHILI_RISTRA.get());
         if (chileRistra != null) {
@@ -152,7 +153,6 @@ public class ItemModelGenerator extends ItemModelProvider {
 
         withExistingParent("chopping_board", modLoc("block/chopping_board"));
         withExistingParent("oil_block", modLoc("block/oil_block"));
-        withExistingParent("kitchenware_racks", modLoc("block/kitchenware_racks"));
         withExistingParent("straw_block", modLoc("block/straw_block"));
 
         ItemModelBuilder fruitBasketFull = new ItemModelBuilder(modLoc("fruit_basket"), this.existingFileHelper)

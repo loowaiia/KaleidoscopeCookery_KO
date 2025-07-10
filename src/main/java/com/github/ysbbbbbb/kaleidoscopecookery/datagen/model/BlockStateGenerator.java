@@ -47,8 +47,14 @@ public class BlockStateGenerator extends BlockStateProvider {
 
         horizontalBlock(ModBlocks.STOCKPOT.get(), blockState -> {
             if (blockState.getValue(StockpotBlock.HAS_LID)) {
+                if (blockState.getValue(StockpotBlock.HAS_BASE)) {
+                    return new ModelFile.UncheckedModelFile(modLoc("block/stockpot_base_has_lid"));
+                }
                 return new ModelFile.UncheckedModelFile(modLoc("block/stockpot_has_lid"));
             } else {
+                if (blockState.getValue(StockpotBlock.HAS_BASE)) {
+                    return new ModelFile.UncheckedModelFile(modLoc("block/stockpot_base"));
+                }
                 return new ModelFile.UncheckedModelFile(modLoc("block/stockpot"));
             }
         });
@@ -184,7 +190,8 @@ public class BlockStateGenerator extends BlockStateProvider {
     }
 
     private void table(RegistryObject<Block> block, String name) {
-        ModelFile.UncheckedModelFile sideModel = new ModelFile.UncheckedModelFile(modLoc("block/table/%s_side".formatted(name)));
+        ModelFile.UncheckedModelFile leftModel = new ModelFile.UncheckedModelFile(modLoc("block/table/%s_left".formatted(name)));
+        ModelFile.UncheckedModelFile rightModel = new ModelFile.UncheckedModelFile(modLoc("block/table/%s_right".formatted(name)));
         getVariantBuilder(block.get()).forAllStates(blockState -> {
             int position = blockState.getValue(TableBlock.POSITION);
             if (position == TableBlock.SINGLE) {
@@ -192,15 +199,13 @@ public class BlockStateGenerator extends BlockStateProvider {
                         .modelFile(new ModelFile.UncheckedModelFile(modLoc("block/table/%s_single".formatted(name))))
                         .build();
             }
+            int rotation = blockState.getValue(TableBlock.AXIS) == Direction.Axis.X ? 180 : 270;
             if (position == TableBlock.LEFT) {
-                int rotation = blockState.getValue(TableBlock.AXIS) == Direction.Axis.X ? 180 : 270;
-                return ConfiguredModel.builder().modelFile(sideModel).rotationY(rotation).build();
+                return ConfiguredModel.builder().modelFile(leftModel).rotationY(rotation).build();
             }
             if (position == TableBlock.RIGHT) {
-                int rotation = blockState.getValue(TableBlock.AXIS) == Direction.Axis.X ? 0 : 90;
-                return ConfiguredModel.builder().modelFile(sideModel).rotationY(rotation).build();
+                return ConfiguredModel.builder().modelFile(rightModel).rotationY(rotation).build();
             }
-            int rotation = blockState.getValue(TableBlock.AXIS) == Direction.Axis.X ? 0 : 90;
             return ConfiguredModel.builder()
                     .modelFile(new ModelFile.UncheckedModelFile(modLoc("block/table/%s_middle".formatted(name))))
                     .rotationY(rotation)

@@ -34,7 +34,7 @@ public class KitchenwareRacksBlockEntityRender implements BlockEntityRenderer<Ki
             poseStack.scale(0.75f, 0.75f, 0.75f);
             poseStack.mulPose(Axis.XN.rotationDegrees(180));
             poseStack.mulPose(Axis.YN.rotationDegrees(-25));
-            poseStack.mulPose(Axis.ZN.rotationDegrees(40));
+            poseStack.mulPose(Axis.ZN.rotationDegrees(45));
             context.getItemRenderer().renderStatic(itemLeft, ItemDisplayContext.FIXED, pPackedLight, pPackedOverlay, poseStack, pBuffer, racks.getLevel(), 0);
             poseStack.popPose();
         }
@@ -43,7 +43,7 @@ public class KitchenwareRacksBlockEntityRender implements BlockEntityRenderer<Ki
             poseStack.scale(0.75f, 0.75f, 0.75f);
             poseStack.mulPose(Axis.XN.rotationDegrees(180));
             poseStack.mulPose(Axis.YN.rotationDegrees(-25));
-            poseStack.mulPose(Axis.ZN.rotationDegrees(40));
+            poseStack.mulPose(Axis.ZN.rotationDegrees(45));
             context.getItemRenderer().renderStatic(itemRight, ItemDisplayContext.FIXED, pPackedLight, pPackedOverlay, poseStack, pBuffer, racks.getLevel(), 0);
         }
 

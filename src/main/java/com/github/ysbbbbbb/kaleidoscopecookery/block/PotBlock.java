@@ -48,6 +48,7 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock,
     public static final BooleanProperty HAS_OIL = BooleanProperty.create("has_oil");
     public static final BooleanProperty SHOW_OIL = BooleanProperty.create("show_oil");
     public static final VoxelShape AABB = Block.box(2, 0, 2, 14, 4, 14);
+    public static final double DURABILITY_COST_PROBABILITY = 0.25;
 
     public PotBlock() {
         super(Properties.of()
@@ -122,6 +123,9 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock,
 
     private void cooking(Level level, BlockPos pos, Player player, PotBlockEntity pot, ItemStack itemInHand, RandomSource random) {
         if (itemInHand.is(ModItems.KITCHEN_SHOVEL.get())) {
+            if (level.random.nextDouble() < DURABILITY_COST_PROBABILITY) {
+                itemInHand.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(player.getUsedItemHand()));
+            }
             pot.onShovelHit(level, player, itemInHand);
             level.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F,
                     1F + (random.nextFloat() - random.nextFloat()) * 0.8F);

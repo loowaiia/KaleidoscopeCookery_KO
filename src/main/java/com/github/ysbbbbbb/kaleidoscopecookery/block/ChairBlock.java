@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.block;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.ChairBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.entity.SitEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.BlockDrop;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.ItemTags;
@@ -64,7 +65,6 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
                 .setValue(WATERLOGGED, false));
     }
 
-
     @Override
     public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
         if (pState.getValue(WATERLOGGED)) {
@@ -87,6 +87,7 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
             if (!hasCarpet) {
                 level.setBlockAndUpdate(pos, state.setValue(HAS_CARPET, true));
                 if (level.getBlockEntity(pos) instanceof ChairBlockEntity chairBlockEntity) {
+                    level.playSound(null, pos, SoundType.WOOL.getPlaceSound(), player.getSoundSource(), 1.0F, 1.0F);
                     chairBlockEntity.setColor(dyeColor);
                     chairBlockEntity.setChanged();
                     itemInHand.shrink(1);
@@ -99,7 +100,8 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
                 // 掉落原地毯
                 DyeColor originalColor = chairBlockEntity.getColor();
                 ItemStack carpetItem = getCarpetByColor(originalColor).getDefaultInstance();
-                popResource(level, pos, carpetItem);
+                BlockDrop.popResource(level, pos, 0.25, carpetItem);
+                level.playSound(null, pos, SoundType.WOOL.getPlaceSound(), player.getSoundSource(), 1.0F, 1.0F);
 
                 chairBlockEntity.setColor(dyeColor);
                 chairBlockEntity.setChanged();
@@ -115,6 +117,7 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
             entitySit.setYRot(state.getValue(FACING).toYRot());
             level.addFreshEntity(entitySit);
             player.startRiding(entitySit, true);
+            return InteractionResult.SUCCESS;
         }
         return super.use(state, level, pos, player, hand, hit);
     }

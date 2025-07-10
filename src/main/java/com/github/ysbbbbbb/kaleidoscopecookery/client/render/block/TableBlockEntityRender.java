@@ -20,6 +20,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.function.BiFunction;
 
@@ -66,17 +67,100 @@ public class TableBlockEntityRender implements BlockEntityRenderer<TableBlockEnt
             poseStack.popPose();
         }
 
-        if (!table.getItemStack().isEmpty()) {
-            poseStack.pushPose();
-            poseStack.translate(0.5, 1.25, 0.5);
-            poseStack.scale(0.5F, 0.5F, 0.5F);
-            if (axis == Direction.Axis.X) {
-                poseStack.mulPose(Axis.YP.rotationDegrees(45));
-            } else {
-                poseStack.mulPose(Axis.YP.rotationDegrees(135));
+        ItemStackHandler items = table.getItems();
+        int count = 0;
+        for (int i = 0; i < items.getSlots(); i++) {
+            if (items.getStackInSlot(i).isEmpty()) {
+                continue;
             }
-            itemRenderer.renderStatic(table.getItemStack(), ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
+            count++;
+        }
+
+        if (count == 0) {
+            return;
+        }
+
+        poseStack.pushPose();
+        poseStack.translate(0.5, 1.35, 0.5);
+        poseStack.scale(0.65F, 0.65F, 0.65F);
+
+        if (count == 1) {
+            this.rotation(poseStack, axis);
+            ItemStack stack1 = items.getStackInSlot(0);
+            itemRenderer.renderStatic(stack1, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
+        } else if (count == 2) {
+            poseStack.pushPose();
+            this.rotation(poseStack, axis);
+            poseStack.translate(0, 0, -0.25);
+            ItemStack stack1 = items.getStackInSlot(0);
+            itemRenderer.renderStatic(stack1, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
             poseStack.popPose();
+
+            poseStack.pushPose();
+            this.rotation(poseStack, axis);
+            poseStack.translate(0, 0, 0.375);
+            ItemStack stack2 = items.getStackInSlot(1);
+            itemRenderer.renderStatic(stack2, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
+            poseStack.popPose();
+        } else if (count == 3) {
+            poseStack.pushPose();
+            this.rotation(poseStack, axis);
+            poseStack.translate(-0.25, 0, -0.25);
+            ItemStack stack1 = items.getStackInSlot(0);
+            itemRenderer.renderStatic(stack1, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
+            poseStack.popPose();
+
+            poseStack.pushPose();
+            this.rotation(poseStack, axis);
+            poseStack.translate(-0.25, 0, 0.375);
+            ItemStack stack2 = items.getStackInSlot(1);
+            itemRenderer.renderStatic(stack2, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
+            poseStack.popPose();
+
+            poseStack.pushPose();
+            this.rotation(poseStack, axis);
+            poseStack.translate(0.375, 0, 0);
+            ItemStack stack3 = items.getStackInSlot(2);
+            itemRenderer.renderStatic(stack3, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
+            poseStack.popPose();
+        } else {
+            poseStack.pushPose();
+            this.rotation(poseStack, axis);
+            poseStack.translate(-0.25, 0, -0.25);
+            ItemStack stack1 = items.getStackInSlot(0);
+            itemRenderer.renderStatic(stack1, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
+            poseStack.popPose();
+
+            poseStack.pushPose();
+            this.rotation(poseStack, axis);
+            poseStack.translate(-0.25, 0, 0.375);
+            ItemStack stack2 = items.getStackInSlot(1);
+            itemRenderer.renderStatic(stack2, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
+            poseStack.popPose();
+
+            poseStack.pushPose();
+            this.rotation(poseStack, axis);
+            poseStack.translate(0.35, 0, -0.255);
+            ItemStack stack3 = items.getStackInSlot(2);
+            itemRenderer.renderStatic(stack3, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
+            poseStack.popPose();
+
+            poseStack.pushPose();
+            this.rotation(poseStack, axis);
+            poseStack.translate(0.35, 0, 0.37);
+            ItemStack stack4 = items.getStackInSlot(3);
+            itemRenderer.renderStatic(stack4, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
+            poseStack.popPose();
+        }
+
+        poseStack.popPose();
+    }
+
+    private void rotation(PoseStack poseStack, Direction.Axis axis) {
+        if (axis == Direction.Axis.X) {
+            poseStack.mulPose(Axis.YP.rotationDegrees(30));
+        } else {
+            poseStack.mulPose(Axis.YP.rotationDegrees(150));
         }
     }
 }

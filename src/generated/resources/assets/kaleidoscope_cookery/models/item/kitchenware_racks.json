@@ -1,3 +1,6 @@
 {
-  "parent": "kaleidoscope_cookery:block/kitchenware_racks"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "kaleidoscope_cookery:item/kitchenware_racks"
+  }
 }
