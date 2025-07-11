@@ -25,7 +25,6 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
@@ -62,6 +61,7 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
     private static final String SOUP_BASE_BUBBLE_COLOR = "SoupBaseBubbleColor";
     private static final String COOKING_BUBBLE_COLOR = "CookingBubbleColor";
     private static final String FINISHED_BUBBLE_COLOR = "FinishedBubbleColor";
+    private static final String LID_ITEM = "LidItem";
 
     private NonNullList<ItemStack> items = NonNullList.withSize(StockpotRecipe.RECIPES_SIZE, ItemStack.EMPTY);
     // 由于原版没有很好的记录桶内生物类型的方式，这里使用一个 Item 来记录
@@ -76,6 +76,10 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
     private int soupBaseBubbleColor = 0xFFFFFF;
     private int cookingBubbleColor = StockpotRecipeSerializer.DEFAULT_COOKING_BUBBLE_COLOR;
     private int finishedBubbleColor = StockpotRecipeSerializer.DEFAULT_FINISHED_BUBBLE_COLOR;
+    /**
+     * 盖子，因为盖子可以当做盾牌，所以会记录很多额外内容，需要专门保存
+     */
+    private ItemStack lidItem = ItemStack.EMPTY;
 
     // 仅用于客户端渲染缓存对象
     public Entity renderEntity = null;
@@ -173,7 +177,7 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
 
         // 第一种情况，放上盖子
         if (!hasLid && mainHandItem.is(ModItems.STOCKPOT_LID.get())) {
-            mainHandItem.shrink(1);
+            this.setLidItem(mainHandItem.split(1));
             this.setChanged();
             level.setBlockAndUpdate(worldPosition, blockState.setValue(StockpotBlock.HAS_LID, true));
             player.playSound(SoundEvents.LANTERN_PLACE, 0.5F, 0.5F);
@@ -182,7 +186,8 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
 
         // 第二种情况，取下盖子
         if (hasLid) {
-            ItemStack lid = ModItems.STOCKPOT_LID.get().getDefaultInstance();
+            ItemStack lid = this.getLidItem().isEmpty() ? ModItems.STOCKPOT_LID.get().getDefaultInstance() : this.getLidItem().copy();
+            this.setLidItem(ItemStack.EMPTY);
             if (mainHandItem.isEmpty()) {
                 player.setItemInHand(InteractionHand.MAIN_HAND, lid);
             } else {
@@ -381,6 +386,9 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
         tag.putInt(SOUP_BASE_BUBBLE_COLOR, this.soupBaseBubbleColor);
         tag.putInt(COOKING_BUBBLE_COLOR, this.cookingBubbleColor);
         tag.putInt(FINISHED_BUBBLE_COLOR, this.finishedBubbleColor);
+        if (!this.lidItem.isEmpty()) {
+            tag.put(LID_ITEM, this.lidItem.save(new CompoundTag()));
+        }
     }
 
     @Override
@@ -411,6 +419,9 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
         this.soupBaseBubbleColor = tag.getInt(SOUP_BASE_BUBBLE_COLOR);
         this.cookingBubbleColor = tag.getInt(COOKING_BUBBLE_COLOR);
         this.finishedBubbleColor = tag.getInt(FINISHED_BUBBLE_COLOR);
+        if (tag.contains(LID_ITEM)) {
+            this.lidItem = ItemStack.of(tag.getCompound(LID_ITEM));
+        }
     }
 
     @Override
@@ -507,5 +518,13 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
             return accessor.kaleidoscope$GetFishType();
         }
         return null;
+    }
+
+    public ItemStack getLidItem() {
+        return lidItem;
+    }
+
+    public void setLidItem(ItemStack lidItem) {
+        this.lidItem = lidItem;
     }
 }

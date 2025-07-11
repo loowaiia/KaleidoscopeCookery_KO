@@ -81,7 +81,7 @@ public class TableBlockEntityRender implements BlockEntityRenderer<TableBlockEnt
         }
 
         poseStack.pushPose();
-        poseStack.translate(0.5, 1.35, 0.5);
+        poseStack.translate(0.5, 1.25, 0.5);
         poseStack.scale(0.65F, 0.65F, 0.65F);
 
         if (count == 1) {

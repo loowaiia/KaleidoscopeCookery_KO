@@ -14,7 +14,7 @@ public final class ModItems {
     public static RegistryObject<Item> STOVE = ITEMS.register("stove", () -> new BlockItem(ModBlocks.STOVE.get(), new Item.Properties()));
     public static RegistryObject<Item> POT = ITEMS.register("pot", () -> new BlockItem(ModBlocks.POT.get(), new Item.Properties()));
     public static RegistryObject<Item> STOCKPOT = ITEMS.register("stockpot", () -> new BlockItem(ModBlocks.STOCKPOT.get(), new Item.Properties()));
-    public static RegistryObject<Item> STOCKPOT_LID = ITEMS.register("stockpot_lid", () -> new Item(new Item.Properties().stacksTo(1)));
+    public static RegistryObject<Item> STOCKPOT_LID = ITEMS.register("stockpot_lid", () -> new ShieldItem(new Item.Properties().durability(120)));
     public static RegistryObject<Item> OIL = ITEMS.register("oil", () -> new Item(new Item.Properties()));
     public static RegistryObject<Item> OIL_BLOCK = ITEMS.register("oil_block", () -> new BlockItem(ModBlocks.OIL_BLOCK.get(), new Item.Properties()));
     public static RegistryObject<Item> CHOPPING_BOARD = ITEMS.register("chopping_board", () -> new BlockItem(ModBlocks.CHOPPING_BOARD.get(), new Item.Properties()));
