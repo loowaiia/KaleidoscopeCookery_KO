@@ -101,6 +101,7 @@ public class LootTableGenerator {
             dropSelf(ModBlocks.STOCKPOT.get());
             dropSelf(ModBlocks.KITCHENWARE_RACKS.get());
             dropSelf(ModBlocks.STRAW_BLOCK.get());
+            dropSelf(ModBlocks.SHAWARMA_SPIT.get());
 
             this.add(ModBlocks.TOMATO_CROP.get(), createCropDrops(ModBlocks.TOMATO_CROP.get(), ModItems.TOMATO.get(),
                     ModItems.TOMATO_SEED.get(), createCropBuilder(ModBlocks.TOMATO_CROP.get())));

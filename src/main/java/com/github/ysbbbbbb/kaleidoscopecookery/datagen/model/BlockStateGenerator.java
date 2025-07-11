@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -56,6 +57,20 @@ public class BlockStateGenerator extends BlockStateProvider {
                     return new ModelFile.UncheckedModelFile(modLoc("block/stockpot_base"));
                 }
                 return new ModelFile.UncheckedModelFile(modLoc("block/stockpot"));
+            }
+        });
+
+        horizontalBlock(ModBlocks.SHAWARMA_SPIT.get(), blockState -> {
+            if (blockState.getValue(ShawarmaSpitBlock.POWERED)) {
+                if (blockState.getValue(ShawarmaSpitBlock.HALF) == DoubleBlockHalf.LOWER) {
+                    return new ModelFile.UncheckedModelFile(modLoc("block/shawarma_spit_powered_lower"));
+                }
+                return new ModelFile.UncheckedModelFile(modLoc("block/shawarma_spit_powered_upper"));
+            } else {
+                if (blockState.getValue(ShawarmaSpitBlock.HALF) == DoubleBlockHalf.LOWER) {
+                    return new ModelFile.UncheckedModelFile(modLoc("block/shawarma_spit_lower"));
+                }
+                return new ModelFile.UncheckedModelFile(modLoc("block/shawarma_spit_upper"));
             }
         });
 

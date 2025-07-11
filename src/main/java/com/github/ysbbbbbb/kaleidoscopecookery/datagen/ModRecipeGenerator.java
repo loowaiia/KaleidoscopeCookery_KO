@@ -225,6 +225,14 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .unlockedBy("has_leather", has(Items.LEATHER))
                 .save(consumer);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.SHAWARMA_SPIT.get())
+                .pattern("ICI")
+                .pattern("ICI")
+                .define('I', Items.CHAIN)
+                .define('C', Items.CAMPFIRE)
+                .unlockedBy("has_campfire", has(Items.CAMPFIRE))
+                .save(consumer);
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ModItems.RICE_PANICLE.get(), 9)
                 .requires(ModItems.STRAW_BLOCK.get())
                 .unlockedBy("has_rice_panicle", has(ModItems.RICE_PANICLE.get()))

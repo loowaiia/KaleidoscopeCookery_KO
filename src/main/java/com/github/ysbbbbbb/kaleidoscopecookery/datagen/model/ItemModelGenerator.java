@@ -92,6 +92,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         basicItem(ModItems.CATERPILLAR.get());
         basicItem(ModItems.ENAMEL_BASIN.get());
         basicItem(ModItems.KITCHENWARE_RACKS.get());
+        basicItem(ModItems.SHAWARMA_SPIT.get());
 
         ResourceLocation chileRistra = ForgeRegistries.ITEMS.getKey(ModItems.CHILI_RISTRA.get());
         if (chileRistra != null) {

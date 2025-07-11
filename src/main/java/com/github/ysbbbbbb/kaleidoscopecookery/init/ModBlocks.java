@@ -27,6 +27,7 @@ public class ModBlocks {
     public static RegistryObject<Block> KITCHENWARE_RACKS = BLOCKS.register("kitchenware_racks", KitchenwareRacksBlock::new);
     public static RegistryObject<Block> CHILI_RISTRA = BLOCKS.register("chili_ristra", ChiliRistraBlock::new);
     public static RegistryObject<Block> STRAW_BLOCK = BLOCKS.register("straw_block", StrawBlocks::new);
+    public static RegistryObject<Block> SHAWARMA_SPIT = BLOCKS.register("shawarma_spit", ShawarmaSpitBlock::new);
 
     public static RegistryObject<Block> TOMATO_CROP = BLOCKS.register("tomato_crop", () -> new BaseCropBlock(ModItems.TOMATO, ModItems.TOMATO_SEED));
     public static RegistryObject<Block> CHILI_CROP = BLOCKS.register("chili_crop", ChiliCropBlock::new);
@@ -79,6 +80,8 @@ public class ModBlocks {
             () -> BlockEntityType.Builder.of(ChoppingBoardBlockEntity::new, CHOPPING_BOARD.get()).build(null));
     public static RegistryObject<BlockEntityType<KitchenwareRacksBlockEntity>> KITCHENWARE_RACKS_BE = BLOCK_ENTITIES.register("kitchenware_racks",
             () -> BlockEntityType.Builder.of(KitchenwareRacksBlockEntity::new, KITCHENWARE_RACKS.get()).build(null));
+    public static RegistryObject<BlockEntityType<ShawarmaSpitBlockEntity>> SHAWARMA_SPIT_BE = BLOCK_ENTITIES.register("shawarma_spit",
+            () -> BlockEntityType.Builder.of(ShawarmaSpitBlockEntity::new, SHAWARMA_SPIT.get()).build(null));
 
     public static RegistryObject<BlockEntityType<ChairBlockEntity>> CHAIR_BE = BLOCK_ENTITIES.register("chair", () -> BlockEntityType.Builder.of(ChairBlockEntity::new,
             CHAIR_OAK.get(), CHAIR_SPRUCE.get(), CHAIR_ACACIA.get(), CHAIR_BAMBOO.get(),
