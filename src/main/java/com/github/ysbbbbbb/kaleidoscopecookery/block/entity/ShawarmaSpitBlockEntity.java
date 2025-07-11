@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.entity;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.block.ShawarmaSpitBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModParticles;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
@@ -105,7 +106,7 @@ public class ShawarmaSpitBlockEntity extends BlockEntity {
                 Block.popResource(level, this.worldPosition, copy);
             }
         }
-        if (!mainHandItem.is(TagMod.KITCHEN_KNIFE)) {
+        if (!mainHandItem.is(TagMod.KITCHEN_KNIFE) && this.getBlockState().getValue(ShawarmaSpitBlock.POWERED)) {
             entity.hurt(level.damageSources().inFire(), 1);
         }
 

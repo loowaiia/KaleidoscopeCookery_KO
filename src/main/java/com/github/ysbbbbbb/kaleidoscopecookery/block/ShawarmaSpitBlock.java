@@ -42,11 +42,11 @@ public class ShawarmaSpitBlock extends HorizontalDirectionalBlock implements Sim
 
     public static final VoxelShape UPPER_AABB = Shapes.or(
             Block.box(0, 14, 0, 16, 16, 16),
-            Block.box(7, 0, 7, 9, 14, 9)
+            Block.box(6, 0, 6, 10, 14, 10)
     );
     public static final VoxelShape LOWER_AABB = Shapes.or(
             Block.box(0, 0, 0, 16, 7, 16),
-            Block.box(7, 7, 7, 9, 16, 9)
+            Block.box(6, 7, 6, 10, 16, 10)
     );
 
     public ShawarmaSpitBlock() {
@@ -55,6 +55,7 @@ public class ShawarmaSpitBlock extends HorizontalDirectionalBlock implements Sim
                 .noOcclusion()
                 .instrument(NoteBlockInstrument.BASS)
                 .strength(2.0F, 3.0F)
+                .lightLevel(state -> state.getValue(POWERED) ? 8 : 0)
                 .sound(SoundType.METAL));
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
@@ -70,6 +71,9 @@ public class ShawarmaSpitBlock extends HorizontalDirectionalBlock implements Sim
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (pPlayer.isShiftKeyDown()) {
+            return InteractionResult.PASS;
+        }
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
         if (blockEntity instanceof ShawarmaSpitBlockEntity shawarmaSpit) {
             ItemStack heldItem = pPlayer.getItemInHand(pHand);
@@ -85,8 +89,11 @@ public class ShawarmaSpitBlock extends HorizontalDirectionalBlock implements Sim
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, ModBlocks.SHAWARMA_SPIT_BE.get(),
-                (level, pos, state, spit) -> spit.tick());
+        return createTickerHelper(pBlockEntityType, ModBlocks.SHAWARMA_SPIT_BE.get(), (level, pos, state, spit) -> {
+            if (state.getValue(POWERED)) {
+                spit.tick();
+            }
+        });
     }
 
     @Override
