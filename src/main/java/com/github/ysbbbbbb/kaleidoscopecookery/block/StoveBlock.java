@@ -91,12 +91,18 @@ public class StoveBlock extends HorizontalDirectionalBlock {
     }
 
     @Override
-    public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity entity) {
-        if (pState.getValue(LIT) && !entity.isSteppingCarefully() && entity instanceof LivingEntity livingEntity
-            && !EnchantmentHelper.hasFrostWalker(livingEntity)) {
-            entity.hurt(pLevel.damageSources().hotFloor(), 0);
+    public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
+        if (state.getValue(LIT)
+            && level instanceof ServerLevel serverLevel
+            && entity instanceof LivingEntity livingEntity
+            && !EnchantmentHelper.hasFrostWalker(livingEntity)
+            && !livingEntity.isSteppingCarefully()
+            && !livingEntity.isInvulnerable()
+            && livingEntity.invulnerableTime <= 10) {
+            livingEntity.invulnerableTime = 20;
+            serverLevel.broadcastDamageEvent(livingEntity, livingEntity.damageSources().hotFloor());
         }
-        super.stepOn(pLevel, pPos, pState, entity);
+        super.stepOn(level, pos, state, entity);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.entity.ai;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -10,10 +10,10 @@ import net.minecraft.world.level.LevelReader;
 
 import java.util.EnumSet;
 
-public class CatLieOnBasketGoal extends MoveToBlockGoal {
+public class CatLieOnBlockGoal extends MoveToBlockGoal {
     private final Cat cat;
 
-    public CatLieOnBasketGoal(Cat cat, double speedModifier, int searchRange) {
+    public CatLieOnBlockGoal(Cat cat, double speedModifier, int searchRange) {
         super(cat, speedModifier, searchRange, 6);
         this.cat = cat;
         this.setFlags(EnumSet.of(Goal.Flag.JUMP, Goal.Flag.MOVE));
@@ -54,12 +54,12 @@ public class CatLieOnBasketGoal extends MoveToBlockGoal {
             this.cat.setLying(false);
         } else if (!this.cat.isLying()) {
             this.cat.setLying(true);
-            this.cat.setPos(this.blockPos.getX() + 0.5, this.blockPos.getY() + 0.125, this.blockPos.getZ() + 0.5);
+            this.cat.setPos(this.blockPos.getX() + 0.5, this.blockPos.getY() + 0.5, this.blockPos.getZ() + 0.5);
         }
     }
 
     @Override
     protected boolean isValidTarget(LevelReader pLevel, BlockPos pPos) {
-        return pLevel.isEmptyBlock(pPos.above()) && pLevel.getBlockState(pPos).is(ModBlocks.FRUIT_BASKET.get());
+        return pLevel.isEmptyBlock(pPos.above()) && pLevel.getBlockState(pPos).is(TagMod.CAT_LIE_ON_BLOCKS);
     }
 }

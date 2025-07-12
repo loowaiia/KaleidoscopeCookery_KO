@@ -25,6 +25,10 @@ public interface TagMod {
      */
     TagKey<Item> STRAW_HAT = itemTag("straw_hat");
     /**
+     * 可以当做稻草捆的方块
+     */
+    TagKey<Item> STRAW_BALE = itemTag("straw_bale");
+    /**
      * 可以当本模组菜刀的物品
      */
     TagKey<Item> KITCHEN_KNIFE = itemTag("kitchen_knife");
@@ -44,6 +48,10 @@ public interface TagMod {
      * 温暖效果下，认为是热源的方块
      */
     TagKey<Block> WARMTH_HEAT_SOURCE_BLOCKS = blockTag("warmth_heat_source_blocks");
+    /**
+     * 吸引猫躺下的方块
+     */
+    TagKey<Block> CAT_LIE_ON_BLOCKS = blockTag("cat_lie_on_blocks");
 
     static TagKey<Item> itemTag(String name) {
         return TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, name));

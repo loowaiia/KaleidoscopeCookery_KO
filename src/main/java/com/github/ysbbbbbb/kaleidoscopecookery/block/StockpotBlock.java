@@ -92,6 +92,7 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
         ItemStack stack = player.getMainHandItem();
         if (state.getValue(HAS_LID) || stack.is(ModItems.STOCKPOT_LID.get())) {
             stockpot.onLitClick(player);
+            return InteractionResult.SUCCESS;
         }
         if (stack.getItem() instanceof BucketItem) {
             stockpot.onBucketClick(player);

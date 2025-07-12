@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "#": {
-      "item": "minecraft:hay_block"
+      "tag": "kaleidoscope_cookery:straw_bale"
     },
     "H": {
       "tag": "kaleidoscope_cookery:straw_hat"

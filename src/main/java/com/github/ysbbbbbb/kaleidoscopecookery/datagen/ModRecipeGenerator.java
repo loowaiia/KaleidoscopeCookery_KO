@@ -69,7 +69,7 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .define('H', TagMod.STRAW_HAT)
                 .define('S', Items.STICK)
                 .define('P', Items.PUMPKIN)
-                .define('#', Items.HAY_BLOCK)
+                .define('#', TagMod.STRAW_BALE)
                 .unlockedBy("has_pumpkin", has(Items.PUMPKIN))
                 .save(consumer);
 

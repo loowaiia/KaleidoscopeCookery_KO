@@ -88,6 +88,7 @@ public final class ModItems {
     public static RegistryObject<Item> CATERPILLAR = ITEMS.register("caterpillar", () -> new Item(new Item.Properties().food(ModFoods.CATERPILLAR)));
     public static RegistryObject<Item> FRIED_EGG = ITEMS.register("fried_egg", () -> new Item(new Item.Properties().food(ModFoods.FRIED_EGG)));
 
+    public static RegistryObject<Item> COOKED_RICE = ITEMS.register("cooked_rice", () -> new BowlFoodOnlyItem(8, 0.8f));
     public static RegistryObject<Item> SCRAMBLE_EGG_WITH_TOMATOES = ITEMS.register("scramble_egg_with_tomatoes", () -> new BowlFoodOnlyItem(8, 0.8f));
     public static RegistryObject<Item> SCRAMBLE_EGG_WITH_TOMATOES_RICE_BOWL = ITEMS.register("scramble_egg_with_tomatoes_rice_bowl", () -> new BowlFoodOnlyItem(8, 0.8f));
     public static RegistryObject<Item> STIR_FRIED_BEEF_OFFAL = ITEMS.register("stir_fried_beef_offal", () -> new BowlFoodOnlyItem(8, 0.8f));
@@ -125,5 +126,4 @@ public final class ModItems {
     public static RegistryObject<Item> COOKED_LAMB_CHOPS = ITEMS.register("cooked_lamb_chops", () -> new Item(new Item.Properties().food(ModFoods.COOKED_LAMB_CHOPS)));
     public static RegistryObject<Item> COOKED_COW_OFFAL = ITEMS.register("cooked_cow_offal", () -> new Item(new Item.Properties().food(ModFoods.COOKED_COW_OFFAL)));
     public static RegistryObject<Item> COOKED_PORK_BELLY = ITEMS.register("cooked_pork_belly", () -> new Item(new Item.Properties().food(ModFoods.COOKED_PORK_BELLY)));
-    public static RegistryObject<Item> COOKED_RICE = ITEMS.register("cooked_rice", () -> new Item(new Item.Properties().food(ModFoods.COOKED_RICE)));
 }

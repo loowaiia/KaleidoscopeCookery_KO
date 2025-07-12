@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FoodBiteRegistry {
-    public static final Map<ResourceLocation, FoodData> FOOD_DATA_MAP = Maps.newHashMap();
+    public static final Map<ResourceLocation, FoodData> FOOD_DATA_MAP = Maps.newLinkedHashMap();
 
     public static ResourceLocation DARK_CUISINE;
     public static ResourceLocation SUSPICIOUS_STIR_FRY;

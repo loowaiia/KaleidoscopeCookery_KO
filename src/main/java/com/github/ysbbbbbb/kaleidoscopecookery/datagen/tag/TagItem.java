@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagCommon;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -46,6 +47,7 @@ public class TagItem extends ItemTagsProvider {
                 .addTag(STRAW_HAT);
         tag(PRESERVATION_FOOD).add(Items.ROTTEN_FLESH, Items.CHICKEN,
                 Items.PUFFERFISH, Items.SPIDER_EYE, Items.POISONOUS_POTATO);
+        this.tag(TagMod.STRAW_BALE).add(HAY_BLOCK, ModItems.STRAW_BLOCK.get());
         addPotIngredient();
 
         // 原版兼容

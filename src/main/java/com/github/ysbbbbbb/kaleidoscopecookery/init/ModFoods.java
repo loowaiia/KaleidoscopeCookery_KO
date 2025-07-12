@@ -32,5 +32,4 @@ public class ModFoods {
     public static final FoodProperties COOKED_LAMB_CHOPS = (new FoodProperties.Builder()).nutrition(8).saturationMod(0.8F).alwaysEat().build();
     public static final FoodProperties COOKED_COW_OFFAL = (new FoodProperties.Builder()).nutrition(8).saturationMod(0.8F).alwaysEat().build();
     public static final FoodProperties COOKED_PORK_BELLY = (new FoodProperties.Builder()).nutrition(8).saturationMod(0.8F).alwaysEat().build();
-    public static final FoodProperties COOKED_RICE = (new FoodProperties.Builder()).nutrition(8).saturationMod(0.8F).alwaysEat().build();
 }

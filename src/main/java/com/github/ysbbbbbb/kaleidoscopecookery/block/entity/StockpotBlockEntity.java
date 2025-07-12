@@ -7,6 +7,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.mixin.MobBucketItemAccessor;
 import com.github.ysbbbbbb.kaleidoscopecookery.recipe.StockpotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.recipe.serializer.StockpotRecipeSerializer;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.BlockDrop;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -191,7 +192,7 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
             if (mainHandItem.isEmpty()) {
                 player.setItemInHand(InteractionHand.MAIN_HAND, lid);
             } else {
-                Block.popResource(level, worldPosition, lid);
+                BlockDrop.popResource(level, worldPosition, 0.5, lid);
             }
             this.setChanged();
             level.setBlockAndUpdate(worldPosition, blockState.setValue(StockpotBlock.HAS_LID, false));
@@ -289,6 +290,9 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
                                 SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F,
                                 ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
                         this.removeItem(i, 1);
+                        if (this.soupBase.getFluidType().getTemperature() > 500) {
+                            player.hurt(level.damageSources().inFire(), 1);
+                        }
                         this.refresh();
                         return;
                     }
@@ -304,9 +308,6 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
                         level.playSound(null, player.getX(), player.getY() + 0.5, player.getZ(),
                                 SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F,
                                 ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                        if (this.soupBase.getFluidType().getTemperature() > 500) {
-                            player.hurt(level.damageSources().inFire(), 1);
-                        }
                         this.refresh();
                         return;
                     }
