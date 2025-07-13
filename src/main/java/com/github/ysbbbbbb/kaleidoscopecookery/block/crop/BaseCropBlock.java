@@ -22,9 +22,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.registries.RegistryObject;
 
 public class BaseCropBlock extends CropBlock {
-    protected final RegistryObject<Item> result;
-    protected final RegistryObject<Item> seed;
-
     private static final VoxelShape[] SHAPE_BY_AGE = new VoxelShape[]{
             Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D),
             Block.box(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D),
@@ -35,26 +32,42 @@ public class BaseCropBlock extends CropBlock {
             Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D),
             Block.box(0.0D, 0.0D, 0.0D, 16.0D, 9.0D, 16.0D)
     };
+    protected final RegistryObject<Item> result;
+    protected final RegistryObject<Item> seed;
 
     public BaseCropBlock(RegistryObject<Item> result, RegistryObject<Item> seed) {
         super(Properties.of()
-                .mapColor(MapColor.PLANT).noCollission().randomTicks()
-                .instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
+                .mapColor(MapColor.PLANT)
+                .noCollission()
+                .randomTicks()
+                .instabreak()
+                .sound(SoundType.CROP)
+                .pushReaction(PushReaction.DESTROY));
         this.result = result;
         this.seed = seed;
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pState.getValue(AGE) >= this.getMaxAge()) {
-            if (!pLevel.isClientSide) {
-                Block.popResource(pLevel, pPos, this.result.get().getDefaultInstance());
-                pLevel.playSound(null, pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5, SoundEvents.CROP_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
-                pLevel.setBlock(pPos, this.getStateForAge(5), Block.UPDATE_CLIENTS);
-            }
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (state.getValue(AGE) >= this.getMaxAge()) {
+            Block.popResource(level, pos, this.result.get().getDefaultInstance());
+            this.onUseBreakCrop(level, pos);
             return InteractionResult.SUCCESS;
         }
-        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+        return super.use(state, level, pos, player, hand, hitResult);
+    }
+
+    protected void onUseBreakCrop(Level level, BlockPos pos) {
+        // 默认右键收割后为第五阶段
+        int ageAfterUse = 5;
+        level.playSound(null,
+                pos.getX() + 0.5,
+                pos.getY() + 0.5,
+                pos.getZ() + 0.5,
+                SoundEvents.CROP_BREAK,
+                SoundSource.BLOCKS,
+                1.0F, 1.0F);
+        level.setBlock(pos, this.getStateForAge(ageAfterUse), Block.UPDATE_CLIENTS);
     }
 
     @Override
@@ -63,7 +76,7 @@ public class BaseCropBlock extends CropBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
         return SHAPE_BY_AGE[this.getAge(state)];
     }
 }
