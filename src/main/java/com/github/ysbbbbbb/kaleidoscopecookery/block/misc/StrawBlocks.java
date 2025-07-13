@@ -1,4 +1,4 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.block;
+package com.github.ysbbbbbb.kaleidoscopecookery.block.misc;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import net.minecraft.core.BlockPos;

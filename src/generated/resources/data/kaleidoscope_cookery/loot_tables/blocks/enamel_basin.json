@@ -208,6 +208,26 @@
             }
           ],
           "name": "kaleidoscope_cookery:oil"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "kaleidoscope_cookery:enamel_basin",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "oil_count": "12"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "add": false,
+              "count": 6.0,
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "kaleidoscope_cookery:oil"
         }
       ],
       "rolls": 1.0

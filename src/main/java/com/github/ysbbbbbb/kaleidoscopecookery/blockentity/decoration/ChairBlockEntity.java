@@ -1,4 +1,4 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.block.entity;
+package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import net.minecraft.core.BlockPos;
@@ -8,40 +8,25 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.items.ItemStackHandler;
 
-public class TableBlockEntity extends BlockEntity {
+public class ChairBlockEntity extends BlockEntity {
     private static final String COLOR_TAG = "CarpetColor";
-    private static final String SHOW_ITEMS = "ShowItems";
-
     private DyeColor color = DyeColor.WHITE;
-    private ItemStackHandler items = new ItemStackHandler(4);
 
-    public TableBlockEntity(BlockPos pos, BlockState blockState) {
-        super(ModBlocks.TABLE_BE.get(), pos, blockState);
+    public ChairBlockEntity(BlockPos pos, BlockState blockState) {
+        super(ModBlocks.CHAIR_BE.get(), pos, blockState);
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         tag.putInt(COLOR_TAG, this.color.getId());
-        tag.put(SHOW_ITEMS, this.items.serializeNBT());
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        if (tag.contains(COLOR_TAG)) {
-            this.color = DyeColor.byId(tag.getInt(COLOR_TAG));
-        }
-        if (tag.contains(SHOW_ITEMS)) {
-            this.items.deserializeNBT(tag.getCompound(SHOW_ITEMS));
-        }
-    }
-
-    @Override
-    public AABB getRenderBoundingBox() {
-        return new AABB(this.worldPosition);
+        this.color = DyeColor.byId(tag.getInt(COLOR_TAG));
     }
 
     @Override
@@ -58,11 +43,12 @@ public class TableBlockEntity extends BlockEntity {
         return this.color;
     }
 
-    public void setColor(DyeColor color) {
-        this.color = color;
+    @Override
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.worldPosition);
     }
 
-    public ItemStackHandler getItems() {
-        return items;
+    public void setColor(DyeColor color) {
+        this.color = color;
     }
 }

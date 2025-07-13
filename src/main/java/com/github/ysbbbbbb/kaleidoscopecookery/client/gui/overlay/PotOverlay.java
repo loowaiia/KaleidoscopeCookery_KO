@@ -1,7 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.gui.overlay;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.block.PotBlock;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.PotBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.Kitchen.PotBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.PotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

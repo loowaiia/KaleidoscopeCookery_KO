@@ -1,4 +1,4 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.block;
+package com.github.ysbbbbbb.kaleidoscopecookery.block.decoration;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.entity.SitEntity;
 import net.minecraft.core.BlockPos;
@@ -34,8 +34,9 @@ import java.util.List;
 
 public class CookStoolBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    public static final VoxelShape NORTH_SOUTH = Block.box(2, 0, 3, 14, 7, 13);
-    public static final VoxelShape EAST_WEST = Block.box(3, 0, 2, 13, 7, 14);
+
+    private static final VoxelShape NORTH_SOUTH = Block.box(2, 0, 3, 14, 7, 13);
+    private static final VoxelShape EAST_WEST = Block.box(3, 0, 2, 13, 7, 14);
 
     public CookStoolBlock() {
         super(BlockBehaviour.Properties.of()
@@ -44,19 +45,21 @@ public class CookStoolBlock extends HorizontalDirectionalBlock implements Simple
                 .strength(2.0F, 3.0F)
                 .sound(SoundType.WOOD)
                 .ignitedByLava());
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(WATERLOGGED, false));
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(FACING, Direction.SOUTH)
+                .setValue(WATERLOGGED, false));
     }
 
     @Override
-    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
-        if (pState.getValue(WATERLOGGED)) {
-            pLevel.scheduleTick(pPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
+        if (state.getValue(WATERLOGGED)) {
+            levelAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
         }
-        return super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
+        return super.updateShape(state, direction, neighborState, levelAccessor, pos, neighborPos);
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         List<SitEntity> entities = level.getEntitiesOfClass(SitEntity.class, new AABB(pos));
         if (entities.isEmpty()) {
             SitEntity entitySit = new SitEntity(level, pos);
@@ -65,12 +68,12 @@ public class CookStoolBlock extends HorizontalDirectionalBlock implements Simple
             player.startRiding(entitySit, true);
             return InteractionResult.SUCCESS;
         }
-        return super.use(state, level, pos, player, hand, hit);
+        return super.use(state, level, pos, player, hand, hitResult);
     }
 
     @Override
-    public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
-        level.getEntitiesOfClass(SitEntity.class, new AABB(pos)).forEach(Entity::discard);
+    public void destroy(LevelAccessor levelAccessor, BlockPos pos, BlockState state) {
+        levelAccessor.getEntitiesOfClass(SitEntity.class, new AABB(pos)).forEach(Entity::discard);
     }
 
     @Override
@@ -81,18 +84,19 @@ public class CookStoolBlock extends HorizontalDirectionalBlock implements Simple
     @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
-                .setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
+        FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        return this.defaultBlockState()
+                .setValue(FACING, context.getHorizontalDirection().getOpposite())
+                .setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
     }
 
     @Override
-    public FluidState getFluidState(BlockState pState) {
-        return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
+    public FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
         if (state.getValue(FACING).getAxis() == Direction.Axis.Z) {
             return NORTH_SOUTH;
         }

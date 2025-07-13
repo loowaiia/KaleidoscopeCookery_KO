@@ -1,6 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.recipe;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.PotBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.PotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;

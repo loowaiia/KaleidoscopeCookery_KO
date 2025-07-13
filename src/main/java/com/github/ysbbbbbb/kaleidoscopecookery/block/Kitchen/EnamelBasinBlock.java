@@ -1,4 +1,4 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.block;
+package com.github.ysbbbbbb.kaleidoscopecookery.block.Kitchen;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenShovelItem;
@@ -36,15 +36,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class EnamelBasinBlock extends Block implements SimpleWaterloggedBlock {
-    public static final int MAX_OIL_COUNT = 11;
+    public static final int MAX_OIL_COUNT = 12;
+
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty HAS_LID = BooleanProperty.create("has_lid");
     public static final IntegerProperty OIL_COUNT = IntegerProperty.create("oil_count", 0, MAX_OIL_COUNT);
-    public static final VoxelShape AABB_NO_LID = Block.box(3, 0, 3, 13, 5, 13);
-    public static final VoxelShape AABB = Shapes.or(AABB_NO_LID,
+
+    private static final VoxelShape AABB_NO_LID = Block.box(3, 0, 3, 13, 5, 13);
+    private static final VoxelShape AABB = Shapes.or(AABB_NO_LID,
             Block.box(2.5, 5, 2.5, 13.5, 6, 13.5),
-            Block.box(7, 6, 7, 9, 7, 9)
-    );
+            Block.box(7, 6, 7, 9, 7, 9));
 
     public EnamelBasinBlock() {
         super(BlockBehaviour.Properties.of()
@@ -59,17 +60,17 @@ public class EnamelBasinBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
-        if (pState.getValue(WATERLOGGED)) {
-            pLevel.scheduleTick(pPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
+        if (state.getValue(WATERLOGGED)) {
+            levelAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
         }
-        return super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
+        return super.updateShape(state, direction, neighborState, levelAccessor, pos, neighborPos);
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (hand != InteractionHand.MAIN_HAND) {
-            super.use(state, level, pos, player, hand, hit);
+            super.use(state, level, pos, player, hand, hitResult);
         }
         ItemStack mainHandItem = player.getMainHandItem();
         // 先判断棍子敲
@@ -110,7 +111,7 @@ public class EnamelBasinBlock extends Block implements SimpleWaterloggedBlock {
         if (mainHandItem.is(ModItems.KITCHEN_SHOVEL.get())) {
             return onShovelClick(state, level, pos, player, mainHandItem);
         }
-        return super.use(state, level, pos, player, hand, hit);
+        return super.use(state, level, pos, player, hand, hitResult);
     }
 
     @NotNull
@@ -135,6 +136,8 @@ public class EnamelBasinBlock extends Block implements SimpleWaterloggedBlock {
             level.destroyBlock(pos, true, player);
             return InteractionResult.SUCCESS;
         }
+
+        // 取油
         level.playSound(player, pos, SoundEvents.HONEY_BLOCK_BREAK, SoundSource.BLOCKS, 0.8f, 1.2F);
         KitchenShovelItem.setHasOil(mainHandItem, true);
         level.setBlockAndUpdate(pos, state.setValue(OIL_COUNT, value - 1));
@@ -144,23 +147,23 @@ public class EnamelBasinBlock extends Block implements SimpleWaterloggedBlock {
     @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
-        return this.defaultBlockState().setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
+        FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        return this.defaultBlockState().setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
     }
 
     @Override
-    public FluidState getFluidState(BlockState pState) {
-        return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
+    public FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(WATERLOGGED, HAS_LID, OIL_COUNT);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(WATERLOGGED, HAS_LID, OIL_COUNT);
     }
 
     @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        return pState.getValue(HAS_LID) ? AABB : AABB_NO_LID;
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
+        return state.getValue(HAS_LID) ? AABB : AABB_NO_LID;
     }
 
     @Override
@@ -173,4 +176,3 @@ public class EnamelBasinBlock extends Block implements SimpleWaterloggedBlock {
         return state.getValue(OIL_COUNT);
     }
 }
-

@@ -1,6 +1,6 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.block;
+package com.github.ysbbbbbb.kaleidoscopecookery.block.decoration;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.FruitBasketBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.FruitBasketBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import net.minecraft.core.BlockPos;
@@ -24,6 +24,8 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -31,13 +33,16 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class FruitBasketBlock extends HorizontalDirectionalBlock implements EntityBlock, SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    public static final VoxelShape NORTH_SOUTH = Shapes.join(
+
+    private static final VoxelShape NORTH_SOUTH = Shapes.join(
             Block.box(1, 0, 2, 15, 8, 14),
             Block.box(2, 1, 3, 14, 8, 13),
             BooleanOp.ONLY_FIRST);
-    public static final VoxelShape EAST_WEST = Shapes.join(
+    private static final VoxelShape EAST_WEST = Shapes.join(
             Block.box(2, 0, 1, 14, 8, 15),
             Block.box(3, 1, 2, 13, 8, 14),
             BooleanOp.ONLY_FIRST);
@@ -47,58 +52,59 @@ public class FruitBasketBlock extends HorizontalDirectionalBlock implements Enti
                 .mapColor(MapColor.WOOD)
                 .instrument(NoteBlockInstrument.BASS)
                 .sound(SoundType.BAMBOO));
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(WATERLOGGED, false));
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(FACING, Direction.SOUTH)
+                .setValue(WATERLOGGED, false));
     }
 
     @Override
-    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
-        if (pState.getValue(WATERLOGGED)) {
-            pLevel.scheduleTick(pPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
+        if (state.getValue(WATERLOGGED)) {
+            levelAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
         }
-        return super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
+        return super.updateShape(state, direction, neighborState, levelAccessor, pos, neighborPos);
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (hand == InteractionHand.OFF_HAND) {
             return InteractionResult.PASS;
         }
-        if (level.getBlockEntity(pos) instanceof FruitBasketBlockEntity blockEntity) {
+        if (level.getBlockEntity(pos) instanceof FruitBasketBlockEntity fruitBasket) {
             if (player.isSecondaryUseActive()) {
-                blockEntity.takeOut(player);
+                fruitBasket.takeOut(player);
                 return InteractionResult.SUCCESS;
             }
             if (!player.getMainHandItem().isEmpty()) {
-                blockEntity.putOn(player.getMainHandItem());
+                fruitBasket.putOn(player.getMainHandItem());
                 return InteractionResult.SUCCESS;
             }
         }
-        return super.use(blockState, level, pos, player, hand, hit);
+        return super.use(state, level, pos, player, hand, hitResult);
     }
 
     @Override
-    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-        BlockEntity entity = level.getBlockEntity(pos);
-        if (entity instanceof FruitBasketBlockEntity blockEntity) {
-            if (!level.isClientSide) {
-                ItemStack stack = ModItems.FRUIT_BASKET.get().getDefaultInstance();
-                blockEntity.saveToItem(stack);
-                Block.popResource(level, pos, stack);
-            }
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder lootParamsBuilder) {
+        List<ItemStack> drops = super.getDrops(state, lootParamsBuilder);
+        BlockEntity parameter = lootParamsBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        if (parameter instanceof FruitBasketBlockEntity fruitBasket) {
+            drops.stream().filter(stack -> stack.is(ModItems.FRUIT_BASKET.get()))
+                    .findFirst().ifPresent(fruitBasket::saveToItem);
         }
-        super.playerWillDestroy(level, pos, state, player);
+        return drops;
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
-        ItemStack cloneItemStack = super.getCloneItemStack(level, pos, state);
-        level.getBlockEntity(pos, ModBlocks.FRUIT_BASKET_BE.get()).ifPresent(e -> e.saveToItem(cloneItemStack));
+    public ItemStack getCloneItemStack(BlockGetter blockGetter, BlockPos pos, BlockState state) {
+        ItemStack cloneItemStack = super.getCloneItemStack(blockGetter, pos, state);
+        blockGetter.getBlockEntity(pos, ModBlocks.FRUIT_BASKET_BE.get())
+                .ifPresent(e -> e.saveToItem(cloneItemStack));
         return cloneItemStack;
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new FruitBasketBlockEntity(pPos, pState);
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new FruitBasketBlockEntity(pos, state);
     }
 
     @Override
@@ -109,18 +115,19 @@ public class FruitBasketBlock extends HorizontalDirectionalBlock implements Enti
     @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
-                .setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
+        FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        return this.defaultBlockState()
+                .setValue(FACING, context.getHorizontalDirection().getOpposite())
+                .setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
     }
 
     @Override
-    public FluidState getFluidState(BlockState pState) {
-        return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
+    public FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
         if (state.getValue(FACING).getAxis() == Direction.Axis.Z) {
             return NORTH_SOUTH;
         }

@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package com.github.ysbbbbbb.kaleidoscopecookery.block.entity;
+package com.github.ysbbbbbb.kaleidoscopecookery.block.food;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

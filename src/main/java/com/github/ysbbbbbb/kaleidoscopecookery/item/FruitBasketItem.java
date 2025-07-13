@@ -1,6 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.item;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.FruitBasketBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.FruitBasketBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.inventory.tooltip.ItemContainerTooltip;
 import net.minecraft.nbt.CompoundTag;

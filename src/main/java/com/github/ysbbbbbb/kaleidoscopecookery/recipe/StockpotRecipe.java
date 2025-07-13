@@ -1,6 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.recipe;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.StockpotBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;

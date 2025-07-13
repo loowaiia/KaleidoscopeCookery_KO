@@ -1,6 +1,6 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.block;
+package com.github.ysbbbbbb.kaleidoscopecookery.block.decoration;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.TableBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.TableBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.BlockDrop;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import net.minecraft.core.BlockPos;
@@ -157,15 +157,15 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState pState, LootParams.Builder pParams) {
-        List<ItemStack> drops = super.getDrops(pState, pParams);
-        BlockEntity parameter = pParams.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-        if (parameter instanceof TableBlockEntity table) {
-            if (pState.getValue(HAS_CARPET)) {
-                Item carpet = getCarpetByColor(table.getColor());
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder lootParamsBuilder) {
+        List<ItemStack> drops = super.getDrops(state, lootParamsBuilder);
+        BlockEntity parameter = lootParamsBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        if (parameter instanceof TableBlockEntity tableBlockEntity) {
+            if (state.getValue(HAS_CARPET)) {
+                Item carpet = getCarpetByColor(tableBlockEntity.getColor());
                 drops.add(new ItemStack(carpet));
             }
-            ItemStackHandler items = table.getItems();
+            ItemStackHandler items = tableBlockEntity.getItems();
             for (int i = 0; i < items.getSlots(); i++) {
                 drops.add(items.getStackInSlot(i).copy());
             }
@@ -181,10 +181,9 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
     /**
      * 根据指定方向和位置，计算桌子的连接状态和朝向
      */
-    private BlockState getConnectedState(LevelAccessor level, BlockPos pos, BlockState baseState) {
-        // 先判断南北方向
-        BlockState northState = level.getBlockState(pos.north());
-        BlockState southState = level.getBlockState(pos.south());
+    private BlockState getConnectedState(LevelAccessor levelAccessor, BlockPos pos, BlockState baseState) {
+        BlockState northState = levelAccessor.getBlockState(pos.north());
+        BlockState southState = levelAccessor.getBlockState(pos.south());
         if (northState.is(this) && southState.is(this)) {
             return baseState.setValue(POSITION, MIDDLE).setValue(AXIS, Direction.Axis.Z);
         }
@@ -195,9 +194,8 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
             return baseState.setValue(POSITION, RIGHT).setValue(AXIS, Direction.Axis.Z);
         }
 
-        // 再判断东西方向
-        BlockState westState = level.getBlockState(pos.west());
-        BlockState eastState = level.getBlockState(pos.east());
+        BlockState westState = levelAccessor.getBlockState(pos.west());
+        BlockState eastState = levelAccessor.getBlockState(pos.east());
         if (eastState.is(this) && westState.is(this)) {
             return baseState.setValue(POSITION, MIDDLE).setValue(AXIS, Direction.Axis.X);
         }
@@ -208,33 +206,29 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
             return baseState.setValue(POSITION, RIGHT).setValue(AXIS, Direction.Axis.X);
         }
 
-        // 都没有则为单独
         return baseState.setValue(POSITION, SINGLE);
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
         if (state.getValue(WATERLOGGED)) {
-            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            levelAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
         }
-        // 如果是东西方向变化，先判断南北有没有桌子，有那么不需要改变状态
         if (direction.getAxis() == Direction.Axis.X) {
-            BlockState northState = level.getBlockState(pos.north());
-            BlockState southState = level.getBlockState(pos.south());
+            BlockState northState = levelAccessor.getBlockState(pos.north());
+            BlockState southState = levelAccessor.getBlockState(pos.south());
             if (northState.is(this) || southState.is(this)) {
                 return state;
             }
         }
-        // 如果是南北方向变化，先判断东西有没有桌子，有那么不需要改变状态
         if (direction.getAxis() == Direction.Axis.Z) {
-            BlockState westState = level.getBlockState(pos.west());
-            BlockState eastState = level.getBlockState(pos.east());
+            BlockState westState = levelAccessor.getBlockState(pos.west());
+            BlockState eastState = levelAccessor.getBlockState(pos.east());
             if (westState.is(this) || eastState.is(this)) {
                 return state;
             }
         }
-        // 其他情况需要重新计算连接状态
-        return getConnectedState(level, pos, state);
+        return getConnectedState(levelAccessor, pos, state);
     }
 
     @Override
@@ -248,18 +242,18 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
     }
 
     @Override
-    public FluidState getFluidState(BlockState pState) {
-        return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
+    public FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
         return FACE;
     }
 
     @Override
     @Nullable
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new TableBlockEntity(pPos, pState);
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new TableBlockEntity(pos, state);
     }
 }

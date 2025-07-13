@@ -1,6 +1,6 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.block;
+package com.github.ysbbbbbb.kaleidoscopecookery.block.Kitchen;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.StockpotBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoundType;
@@ -64,25 +64,25 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
     @Nullable
     @SuppressWarnings("all")
     protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(
-            BlockEntityType<A> pServerType, BlockEntityType<E> pClientType, BlockEntityTicker<? super E> pTicker) {
-        return pClientType == pServerType ? (BlockEntityTicker<A>) pTicker : null;
+            BlockEntityType<A> serverType, BlockEntityType<E> clientType, BlockEntityTicker<? super E> ticker) {
+        return clientType == serverType ? (BlockEntityTicker<A>) ticker : null;
     }
 
     @Override
-    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState neighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos neighborPos) {
-        if (pState.getValue(WATERLOGGED)) {
-            pLevel.scheduleTick(pPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
+        if (state.getValue(WATERLOGGED)) {
+            levelAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
         }
         // 如果下方是不完整方块，则添加基座
-        if (pDirection == Direction.DOWN) {
-            return pState.setValue(HAS_BASE, !neighborState.isFaceSturdy(pLevel, neighborPos, Direction.UP));
+        if (direction == Direction.DOWN) {
+            return state.setValue(HAS_BASE, !neighborState.isFaceSturdy(levelAccessor, neighborPos, Direction.UP));
         }
-        return super.updateShape(pState, pDirection, neighborState, pLevel, pPos, neighborPos);
+        return super.updateShape(state, direction, neighborState, levelAccessor, pos, neighborPos);
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand pHand, BlockHitResult pHit) {
-        if (pHand != InteractionHand.MAIN_HAND) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (hand != InteractionHand.MAIN_HAND) {
             return InteractionResult.PASS;
         }
         BlockEntity blockEntity = level.getBlockEntity(pos);
@@ -107,41 +107,44 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
             stockpot.onBowlClick(player);
             return InteractionResult.SUCCESS;
         }
-        return super.use(state, level, pos, player, pHand, pHit);
+        return super.use(state, level, pos, player, hand, hitResult);
     }
 
     @Override
     @Nullable
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new StockpotBlockEntity(pPos, pState);
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new StockpotBlockEntity(pos, state);
     }
 
     @Override
     @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        if (pLevel.isClientSide) {
-            return createTickerHelper(pBlockEntityType, ModBlocks.STOCKPOT_BE.get(), (level, pos, state, pot) -> pot.clientTick());
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        if (level.isClientSide) {
+            return createTickerHelper(blockEntityType, ModBlocks.STOCKPOT_BE.get(),
+                    (lvl, blockPos, blockState, pot) -> pot.clientTick());
         }
-        return createTickerHelper(pBlockEntityType, ModBlocks.STOCKPOT_BE.get(), (level, pos, state, pot) -> pot.tick());
+        return createTickerHelper(blockEntityType, ModBlocks.STOCKPOT_BE.get(),
+                (lvl, blockPos, blockState, pot) -> pot.tick());
     }
 
     @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
-        BlockState blockState = this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
-                .setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
+        FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        BlockState blockState = this.defaultBlockState()
+                .setValue(FACING, context.getHorizontalDirection().getOpposite())
+                .setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
         // 如果下方是不完整方块，则添加基座
-        BlockState state = context.getLevel().getBlockState(context.getClickedPos().below());
-        if (!state.isFaceSturdy(context.getLevel(), context.getClickedPos().below(), Direction.UP)) {
+        BlockState belowState = context.getLevel().getBlockState(context.getClickedPos().below());
+        if (!belowState.isFaceSturdy(context.getLevel(), context.getClickedPos().below(), Direction.UP)) {
             return blockState.setValue(HAS_BASE, true);
         }
         return blockState;
     }
 
     @Override
-    public FluidState getFluidState(BlockState pState) {
-        return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
+    public FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
@@ -150,25 +153,25 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
     }
 
     @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        if (pState.getValue(HAS_LID)) {
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
+        if (state.getValue(HAS_LID)) {
             return AABB_WITH_LID;
         }
         return AABB;
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState pState, LootParams.Builder pParams) {
-        List<ItemStack> drops = super.getDrops(pState, pParams);
-        if (pState.getValue(HAS_LID)) {
-            BlockEntity parameter = pParams.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder lootParamsBuilder) {
+        List<ItemStack> drops = super.getDrops(state, lootParamsBuilder);
+        if (state.getValue(HAS_LID)) {
+            BlockEntity parameter = lootParamsBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
             if (parameter instanceof StockpotBlockEntity stockpot && !stockpot.getLidItem().isEmpty()) {
                 drops.add(stockpot.getLidItem().copy());
             } else {
                 drops.add(new ItemStack(ModItems.STOCKPOT_LID.get()));
             }
         }
-        BlockEntity parameter = pParams.getParameter(LootContextParams.BLOCK_ENTITY);
+        BlockEntity parameter = lootParamsBuilder.getParameter(LootContextParams.BLOCK_ENTITY);
         if (parameter instanceof StockpotBlockEntity stockpotBlock && stockpotBlock.getStatus() == StockpotBlockEntity.PUT_INGREDIENT) {
             stockpotBlock.getItems().forEach(stack -> {
                 if (!stack.isEmpty()) {

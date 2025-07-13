@@ -1,6 +1,6 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.block;
+package com.github.ysbbbbbb.kaleidoscopecookery.block.Kitchen;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.PotBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.PotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoundType;
@@ -47,50 +47,53 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock,
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty HAS_OIL = BooleanProperty.create("has_oil");
     public static final BooleanProperty SHOW_OIL = BooleanProperty.create("show_oil");
-    public static final VoxelShape AABB = Block.box(2, 0, 2, 14, 4, 14);
-    public static final double DURABILITY_COST_PROBABILITY = 0.25;
+
+    private static final VoxelShape AABB = Block.box(2, 0, 2, 14, 4, 14);
+    private static final double DURABILITY_COST_PROBABILITY = 0.25;
 
     public PotBlock() {
         super(Properties.of()
                 .mapColor(MapColor.METAL)
-                .sound(ModSoundType.POT).noOcclusion()
+                .sound(ModSoundType.POT)
+                .noOcclusion()
                 .strength(1.5F, 6.0F));
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(HAS_OIL, false)
-                .setValue(SHOW_OIL, false).setValue(WATERLOGGED, false));
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(FACING, Direction.SOUTH)
+                .setValue(HAS_OIL, false)
+                .setValue(SHOW_OIL, false)
+                .setValue(WATERLOGGED, false));
     }
 
     @Override
-    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
-        if (pState.getValue(WATERLOGGED)) {
-            pLevel.scheduleTick(pPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
+        if (state.getValue(WATERLOGGED)) {
+            levelAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
         }
-        return super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
+        return super.updateShape(state, direction, neighborState, levelAccessor, pos, neighborPos);
     }
 
     @Nullable
     @SuppressWarnings("all")
     protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(
-            BlockEntityType<A> pServerType, BlockEntityType<E> pClientType, BlockEntityTicker<? super E> pTicker) {
-        return pClientType == pServerType ? (BlockEntityTicker<A>) pTicker : null;
+            BlockEntityType<A> serverType, BlockEntityType<E> clientType, BlockEntityTicker<? super E> ticker) {
+        return clientType == serverType ? (BlockEntityTicker<A>) ticker : null;
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand pHand, BlockHitResult pHit) {
-        if (pHand == InteractionHand.OFF_HAND) {
-            return super.use(state, level, pos, player, pHand, pHit);
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (hand == InteractionHand.OFF_HAND) {
+            return super.use(state, level, pos, player, hand, hitResult);
         }
 
-        // 判断热源
         BlockState belowState = level.getBlockState(pos.below());
         if (!belowState.hasProperty(BlockStateProperties.LIT) || !belowState.getValue(BlockStateProperties.LIT)) {
             sendBarMessage(player, Component.translatable("tip.kaleidoscope_cookery.pot.need_lit_stove"));
             return InteractionResult.FAIL;
         }
 
-        ItemStack itemInHand = player.getItemInHand(pHand);
+        ItemStack itemInHand = player.getItemInHand(hand);
         RandomSource random = level.random;
 
-        // 放油
         if (!state.getValue(HAS_OIL)) {
             if (itemInHand.is(TagMod.OIL)) {
                 placeOil(state, level, pos, player, random);
@@ -106,13 +109,12 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock,
             return InteractionResult.FAIL;
         }
 
-        // 炒菜等内容
-        if (level.getBlockEntity(pos) instanceof PotBlockEntity pot) {
-            cooking(level, pos, player, pot, itemInHand, random);
+        if (level.getBlockEntity(pos) instanceof PotBlockEntity potBlockEntity) {
+            cooking(level, pos, player, potBlockEntity, itemInHand, random);
             return InteractionResult.SUCCESS;
         }
 
-        return super.use(state, level, pos, player, pHand, pHit);
+        return super.use(state, level, pos, player, hand, hitResult);
     }
 
     private void sendBarMessage(Player player, MutableComponent message) {
@@ -121,27 +123,27 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock,
         }
     }
 
-    private void cooking(Level level, BlockPos pos, Player player, PotBlockEntity pot, ItemStack itemInHand, RandomSource random) {
+    private void cooking(Level level, BlockPos pos, Player player, PotBlockEntity potBlockEntity, ItemStack itemInHand, RandomSource random) {
         if (itemInHand.is(ModItems.KITCHEN_SHOVEL.get())) {
             if (level.random.nextDouble() < DURABILITY_COST_PROBABILITY) {
                 itemInHand.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(player.getUsedItemHand()));
             }
-            pot.onShovelHit(level, player, itemInHand);
+            potBlockEntity.onShovelHit(level, player, itemInHand);
             level.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F,
                     1F + (random.nextFloat() - random.nextFloat()) * 0.8F);
             return;
         }
 
-        if (pot.getStatus() == PotBlockEntity.FINISHED) {
-            pot.takeOut(player);
+        if (potBlockEntity.getStatus() == PotBlockEntity.FINISHED) {
+            potBlockEntity.takeOut(player);
             return;
         }
 
-        pot.addIngredient(itemInHand, player);
+        potBlockEntity.addIngredient(itemInHand, player);
     }
 
-    private void placeOil(BlockState pState, Level level, BlockPos pos, Player player, RandomSource random) {
-        level.setBlockAndUpdate(pos, pState.setValue(HAS_OIL, true).setValue(SHOW_OIL, true));
+    private void placeOil(BlockState state, Level level, BlockPos pos, Player player, RandomSource random) {
+        level.setBlockAndUpdate(pos, state.setValue(HAS_OIL, true).setValue(SHOW_OIL, true));
         level.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1F,
                 (random.nextFloat() - random.nextFloat()) * 0.8F);
         for (int i = 0; i < 10; i++) {
@@ -155,34 +157,35 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock,
 
     @Override
     @Nullable
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new PotBlockEntity(pPos, pState);
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new PotBlockEntity(pos, state);
     }
 
     @Override
     @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        if (pLevel.isClientSide) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        if (level.isClientSide) {
             return null;
         }
-        if (!pState.getValue(HAS_OIL)) {
+        if (!state.getValue(HAS_OIL)) {
             return null;
         }
-        return createTickerHelper(pBlockEntityType, ModBlocks.POT_BE.get(),
-                (level, pos, state, pot) -> pot.tick());
+        return createTickerHelper(blockEntityType, ModBlocks.POT_BE.get(),
+                (levelIn, pos, stateIn, pot) -> pot.tick());
     }
 
     @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
-                .setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
+        FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        return this.defaultBlockState()
+                .setValue(FACING, context.getHorizontalDirection().getOpposite())
+                .setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
     }
 
     @Override
-    public FluidState getFluidState(BlockState pState) {
-        return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
+    public FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
@@ -191,7 +194,7 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock,
     }
 
     @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
         return AABB;
     }
 }
