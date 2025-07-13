@@ -1,4 +1,4 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.block.entity;
+package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;

@@ -1,6 +1,6 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.block;
+package com.github.ysbbbbbb.kaleidoscopecookery.block.Kitchen;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.KitchenwareRacksBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenwareRacksBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -34,10 +34,10 @@ import java.util.List;
 public class KitchenwareRacksBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock, EntityBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    public static final VoxelShape NORTH = Block.box(1, 9, 14, 15, 14, 16);
-    public static final VoxelShape SOUTH = Block.box(1, 9, 0, 15, 14, 2);
-    public static final VoxelShape EAST = Block.box(0, 9, 1, 2, 14, 15);
-    public static final VoxelShape WEST = Block.box(14, 9, 1, 16, 14, 15);
+    private static final VoxelShape NORTH = Block.box(1, 9, 14, 15, 14, 16);
+    private static final VoxelShape SOUTH = Block.box(1, 9, 0, 15, 14, 2);
+    private static final VoxelShape EAST = Block.box(0, 9, 1, 2, 14, 15);
+    private static final VoxelShape WEST = Block.box(14, 9, 1, 16, 14, 15);
 
     public KitchenwareRacksBlock() {
         super(Properties.of()
@@ -46,31 +46,35 @@ public class KitchenwareRacksBlock extends HorizontalDirectionalBlock implements
                 .strength(2.0F, 3.0F)
                 .sound(SoundType.WOOD)
                 .ignitedByLava());
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(WATERLOGGED, false));
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(FACING, Direction.SOUTH)
+                .setValue(WATERLOGGED, false));
     }
 
     @Override
-    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
-        if (pState.getValue(WATERLOGGED)) {
-            pLevel.scheduleTick(pPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
+        if (state.getValue(WATERLOGGED)) {
+            levelAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
         }
-        return super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
+        return super.updateShape(state, direction, neighborState, levelAccessor, pos, neighborPos);
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (hand != InteractionHand.MAIN_HAND) {
             return InteractionResult.PASS;
         }
+
         ItemStack mainHandItem = player.getMainHandItem();
-        // 依据点击的左右侧区分
-        Vec3 location = hit.getLocation().subtract(Vec3.atCenterOf(pos))
-                .yRot((float) Math.toRadians(state.getValue(FACING).getOpposite().toYRot()));
+        double yRotDeg = state.getValue(FACING).getOpposite().toYRot();
+        float yRotRad = (float) Math.toRadians(yRotDeg);
+        Vec3 location = hitResult.getLocation().subtract(Vec3.atCenterOf(pos)).yRot(yRotRad);
         boolean isLeftClick = location.x > 0;
+
         if (level.getBlockEntity(pos) instanceof KitchenwareRacksBlockEntity racks && racks.onClick(player, mainHandItem, isLeftClick)) {
             return InteractionResult.SUCCESS;
         }
-        return super.use(state, level, pos, player, hand, hit);
+        return super.use(state, level, pos, player, hand, hitResult);
     }
 
     @Override
@@ -81,18 +85,19 @@ public class KitchenwareRacksBlock extends HorizontalDirectionalBlock implements
     @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
-                .setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
+        FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        return this.defaultBlockState()
+                .setValue(FACING, context.getHorizontalDirection().getOpposite())
+                .setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
     }
 
     @Override
-    public FluidState getFluidState(BlockState pState) {
-        return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
+    public FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
         return switch (state.getValue(FACING)) {
             case SOUTH -> SOUTH;
             case EAST -> EAST;
@@ -103,14 +108,14 @@ public class KitchenwareRacksBlock extends HorizontalDirectionalBlock implements
 
     @Override
     @Nullable
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new KitchenwareRacksBlockEntity(pPos, pState);
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new KitchenwareRacksBlockEntity(pos, state);
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState pState, LootParams.Builder pParams) {
-        List<ItemStack> drops = super.getDrops(pState, pParams);
-        BlockEntity parameter = pParams.getParameter(LootContextParams.BLOCK_ENTITY);
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder lootParamsBuilder) {
+        List<ItemStack> drops = super.getDrops(state, lootParamsBuilder);
+        BlockEntity parameter = lootParamsBuilder.getParameter(LootContextParams.BLOCK_ENTITY);
         if (parameter instanceof KitchenwareRacksBlockEntity racks) {
             if (!racks.getItemLeft().isEmpty()) {
                 drops.add(racks.getItemLeft());

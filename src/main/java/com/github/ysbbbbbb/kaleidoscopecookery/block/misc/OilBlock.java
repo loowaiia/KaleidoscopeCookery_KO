@@ -1,4 +1,4 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.block;
+package com.github.ysbbbbbb.kaleidoscopecookery.block.misc;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,13 +26,13 @@ public class OilBlock extends Block {
         );
     }
 
-    private static boolean never(BlockState state, BlockGetter world, BlockPos pos, EntityType<?> entityType) {
+    private static boolean never(BlockState state, BlockGetter blockGetter, BlockPos pos, EntityType<?> entityType) {
         return false;
     }
 
     @Override
-    public boolean isFireSource(BlockState state, LevelReader level, BlockPos pos, Direction side) {
-        return side == Direction.UP;
+    public boolean isFireSource(BlockState state, LevelReader levelReader, BlockPos pos, Direction direction) {
+        return direction == Direction.UP;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class OilBlock extends Block {
     }
 
     @Override
-    public boolean canStickTo(BlockState state, BlockState other) {
+    public boolean canStickTo(BlockState state, BlockState otherState) {
         return false;
     }
 

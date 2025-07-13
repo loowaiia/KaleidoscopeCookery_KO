@@ -1,12 +1,19 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.*;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.Kitchen.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.BaseCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.ChiliCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.LettuceCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.RiceCropBlock;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.*;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.*;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.misc.ChiliRistraBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.misc.OilBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.misc.StrawBlocks;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.ChairBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.FruitBasketBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.TableBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;

@@ -1,6 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.render.block;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.KitchenwareRacksBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenwareRacksBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;

@@ -1,6 +1,6 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.block;
+package com.github.ysbbbbbb.kaleidoscopecookery.block.Kitchen;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.block.entity.ShawarmaSpitBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.ShawarmaSpitBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
@@ -65,21 +65,23 @@ public class ShawarmaSpitBlock extends HorizontalDirectionalBlock implements Sim
     }
 
     @Nullable
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> pServerType, BlockEntityType<E> pClientType, BlockEntityTicker<? super E> pTicker) {
-        return pClientType == pServerType ? (BlockEntityTicker<A>) pTicker : null;
+    @SuppressWarnings("all")
+    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(
+            BlockEntityType<A> serverType, BlockEntityType<E> clientType, BlockEntityTicker<? super E> ticker) {
+        return clientType == serverType ? (BlockEntityTicker<A>) ticker : null;
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pPlayer.isShiftKeyDown()) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (player.isShiftKeyDown()) {
             return InteractionResult.PASS;
         }
-        BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+        BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof ShawarmaSpitBlockEntity shawarmaSpit) {
-            ItemStack heldItem = pPlayer.getItemInHand(pHand);
-            if (shawarmaSpit.onPutCookingItem(pLevel, heldItem)) {
+            ItemStack heldItem = player.getItemInHand(hand);
+            if (shawarmaSpit.onPutCookingItem(level, heldItem)) {
                 return InteractionResult.SUCCESS;
-            } else if (shawarmaSpit.onTakeCookedItem(pLevel, pPlayer)) {
+            } else if (shawarmaSpit.onTakeCookedItem(level, player)) {
                 return InteractionResult.SUCCESS;
             }
         }
@@ -88,16 +90,16 @@ public class ShawarmaSpitBlock extends HorizontalDirectionalBlock implements Sim
 
     @Override
     @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, ModBlocks.SHAWARMA_SPIT_BE.get(), (level, pos, state, spit) -> {
-            if (state.getValue(POWERED)) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return createTickerHelper(blockEntityType, ModBlocks.SHAWARMA_SPIT_BE.get(), (levelIn, blockPos, blockState, spit) -> {
+            if (blockState.getValue(POWERED)) {
                 spit.tick();
             }
         });
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
         return state.getValue(HALF) == DoubleBlockHalf.LOWER ? LOWER_AABB : UPPER_AABB;
     }
 
@@ -111,7 +113,8 @@ public class ShawarmaSpitBlock extends HorizontalDirectionalBlock implements Sim
         boolean isUpperHalf = half == DoubleBlockHalf.UPPER && direction == Direction.DOWN;
         if (direction.getAxis() == Direction.Axis.Y && (isLowerHalf || isUpperHalf)) {
             if (neighborState.is(this) && neighborState.getValue(HALF) != half) {
-                return state.setValue(FACING, neighborState.getValue(FACING)).setValue(POWERED, neighborState.getValue(POWERED));
+                return state.setValue(FACING, neighborState.getValue(FACING))
+                        .setValue(POWERED, neighborState.getValue(POWERED));
             }
             return Blocks.AIR.defaultBlockState();
         }
@@ -168,14 +171,14 @@ public class ShawarmaSpitBlock extends HorizontalDirectionalBlock implements Sim
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState pState, LootParams.Builder pParams) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder lootParamsBuilder) {
         List<ItemStack> drops;
-        if (pState.getValue(HALF) == DoubleBlockHalf.LOWER) {
-            drops = super.getDrops(pState, pParams);
+        if (state.getValue(HALF) == DoubleBlockHalf.LOWER) {
+            drops = super.getDrops(state, lootParamsBuilder);
         } else {
             drops = Lists.newArrayList();
         }
-        BlockEntity parameter = pParams.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        BlockEntity parameter = lootParamsBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (parameter instanceof ShawarmaSpitBlockEntity shawarmaSpit) {
             if (!shawarmaSpit.cookingItem.isEmpty()) {
                 drops.add(shawarmaSpit.cookingItem.copy());

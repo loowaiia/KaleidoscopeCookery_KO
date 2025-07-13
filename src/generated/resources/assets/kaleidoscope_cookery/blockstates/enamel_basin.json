@@ -24,6 +24,12 @@
     "has_lid=false,oil_count=11,waterlogged=true": {
       "model": "kaleidoscope_cookery:block/enamel_basin/high"
     },
+    "has_lid=false,oil_count=12,waterlogged=false": {
+      "model": "kaleidoscope_cookery:block/enamel_basin/high"
+    },
+    "has_lid=false,oil_count=12,waterlogged=true": {
+      "model": "kaleidoscope_cookery:block/enamel_basin/high"
+    },
     "has_lid=false,oil_count=2,waterlogged=false": {
       "model": "kaleidoscope_cookery:block/enamel_basin/low"
     },
@@ -94,6 +100,12 @@
       "model": "kaleidoscope_cookery:block/enamel_basin/base"
     },
     "has_lid=true,oil_count=11,waterlogged=true": {
+      "model": "kaleidoscope_cookery:block/enamel_basin/base"
+    },
+    "has_lid=true,oil_count=12,waterlogged=false": {
+      "model": "kaleidoscope_cookery:block/enamel_basin/base"
+    },
+    "has_lid=true,oil_count=12,waterlogged=true": {
       "model": "kaleidoscope_cookery:block/enamel_basin/base"
     },
     "has_lid=true,oil_count=2,waterlogged=false": {

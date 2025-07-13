@@ -1,4 +1,4 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.block;
+package com.github.ysbbbbbb.kaleidoscopecookery.block.Kitchen;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import net.minecraft.ChatFormatting;
@@ -50,7 +50,9 @@ public class StoveBlock extends HorizontalDirectionalBlock {
                 .lightLevel(state -> state.getValue(LIT) ? 13 : 0)
                 .randomTicks()
                 .strength(1.5F, 6.0F));
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(LIT, false));
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(FACING, Direction.SOUTH)
+                .setValue(LIT, false));
     }
 
     @Override
@@ -61,7 +63,10 @@ public class StoveBlock extends HorizontalDirectionalBlock {
             double z = pos.getZ() + 0.5;
 
             if (random.nextInt(10) == 0) {
-                level.playLocalSound(x, y, z, SoundEvents.CAMPFIRE_CRACKLE, SoundSource.BLOCKS, 0.5F + random.nextFloat(),
+                level.playLocalSound(x, y, z,
+                        SoundEvents.CAMPFIRE_CRACKLE,
+                        SoundSource.BLOCKS,
+                        0.5F + random.nextFloat(),
                         random.nextFloat() * 0.7F + 0.6F, false);
             }
 
@@ -71,14 +76,17 @@ public class StoveBlock extends HorizontalDirectionalBlock {
                     z + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
                     0, 0.02, 0);
 
-
             Direction direction = state.getValue(FACING);
             Direction.Axis axis = direction.getAxis();
             double offsetRandom = random.nextDouble() * 0.6 - 0.3;
             double xOffset = axis == Direction.Axis.X ? (double) direction.getStepX() * 0.52 : offsetRandom;
             double yOffset = 0.25 + random.nextDouble() * 6.0 / 16.0;
             double zOffset = axis == Direction.Axis.Z ? (double) direction.getStepZ() * 0.52 : offsetRandom;
-            level.addParticle(ParticleTypes.FLAME, x + xOffset, pos.getY() + yOffset, z + zOffset, 0, 0, 0);
+            level.addParticle(ParticleTypes.FLAME,
+                    x + xOffset,
+                    pos.getY() + yOffset,
+                    z + zOffset,
+                    0, 0, 0);
         }
     }
 
@@ -106,42 +114,51 @@ public class StoveBlock extends HorizontalDirectionalBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
-        if (pState.getValue(LIT) && pLevel.isWaterAt(pPos.above()) && pLevel instanceof ServerLevel serverLevel) {
-            serverLevel.setBlockAndUpdate(pPos, pState.setValue(LIT, false));
-            serverLevel.playSound(null, pPos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
+        if (state.getValue(LIT) && levelAccessor.isWaterAt(pos.above()) && levelAccessor instanceof ServerLevel serverLevel) {
+            serverLevel.setBlockAndUpdate(pos, state.setValue(LIT, false));
+            serverLevel.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
-        return super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
+        return super.updateShape(state, direction, neighborState, levelAccessor, pos, neighborPos);
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult pHit) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         ItemStack itemInHand = player.getItemInHand(hand);
         // 点燃炉灶
-        if (!blockState.getValue(LIT) && itemInHand.is(TagMod.LIT_STOVE)) {
-            level.setBlockAndUpdate(pos, blockState.setValue(LIT, true));
+        if (!state.getValue(LIT) && itemInHand.is(TagMod.LIT_STOVE)) {
+            level.setBlockAndUpdate(pos, state.setValue(LIT, true));
             if (itemInHand.is(Items.FIRE_CHARGE)) {
-                level.playSound(player, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
+                level.playSound(player, pos,
+                        SoundEvents.FIRECHARGE_USE,
+                        SoundSource.BLOCKS, 1.0F,
+                        level.getRandom().nextFloat() * 0.4F + 0.8F);
                 itemInHand.shrink(1);
             } else {
-                level.playSound(player, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
+                level.playSound(player, pos,
+                        SoundEvents.FLINTANDSTEEL_USE,
+                        SoundSource.BLOCKS, 1.0F,
+                        level.getRandom().nextFloat() * 0.4F + 0.8F);
                 itemInHand.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
             }
             return InteractionResult.SUCCESS;
         }
         // 熄灭
-        if (blockState.getValue(LIT) && itemInHand.is(TagMod.EXTINGUISH_STOVE)) {
-            level.setBlockAndUpdate(pos, blockState.setValue(LIT, false));
-            level.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.8F);
+        if (state.getValue(LIT) && itemInHand.is(TagMod.EXTINGUISH_STOVE)) {
+            level.setBlockAndUpdate(pos, state.setValue(LIT, false));
+            level.playSound(player, pos,
+                    SoundEvents.FIRE_EXTINGUISH,
+                    SoundSource.BLOCKS, 0.5F,
+                    2.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.8F);
             itemInHand.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
             return InteractionResult.SUCCESS;
         }
-        return super.use(blockState, level, pos, player, hand, pHit);
+        return super.use(state, level, pos, player, hand, hitResult);
     }
 
     @Override
-    public void onProjectileHit(Level level, BlockState state, BlockHitResult pHit, Projectile projectile) {
-        BlockPos hitBlockPos = pHit.getBlockPos();
+    public void onProjectileHit(Level level, BlockState state, BlockHitResult hitResult, Projectile projectile) {
+        BlockPos hitBlockPos = hitResult.getBlockPos();
         if (!level.isClientSide && projectile.isOnFire() && projectile.mayInteract(level, hitBlockPos) && !state.getValue(LIT)) {
             level.setBlock(hitBlockPos, state.setValue(BlockStateProperties.LIT, true), Block.UPDATE_ALL_IMMEDIATE);
         }

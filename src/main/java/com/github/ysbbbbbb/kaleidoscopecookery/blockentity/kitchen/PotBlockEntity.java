@@ -1,4 +1,4 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.block.entity;
+package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
@@ -43,8 +43,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-import static com.github.ysbbbbbb.kaleidoscopecookery.block.PotBlock.HAS_OIL;
-import static com.github.ysbbbbbb.kaleidoscopecookery.block.PotBlock.SHOW_OIL;
+import static com.github.ysbbbbbb.kaleidoscopecookery.block.Kitchen.PotBlock.HAS_OIL;
+import static com.github.ysbbbbbb.kaleidoscopecookery.block.Kitchen.PotBlock.SHOW_OIL;
 
 public class PotBlockEntity extends BlockEntity implements Container {
     public static final IntRange INGREDIENT_TICK = IntRange.second(0, 30);
