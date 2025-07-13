@@ -1,5 +1,8 @@
 {
   "type": "kaleidoscope_cookery:pot",
+  "carrier": {
+    "item": "minecraft:bowl"
+  },
   "ingredients": [
     {
       "item": "minecraft:chorus_fruit"
@@ -20,7 +23,6 @@
       "tag": "forge:cooked_eggs"
     }
   ],
-  "need_bowl": true,
   "result": {
     "count": 3,
     "item": "kaleidoscope_cookery:chorus_fried_egg"

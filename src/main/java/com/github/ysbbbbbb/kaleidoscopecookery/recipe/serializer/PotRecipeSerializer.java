@@ -21,14 +21,21 @@ public class PotRecipeSerializer implements RecipeSerializer<PotRecipe> {
     public PotRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
         int time = GsonHelper.getAsInt(json, "time", 200);
         int stirFryCount = GsonHelper.getAsInt(json, "stir_fry_count", 3);
-        boolean needBowl = GsonHelper.getAsBoolean(json, "need_bowl", false);
+
+        Ingredient carrier;
+        if (json.has("carrier")) {
+            carrier = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "carrier"));
+        } else {
+            carrier = Ingredient.EMPTY;
+        }
+
         JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
         List<Ingredient> inputs = Lists.newArrayList();
         for (JsonElement e : ingredients) {
             inputs.add(Ingredient.fromJson(e));
         }
         ItemStack result = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true, true);
-        return new PotRecipe(recipeId, time, stirFryCount, needBowl, inputs, result);
+        return new PotRecipe(recipeId, time, stirFryCount, carrier, inputs, result);
     }
 
     @Override
@@ -36,21 +43,21 @@ public class PotRecipeSerializer implements RecipeSerializer<PotRecipe> {
     public PotRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buf) {
         int time = buf.readVarInt();
         int stirFryCount = buf.readVarInt();
-        boolean needBowl = buf.readBoolean();
+        Ingredient carrier = Ingredient.fromNetwork(buf);
         int ingredientsSize = buf.readVarInt();
         List<Ingredient> inputs = Lists.newArrayList();
         for (int i = 0; i < ingredientsSize; i++) {
             inputs.add(Ingredient.fromNetwork(buf));
         }
         ItemStack result = buf.readItem();
-        return new PotRecipe(recipeId, time, stirFryCount, needBowl, inputs, result);
+        return new PotRecipe(recipeId, time, stirFryCount, carrier, inputs, result);
     }
 
     @Override
     public void toNetwork(FriendlyByteBuf buf, PotRecipe recipe) {
         buf.writeVarInt(recipe.getTime());
         buf.writeVarInt(recipe.getStirFryCount());
-        buf.writeBoolean(recipe.isNeedBowl());
+        recipe.getCarrier().toNetwork(buf);
         buf.writeVarInt(recipe.getIngredients().size());
         recipe.getIngredients().forEach(i -> i.toNetwork(buf));
         buf.writeItem(recipe.getResult());

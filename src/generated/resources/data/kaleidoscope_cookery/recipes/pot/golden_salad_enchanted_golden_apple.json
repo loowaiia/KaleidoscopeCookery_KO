@@ -1,5 +1,8 @@
 {
   "type": "kaleidoscope_cookery:pot",
+  "carrier": {
+    "item": "minecraft:bowl"
+  },
   "ingredients": [
     {
       "item": "minecraft:enchanted_golden_apple"
@@ -20,7 +23,6 @@
       "item": "minecraft:glistering_melon_slice"
     }
   ],
-  "need_bowl": true,
   "result": {
     "item": "kaleidoscope_cookery:golden_salad"
   },

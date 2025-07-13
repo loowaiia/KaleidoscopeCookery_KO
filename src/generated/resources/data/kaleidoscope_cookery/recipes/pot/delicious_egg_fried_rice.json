@@ -1,5 +1,8 @@
 {
   "type": "kaleidoscope_cookery:pot",
+  "carrier": {
+    "item": "minecraft:bowl"
+  },
   "ingredients": [
     {
       "tag": "forge:eggs"
@@ -20,7 +23,6 @@
       "item": "minecraft:carrot"
     }
   ],
-  "need_bowl": true,
   "result": {
     "item": "kaleidoscope_cookery:delicious_egg_fried_rice"
   },

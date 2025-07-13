@@ -5,7 +5,6 @@
       "item": "minecraft:salmon"
     }
   ],
-  "need_bowl": false,
   "result": {
     "item": "minecraft:cooked_salmon"
   },

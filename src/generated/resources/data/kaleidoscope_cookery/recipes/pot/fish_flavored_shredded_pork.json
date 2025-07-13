@@ -1,5 +1,8 @@
 {
   "type": "kaleidoscope_cookery:pot",
+  "carrier": {
+    "item": "minecraft:bowl"
+  },
   "ingredients": [
     {
       "tag": "forge:mushrooms"
@@ -20,7 +23,6 @@
       "tag": "forge:crops/chilipepper"
     }
   ],
-  "need_bowl": true,
   "result": {
     "item": "kaleidoscope_cookery:fish_flavored_shredded_pork"
   },

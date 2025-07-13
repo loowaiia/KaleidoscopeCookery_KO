@@ -8,6 +8,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import com.github.ysbbbbbb.kaleidoscopecookery.recipe.PotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.IntRange;
+import com.google.gson.JsonParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
@@ -31,6 +32,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -55,7 +57,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
     private static final String STATUS = "Status";
     private static final String CURRENT_TICK = "CurrentTick";
     private static final String STIR_FRY_COUNT = "StirFryCount";
-    private static final String NEED_BOWL = "NeedBowl";
+    private static final String CARRIER = "Carrier";
     private static final String RECIPE_ID = "RecipeId";
     private static final String RESULT_TICK = "ResultTick";
     private static final String RESULT_STACK = "ResultStack";
@@ -68,7 +70,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
     private @Nullable ResourceLocation recipeId;
     private @Nullable IntRange getResultTick;
     private int stirFryCount = 0;
-    private boolean needBowl = false;
+    private Ingredient carrier = Ingredient.EMPTY;
     private int burntLevel = 0;
 
     private long seed;
@@ -241,7 +243,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
         level.getRecipeManager().getRecipeFor(ModRecipes.POT_RECIPE, this, level).ifPresentOrElse(recipe -> {
             // 如果合成表符合，那么进入炒菜阶段
             this.recipeId = recipe.getId();
-            this.needBowl = recipe.isNeedBowl();
+            this.carrier = recipe.getCarrier();
             int time = recipe.getTime() / 20;
             // 最后给 20 秒时间来取出成品，20 秒取出黑暗料理
             this.getResultTick = IntRange.second(time, time + 40);
@@ -268,7 +270,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
             }
         }
         if (result.is(suspiciousStirFry)) {
-            this.needBowl = true;
+            this.carrier = Ingredient.of(Items.BOWL);
         }
         return result;
     }
@@ -288,20 +290,30 @@ public class PotBlockEntity extends BlockEntity implements Container {
             finallyResult = new ItemStack(FoodBiteRegistry.getItem(FoodBiteRegistry.DARK_CUISINE));
         }
 
-        if (this.needBowl) {
-            if (player.getMainHandItem().is(Items.BOWL)) {
+        ItemStack mainHandItem = player.getMainHandItem();
+        if (!this.carrier.isEmpty()) {
+            Component carrierName = carrier.getItems()[0].getHoverName();
+            if (this.carrier.test(mainHandItem)) {
+                if (mainHandItem.getCount() < finallyResult.getCount()) {
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        MutableComponent component = Component.translatable("tip.kaleidoscope_cookery.pot.carrier_count_not_enough",
+                                finallyResult.getCount(), carrierName);
+                        serverPlayer.connection.send(new ClientboundSetActionBarTextPacket(component));
+                    }
+                    return;
+                }
                 ItemHandlerHelper.giveItemToPlayer(player, finallyResult);
-                player.getMainHandItem().shrink(1);
+                mainHandItem.shrink(finallyResult.getCount());
                 this.reset();
             } else {
                 player.hurt(player.level().damageSources().inFire(), 1);
                 if (player instanceof ServerPlayer serverPlayer) {
-                    MutableComponent component = Component.translatable("tip.kaleidoscope_cookery.pot.need_bowl");
+                    MutableComponent component = Component.translatable("tip.kaleidoscope_cookery.pot.need_carrier", carrierName);
                     serverPlayer.connection.send(new ClientboundSetActionBarTextPacket(component));
                 }
             }
         } else {
-            if (player.getMainHandItem().is(ModItems.KITCHEN_SHOVEL.get())) {
+            if (mainHandItem.is(ModItems.KITCHEN_SHOVEL.get())) {
                 if (player.isSecondaryUseActive()) {
                     ItemHandlerHelper.giveItemToPlayer(player, finallyResult);
                     this.reset();
@@ -352,7 +364,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
         this.getResultTick = null;
         this.result = ItemStack.EMPTY;
         this.stirFryCount = 0;
-        this.needBowl = false;
+        this.carrier = Ingredient.EMPTY;
         this.burntLevel = 0;
         this.items.clear();
         this.status = PUT_INGREDIENT;
@@ -379,7 +391,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
         tag.putInt(STATUS, this.status);
         tag.putInt(CURRENT_TICK, this.currentTick);
         tag.putInt(STIR_FRY_COUNT, this.stirFryCount);
-        tag.putBoolean(NEED_BOWL, this.needBowl);
+        tag.putString(CARRIER, this.carrier.toJson().toString());
         tag.putInt(BURNT_LEVEL, this.burntLevel);
         if (this.recipeId != null) {
             tag.putString(RECIPE_ID, this.recipeId.toString());
@@ -399,7 +411,7 @@ public class PotBlockEntity extends BlockEntity implements Container {
         this.status = tag.getInt(STATUS);
         this.currentTick = tag.getInt(CURRENT_TICK);
         this.stirFryCount = tag.getInt(STIR_FRY_COUNT);
-        this.needBowl = tag.getBoolean(NEED_BOWL);
+        this.carrier = Ingredient.fromJson(JsonParser.parseString(tag.getString(CARRIER)));
         this.burntLevel = tag.getInt(BURNT_LEVEL);
         if (tag.contains(RECIPE_ID)) {
             this.recipeId = new ResourceLocation(tag.getString(RECIPE_ID));
@@ -497,8 +509,8 @@ public class PotBlockEntity extends BlockEntity implements Container {
         return burntLevel;
     }
 
-    public boolean isNeedBowl() {
-        return needBowl;
+    public boolean hasCarrier() {
+        return !carrier.isEmpty();
     }
 
     public ItemStack getResult() {

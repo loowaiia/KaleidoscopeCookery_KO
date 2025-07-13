@@ -1,5 +1,8 @@
 {
   "type": "kaleidoscope_cookery:pot",
+  "carrier": {
+    "item": "minecraft:bowl"
+  },
   "ingredients": [
     {
       "item": "minecraft:ender_pearl"
@@ -11,7 +14,6 @@
       "item": "minecraft:ender_eye"
     }
   ],
-  "need_bowl": true,
   "result": {
     "item": "kaleidoscope_cookery:sweet_and_sour_ender_pearls"
   },

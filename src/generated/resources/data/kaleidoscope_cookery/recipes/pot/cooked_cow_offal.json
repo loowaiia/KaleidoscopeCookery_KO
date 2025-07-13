@@ -5,7 +5,6 @@
       "item": "kaleidoscope_cookery:raw_cow_offal"
     }
   ],
-  "need_bowl": false,
   "result": {
     "item": "kaleidoscope_cookery:cooked_cow_offal"
   },

@@ -28,6 +28,6 @@
     "count": 3,
     "item": "kaleidoscope_cookery:fearsome_thick_soup"
   },
-  "soup_base": "minecraft:water",
+  "soup_base": "minecraft:lava",
   "time": 300
 }

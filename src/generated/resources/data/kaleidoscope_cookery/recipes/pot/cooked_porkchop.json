@@ -5,7 +5,6 @@
       "item": "minecraft:porkchop"
     }
   ],
-  "need_bowl": false,
   "result": {
     "item": "minecraft:cooked_porkchop"
   },

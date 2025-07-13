@@ -1,5 +1,8 @@
 {
   "type": "kaleidoscope_cookery:pot",
+  "carrier": {
+    "item": "minecraft:bowl"
+  },
   "ingredients": [
     {
       "tag": "forge:raw_mutton"
@@ -20,7 +23,6 @@
       "item": "minecraft:blue_ice"
     }
   ],
-  "need_bowl": true,
   "result": {
     "item": "kaleidoscope_cookery:frost_lamb_chop"
   },

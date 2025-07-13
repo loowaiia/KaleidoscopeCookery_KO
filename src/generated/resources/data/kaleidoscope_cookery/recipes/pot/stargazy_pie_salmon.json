@@ -1,5 +1,8 @@
 {
   "type": "kaleidoscope_cookery:pot",
+  "carrier": {
+    "item": "minecraft:bowl"
+  },
   "ingredients": [
     {
       "item": "minecraft:pumpkin_pie"
@@ -20,7 +23,6 @@
       "tag": "forge:raw_fishes/salmon"
     }
   ],
-  "need_bowl": true,
   "result": {
     "item": "kaleidoscope_cookery:stargazy_pie"
   },

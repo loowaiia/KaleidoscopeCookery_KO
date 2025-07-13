@@ -5,7 +5,6 @@
       "item": "minecraft:potato"
     }
   ],
-  "need_bowl": false,
   "result": {
     "item": "minecraft:baked_potato"
   },

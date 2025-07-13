@@ -5,7 +5,6 @@
       "item": "minecraft:cod"
     }
   ],
-  "need_bowl": false,
   "result": {
     "item": "minecraft:cooked_cod"
   },

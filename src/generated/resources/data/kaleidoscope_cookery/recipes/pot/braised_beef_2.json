@@ -1,5 +1,8 @@
 {
   "type": "kaleidoscope_cookery:pot",
+  "carrier": {
+    "item": "minecraft:bowl"
+  },
   "ingredients": [
     {
       "tag": "forge:raw_beef"
@@ -26,7 +29,6 @@
       "tag": "forge:crops/chilipepper"
     }
   ],
-  "need_bowl": true,
   "result": {
     "count": 2,
     "item": "kaleidoscope_cookery:braised_beef"

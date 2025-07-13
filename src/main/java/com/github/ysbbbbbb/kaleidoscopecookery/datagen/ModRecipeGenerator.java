@@ -17,10 +17,13 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -319,48 +322,80 @@ public class ModRecipeGenerator extends RecipeProvider {
         addSingleItemRecipe(TagCommon.EGGS, ModItems.FRIED_EGG.get(), "egg", consumer);
 
         PotRecipeBuilder.builder().addInput(TagCommon.COOKED_EGGS, TagCommon.COOKED_EGGS, TagCommon.CROPS_TOMATO, TagCommon.CROPS_TOMATO)
-                .setNeedBowl(true).setResult(ModItems.SCRAMBLE_EGG_WITH_TOMATOES.get()).save(consumer);
+                .setBowlCarrier().setResult(ModItems.SCRAMBLE_EGG_WITH_TOMATOES.get()).save(consumer);
+
+        PotRecipeBuilder.builder().addInput(TagCommon.COOKED_EGGS, TagCommon.CROPS_TOMATO, TagCommon.CROPS_TOMATO)
+                .setCarrier(ModItems.COOKED_RICE.get()).setResult(ModItems.SCRAMBLE_EGG_WITH_TOMATOES_RICE_BOWL.get()).save(consumer);
 
         PotRecipeBuilder.builder().addInput(TagCommon.COOKED_EGGS, TagCommon.COOKED_EGGS, TagCommon.COOKED_EGGS, TagCommon.COOKED_EGGS,
                         TagCommon.CROPS_TOMATO, TagCommon.CROPS_TOMATO, TagCommon.CROPS_TOMATO, TagCommon.CROPS_TOMATO)
-                .setNeedBowl(true).setResult(ModItems.SCRAMBLE_EGG_WITH_TOMATOES.get(), 2).save(consumer, "scramble_egg_with_tomatoes_2");
+                .setBowlCarrier().setResult(ModItems.SCRAMBLE_EGG_WITH_TOMATOES.get(), 2).save(consumer, "scramble_egg_with_tomatoes_2");
+
+        PotRecipeBuilder.builder().addInput(TagCommon.COOKED_EGGS, TagCommon.COOKED_EGGS, TagCommon.COOKED_EGGS,
+                        TagCommon.CROPS_TOMATO, TagCommon.CROPS_TOMATO, TagCommon.CROPS_TOMATO, TagCommon.CROPS_TOMATO)
+                .setCarrier(ModItems.COOKED_RICE.get()).setResult(ModItems.SCRAMBLE_EGG_WITH_TOMATOES_RICE_BOWL.get(), 2)
+                .save(consumer, "scramble_egg_with_tomatoes_rice_bowl_2");
 
         PotRecipeBuilder.builder().addInput(ModItems.RAW_COW_OFFAL.get(), ModItems.RAW_COW_OFFAL.get(), ModItems.RAW_COW_OFFAL.get())
                 .addInput(TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_LETTUCE, TagCommon.CROPS_LETTUCE)
-                .setNeedBowl(true).setResult(ModItems.STIR_FRIED_BEEF_OFFAL.get()).save(consumer);
+                .setBowlCarrier().setResult(ModItems.STIR_FRIED_BEEF_OFFAL.get()).save(consumer);
+
+        PotRecipeBuilder.builder().addInput(ModItems.RAW_COW_OFFAL.get(), ModItems.RAW_COW_OFFAL.get())
+                .addInput(TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_LETTUCE, TagCommon.CROPS_LETTUCE)
+                .setCarrier(ModItems.COOKED_RICE.get()).setResult(ModItems.STIR_FRIED_BEEF_OFFAL_RICE_BOWL.get()).save(consumer);
 
         PotRecipeBuilder.builder().addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_CHILI_PEPPER)
-                .setNeedBowl(true).setResult(ModItems.BRAISED_BEEF.get()).save(consumer);
+                .setBowlCarrier().setResult(ModItems.BRAISED_BEEF.get()).save(consumer);
+
+        PotRecipeBuilder.builder().addInput(TagCommon.RAW_BEEF, TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_CHILI_PEPPER)
+                .setCarrier(ModItems.COOKED_RICE.get()).setResult(ModItems.BRAISED_BEEF_RICE_BOWL.get()).save(consumer);
 
         PotRecipeBuilder.builder().addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.RAW_BEEF,
                         TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_CHILI_PEPPER)
-                .setNeedBowl(true).setResult(ModItems.BRAISED_BEEF.get(), 2).save(consumer, "braised_beef_2");
+                .setBowlCarrier().setResult(ModItems.BRAISED_BEEF.get(), 2).save(consumer, "braised_beef_2");
+
+        PotRecipeBuilder.builder().addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.RAW_BEEF,
+                        TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_CHILI_PEPPER)
+                .setCarrier(ModItems.COOKED_RICE.get()).setResult(ModItems.BRAISED_BEEF_RICE_BOWL.get(), 2).save(consumer, "braised_beef_rice_bowl_2");
 
         PotRecipeBuilder.builder().addInput(ModItems.GREEN_CHILI.get(), ModItems.GREEN_CHILI.get())
                 .addInput(TagCommon.RAW_PORK, TagCommon.RAW_PORK, TagCommon.RAW_PORK)
-                .setNeedBowl(true).setResult(ModItems.STIR_FRIED_PORK_WITH_PEPPERS.get()).save(consumer);
+                .setBowlCarrier().setResult(ModItems.STIR_FRIED_PORK_WITH_PEPPERS.get()).save(consumer);
+
+        PotRecipeBuilder.builder().addInput(ModItems.GREEN_CHILI.get(), ModItems.GREEN_CHILI.get())
+                .addInput(TagCommon.RAW_PORK, TagCommon.RAW_PORK)
+                .setCarrier(ModItems.COOKED_RICE.get()).setResult(ModItems.STIR_FRIED_PORK_WITH_PEPPERS_RICE_BOWL.get()).save(consumer);
 
         PotRecipeBuilder.builder().addInput(Items.SUGAR, Items.SUGAR, Items.SUGAR).addInput(TagCommon.RAW_PORK, TagCommon.RAW_PORK)
-                .setNeedBowl(true).setResult(ModItems.SWEET_AND_SOUR_PORK.get()).save(consumer);
+                .setBowlCarrier().setResult(ModItems.SWEET_AND_SOUR_PORK.get()).save(consumer);
+
+        PotRecipeBuilder.builder().addInput(Items.SUGAR, Items.SUGAR).addInput(TagCommon.RAW_PORK, TagCommon.RAW_PORK)
+                .setCarrier(ModItems.COOKED_RICE.get()).setResult(ModItems.SWEET_AND_SOUR_PORK_RICE_BOWL.get()).save(consumer);
 
         PotRecipeBuilder.builder().addInput(TagCommon.CROPS_LETTUCE, TagCommon.CROPS_LETTUCE, TagCommon.CROPS_TOMATO).addInput(Items.CARROT, Items.POTATO)
-                .setNeedBowl(true).setResult(ModItems.COUNTRY_STYLE_MIXED_VEGETABLES.get()).save(consumer);
+                .setBowlCarrier().setResult(ModItems.COUNTRY_STYLE_MIXED_VEGETABLES.get()).save(consumer);
 
         PotRecipeBuilder.builder().addInput(Tags.Items.MUSHROOMS, Tags.Items.MUSHROOMS, TagCommon.RAW_PORK, TagCommon.RAW_PORK, TagCommon.RAW_PORK, TagCommon.CROPS_CHILI_PEPPER)
-                .setNeedBowl(true).setResult(ModItems.FISH_FLAVORED_SHREDDED_PORK.get()).save(consumer);
+                .setBowlCarrier().setResult(ModItems.FISH_FLAVORED_SHREDDED_PORK.get()).save(consumer);
+
+        PotRecipeBuilder.builder().addInput(Tags.Items.MUSHROOMS, Tags.Items.MUSHROOMS, TagCommon.RAW_PORK, TagCommon.RAW_PORK, TagCommon.CROPS_CHILI_PEPPER)
+                .setCarrier(ModItems.COOKED_RICE.get()).setResult(ModItems.FISH_FLAVORED_SHREDDED_PORK_RICE_BOWL.get()).save(consumer);
 
         PotRecipeBuilder.builder().addInput(TagCommon.EGGS, TagCommon.EGGS, TagCommon.COOKED_RICE)
-                .setNeedBowl(true).setResult(ModItems.EGG_FRIED_RICE.get()).save(consumer);
+                .setBowlCarrier().setResult(ModItems.EGG_FRIED_RICE.get()).save(consumer);
 
         PotRecipeBuilder.builder().addInput(TagCommon.EGGS, TagCommon.EGGS, TagCommon.EGGS, TagCommon.EGGS, TagCommon.COOKED_RICE, TagCommon.COOKED_RICE)
-                .setNeedBowl(true).setResult(ModItems.EGG_FRIED_RICE.get(), 2).save(consumer, "egg_fried_rice_2");
+                .setBowlCarrier().setResult(ModItems.EGG_FRIED_RICE.get(), 2).save(consumer, "egg_fried_rice_2");
 
         PotRecipeBuilder.builder().addInput(TagCommon.EGGS, TagCommon.EGGS, TagCommon.EGGS, TagCommon.EGGS, TagCommon.EGGS, TagCommon.EGGS,
                         TagCommon.COOKED_RICE, TagCommon.COOKED_RICE, TagCommon.COOKED_RICE)
-                .setNeedBowl(true).setResult(ModItems.EGG_FRIED_RICE.get(), 3).save(consumer, "egg_fried_rice_3");
+                .setBowlCarrier().setResult(ModItems.EGG_FRIED_RICE.get(), 3).save(consumer, "egg_fried_rice_3");
 
         PotRecipeBuilder.builder().addInput(TagCommon.EGGS, TagCommon.EGGS, TagCommon.CROPS_LETTUCE, TagCommon.CROPS_LETTUCE, TagCommon.COOKED_RICE)
-                .addInput(Items.CARROT).setNeedBowl(true).setResult(ModItems.DELICIOUS_EGG_FRIED_RICE.get()).save(consumer);
+                .addInput(Items.CARROT).setBowlCarrier().setResult(ModItems.DELICIOUS_EGG_FRIED_RICE.get()).save(consumer);
+
+        PotRecipeBuilder.builder().addInput(ItemTags.FLOWERS).addInput(Items.RED_MUSHROOM, Items.BROWN_MUSHROOM)
+                .setCarrier(ModItems.COOKED_RICE.get()).setResult(ModItems.SUSPICIOUS_STEW_RICE_BOWL.get()).save(consumer);
 
         ChoppingBoardBuilder.builder().setIngredient(Items.MUTTON).setResult(ModItems.RAW_LAMB_CHOPS.get(), 2)
                 .setCutCount(4).setModelId(modLoc("raw_lamb_chops")).save(consumer);
@@ -383,11 +418,18 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .setFinishedBubbleColor(0xE9E3DB).setTime(500).save(consumer, "rice_5");
 
         StockpotRecipeBuilder.builder().addInput(Items.BONE, Items.BONE, Items.BONE, Items.BONE).setResult(ModItems.PORK_BONE_SOUP.get()).save(consumer);
+
         StockpotRecipeBuilder.builder().addInput(TagCommon.RAW_FISHES_SALMON, TagCommon.RAW_FISHES_SALMON, TagCommon.RAW_FISHES_SALMON)
                 .addInput(Items.KELP, Items.BONE_MEAL).setResult(ModItems.SEAFOOD_MISO_SOUP.get()).save(consumer, "seafood_miso_soup_salmon");
         StockpotRecipeBuilder.builder().addInput(TagCommon.RAW_FISHES_COD, TagCommon.RAW_FISHES_COD, TagCommon.RAW_FISHES_COD)
                 .addInput(Items.KELP, Items.BONE_MEAL).setResult(ModItems.SEAFOOD_MISO_SOUP.get()).save(consumer, "seafood_miso_soup_cod");
-        StockpotRecipeBuilder.builder().addInput(Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH)
+
+        StockpotRecipeBuilder.builder().addInput(Items.KELP, Items.BONE_MEAL).addInputEntityType(EntityType.SALMON)
+                .setResult(ModItems.SEAFOOD_MISO_SOUP.get(), 1).save(consumer, "seafood_miso_soup_salmon_entity");
+        StockpotRecipeBuilder.builder().addInput(Items.KELP, Items.BONE_MEAL).addInputEntityType(EntityType.COD)
+                .setResult(ModItems.SEAFOOD_MISO_SOUP.get(), 1).save(consumer, "seafood_miso_soup_cod_entity");
+
+        StockpotRecipeBuilder.builder().addInput(Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH).setSoupBase(Fluids.LAVA)
                 .addInput(Blocks.SCULK, Blocks.SCULK).setResult(ModItems.FEARSOME_THICK_SOUP.get()).save(consumer);
         StockpotRecipeBuilder.builder().addInput(Items.CARROT, Items.CARROT).addInput(TagCommon.RAW_MUTTON, TagCommon.RAW_MUTTON)
                 .setResult(ModItems.LAMB_AND_RADISH_SOUP.get()).save(consumer);
@@ -422,139 +464,138 @@ public class ModRecipeGenerator extends RecipeProvider {
 
     private void addFoodBiteRecipe(Consumer<FinishedRecipe> consumer) {
         Item slimeBallMeal = FoodBiteRegistry.getItem(FoodBiteRegistry.SLIME_BALL_MEAL);
-        addSameItemRecipe(Items.SLIME_BALL, 4, slimeBallMeal.getDefaultInstance(), true, consumer);
-        addSameItemRecipe(Items.SLIME_BALL, 5, slimeBallMeal.getDefaultInstance(), true, consumer);
-        addSameItemRecipe(Items.SLIME_BALL, 6, slimeBallMeal.getDefaultInstance(), true, consumer);
-        addSameItemRecipe(Items.SLIME_BALL, 7, slimeBallMeal.getDefaultInstance(), true, consumer);
-        addSameItemRecipe(Items.SLIME_BALL, 8, new ItemStack(slimeBallMeal, 2), true, consumer);
-        addSameItemRecipe(Items.SLIME_BALL, 9, new ItemStack(slimeBallMeal, 2), true, consumer);
+        addSameItemRecipe(Items.SLIME_BALL, 4, slimeBallMeal.getDefaultInstance(), Items.BOWL, consumer);
+        addSameItemRecipe(Items.SLIME_BALL, 5, slimeBallMeal.getDefaultInstance(), Items.BOWL, consumer);
+        addSameItemRecipe(Items.SLIME_BALL, 6, slimeBallMeal.getDefaultInstance(), Items.BOWL, consumer);
+        addSameItemRecipe(Items.SLIME_BALL, 7, slimeBallMeal.getDefaultInstance(), Items.BOWL, consumer);
+        addSameItemRecipe(Items.SLIME_BALL, 8, new ItemStack(slimeBallMeal, 2), Items.BOWL, consumer);
+        addSameItemRecipe(Items.SLIME_BALL, 9, new ItemStack(slimeBallMeal, 2), Items.BOWL, consumer);
 
         PotRecipeBuilder.builder().addInput(Items.HONEY_BOTTLE, Items.HONEY_BOTTLE, Items.SUGAR, Items.SUGAR, Items.PUMPKIN_PIE)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.FONDANT_PIE).save(consumer);
+                .setBowlCarrier().setResult(FoodBiteRegistry.FONDANT_PIE).save(consumer);
 
         PotRecipeBuilder.builder().addInput(Items.BAMBOO, Items.BAMBOO).addInput(TagCommon.RAW_PORK, TagCommon.RAW_PORK, TagCommon.RAW_PORK)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.DONGPO_PORK).save(consumer);
+                .setBowlCarrier().setResult(FoodBiteRegistry.DONGPO_PORK).save(consumer);
 
         PotRecipeBuilder.builder().addInput(Items.SUGAR, Items.SUGAR, Items.SUGAR, Items.SPIDER_EYE, Items.SPIDER_EYE, Items.SPIDER_EYE)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.FONDANT_SPIDER_EYE).save(consumer);
+                .setBowlCarrier().setResult(FoodBiteRegistry.FONDANT_SPIDER_EYE).save(consumer);
 
         PotRecipeBuilder.builder().addInput(Items.CHORUS_FRUIT, Items.CHORUS_FRUIT, Items.CHORUS_FRUIT)
                 .addInput(TagCommon.COOKED_EGGS, TagCommon.COOKED_EGGS, TagCommon.COOKED_EGGS)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.CHORUS_FRIED_EGG, 3).save(consumer);
+                .setBowlCarrier().setResult(FoodBiteRegistry.CHORUS_FRIED_EGG, 3).save(consumer);
 
         PotRecipeBuilder.builder().addInput(TagCommon.RAW_FISHES_COD, TagCommon.RAW_FISHES_COD)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.BRAISED_FISH).save(consumer, "braised_fish_cod");
+                .setBowlCarrier().setResult(FoodBiteRegistry.BRAISED_FISH).save(consumer, "braised_fish_cod");
         PotRecipeBuilder.builder().addInput(TagCommon.RAW_FISHES_SALMON, TagCommon.RAW_FISHES_SALMON)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.BRAISED_FISH).save(consumer, "braised_fish_salmon");
+                .setBowlCarrier().setResult(FoodBiteRegistry.BRAISED_FISH).save(consumer, "braised_fish_salmon");
         PotRecipeBuilder.builder().addInput(TagCommon.RAW_FISHES_COD, TagCommon.RAW_FISHES_SALMON)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.BRAISED_FISH).save(consumer, "braised_fish_cod_salmon");
+                .setBowlCarrier().setResult(FoodBiteRegistry.BRAISED_FISH).save(consumer, "braised_fish_cod_salmon");
+
+        PotRecipeBuilder.builder().addInput(TagCommon.RAW_FISHES_COD).setCarrier(ModItems.COOKED_RICE.get())
+                .setResult(ModItems.BRAISED_FISH_RICE_BOWL.get()).save(consumer, "braised_fish_cod_with_rice");
+        PotRecipeBuilder.builder().addInput(TagCommon.RAW_FISHES_SALMON).setCarrier(ModItems.COOKED_RICE.get())
+                .setResult(ModItems.BRAISED_FISH_RICE_BOWL.get()).save(consumer, "braised_fish_salmon_with_rice");
 
         PotRecipeBuilder.builder().addInput(Items.GOLDEN_APPLE, Items.GOLDEN_APPLE, Items.GOLDEN_CARROT, Items.GOLDEN_CARROT, Items.GLISTERING_MELON_SLICE, Items.GLISTERING_MELON_SLICE)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.GOLDEN_SALAD).save(consumer, "golden_salad_golden_apple");
+                .setBowlCarrier().setResult(FoodBiteRegistry.GOLDEN_SALAD).save(consumer, "golden_salad_golden_apple");
         PotRecipeBuilder.builder().addInput(Items.ENCHANTED_GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE, Items.GOLDEN_CARROT, Items.GOLDEN_CARROT, Items.GLISTERING_MELON_SLICE, Items.GLISTERING_MELON_SLICE)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.GOLDEN_SALAD).save(consumer, "golden_salad_enchanted_golden_apple");
+                .setBowlCarrier().setResult(FoodBiteRegistry.GOLDEN_SALAD).save(consumer, "golden_salad_enchanted_golden_apple");
 
         PotRecipeBuilder.builder().addInput(Items.AMETHYST_SHARD, Items.AMETHYST_SHARD, Items.AMETHYST_SHARD).addInput(TagCommon.RAW_MUTTON)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.CRYSTAL_LAMB_CHOP).save(consumer);
+                .setBowlCarrier().setResult(FoodBiteRegistry.CRYSTAL_LAMB_CHOP).save(consumer);
 
         PotRecipeBuilder.builder().addInput(Items.CRIMSON_FUNGUS, Items.CRIMSON_FUNGUS, Items.WARPED_FUNGUS, Items.WARPED_FUNGUS)
                 .addInput(TagCommon.RAW_FISHES_TROPICAL, TagCommon.RAW_FISHES_TROPICAL)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.NETHER_STYLE_SASHIMI).save(consumer);
+                .setBowlCarrier().setResult(FoodBiteRegistry.NETHER_STYLE_SASHIMI).save(consumer);
 
         PotRecipeBuilder.builder().addInput(Items.BONE, Items.BONE, Items.BONE, Items.SWEET_BERRIES, Items.SWEET_BERRIES, Items.SWEET_BERRIES)
                 .addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.PAN_SEARED_KNIGHT_STEAK).save(consumer);
+                .setBowlCarrier().setResult(FoodBiteRegistry.PAN_SEARED_KNIGHT_STEAK).save(consumer);
 
         PotRecipeBuilder.builder().addInput(Items.PUMPKIN_PIE).addInput(TagCommon.RAW_FISHES_COD, TagCommon.RAW_FISHES_COD, TagCommon.RAW_FISHES_COD, TagCommon.RAW_FISHES_COD, TagCommon.RAW_FISHES_COD)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.STARGAZY_PIE).save(consumer, "stargazy_pie_cod");
+                .setBowlCarrier().setResult(FoodBiteRegistry.STARGAZY_PIE).save(consumer, "stargazy_pie_cod");
         PotRecipeBuilder.builder().addInput(Items.PUMPKIN_PIE).addInput(TagCommon.RAW_FISHES_SALMON, TagCommon.RAW_FISHES_SALMON, TagCommon.RAW_FISHES_SALMON, TagCommon.RAW_FISHES_SALMON, TagCommon.RAW_FISHES_SALMON)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.STARGAZY_PIE).save(consumer, "stargazy_pie_salmon");
+                .setBowlCarrier().setResult(FoodBiteRegistry.STARGAZY_PIE).save(consumer, "stargazy_pie_salmon");
 
         PotRecipeBuilder.builder().addInput(Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_EYE)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.SWEET_AND_SOUR_ENDER_PEARLS).save(consumer, "sweet_and_sour_ender_pearls_1");
+                .setBowlCarrier().setResult(FoodBiteRegistry.SWEET_AND_SOUR_ENDER_PEARLS).save(consumer, "sweet_and_sour_ender_pearls_1");
         PotRecipeBuilder.builder().addInput(Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL,
                         Items.ENDER_EYE, Items.ENDER_EYE)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.SWEET_AND_SOUR_ENDER_PEARLS, 2).save(consumer, "sweet_and_sour_ender_pearls_2");
+                .setBowlCarrier().setResult(FoodBiteRegistry.SWEET_AND_SOUR_ENDER_PEARLS, 2).save(consumer, "sweet_and_sour_ender_pearls_2");
         PotRecipeBuilder.builder().addInput(Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL,
                         Items.ENDER_EYE, Items.ENDER_EYE, Items.ENDER_EYE)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.SWEET_AND_SOUR_ENDER_PEARLS, 3).save(consumer, "sweet_and_sour_ender_pearls_3");
+                .setBowlCarrier().setResult(FoodBiteRegistry.SWEET_AND_SOUR_ENDER_PEARLS, 3).save(consumer, "sweet_and_sour_ender_pearls_3");
 
         PotRecipeBuilder.builder().addInput(TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_CHILI_PEPPER, TagCommon.RAW_CHICKEN, TagCommon.RAW_CHICKEN,
                         TagCommon.RAW_CHICKEN, TagCommon.RAW_CHICKEN).addInput(Items.BLAZE_POWDER)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.SPICY_CHICKEN).save(consumer, "spicy_chicken_blaze_powder");
+                .setBowlCarrier().setResult(FoodBiteRegistry.SPICY_CHICKEN).save(consumer, "spicy_chicken_blaze_powder");
+
+        PotRecipeBuilder.builder().addInput(TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_CHILI_PEPPER, TagCommon.RAW_CHICKEN,
+                        TagCommon.RAW_CHICKEN, TagCommon.RAW_CHICKEN).addInput(Items.BLAZE_POWDER)
+                .setCarrier(ModItems.COOKED_RICE.get()).setResult(ModItems.SPICY_CHICKEN_RICE_BOWL.get())
+                .save(consumer, "spicy_chicken_rice_bowl_blaze_powder");
 
         PotRecipeBuilder.builder().addInput(TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_CHILI_PEPPER,
                         TagCommon.RAW_CHICKEN, TagCommon.RAW_CHICKEN, TagCommon.RAW_CHICKEN, TagCommon.RAW_CHICKEN)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.SPICY_CHICKEN).save(consumer, "spicy_chicken");
+                .setBowlCarrier().setResult(FoodBiteRegistry.SPICY_CHICKEN).save(consumer, "spicy_chicken");
+
+        PotRecipeBuilder.builder().addInput(TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_CHILI_PEPPER,
+                        TagCommon.RAW_CHICKEN, TagCommon.RAW_CHICKEN, TagCommon.RAW_CHICKEN)
+                .setCarrier(ModItems.COOKED_RICE.get()).setResult(ModItems.SPICY_CHICKEN_RICE_BOWL.get()).save(consumer, "spicy_chicken_rice_bowl");
 
         PotRecipeBuilder.builder().addInput(TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_CHILI_PEPPER,
                         TagCommon.RAW_CHICKEN, TagCommon.RAW_CHICKEN, TagCommon.RAW_CHICKEN, TagCommon.RAW_CHICKEN)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.YAKITORI).save(consumer);
+                .setBowlCarrier().setResult(FoodBiteRegistry.YAKITORI).save(consumer);
 
         PotRecipeBuilder.builder().addInput(TagCommon.RAW_MUTTON, TagCommon.RAW_MUTTON, TagCommon.RAW_MUTTON)
                 .addInput(Items.BLAZE_ROD, Items.BLAZE_ROD, Items.BLAZE_ROD, Items.BLAZE_ROD, Blocks.MAGMA_BLOCK)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.BLAZE_LAMB_CHOP).save(consumer);
+                .setBowlCarrier().setResult(FoodBiteRegistry.BLAZE_LAMB_CHOP).save(consumer);
 
         PotRecipeBuilder.builder().addInput(TagCommon.RAW_MUTTON, TagCommon.RAW_MUTTON, TagCommon.RAW_MUTTON)
                 .addInput(Items.BLUE_ICE, Items.BLUE_ICE, Items.BLUE_ICE)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.FROST_LAMB_CHOP).save(consumer);
+                .setBowlCarrier().setResult(FoodBiteRegistry.FROST_LAMB_CHOP).save(consumer);
 
         PotRecipeBuilder.builder().addInput(TagCommon.RAW_FISHES_TROPICAL, TagCommon.RAW_FISHES_TROPICAL, TagCommon.RAW_FISHES_TROPICAL, TagCommon.RAW_FISHES_TROPICAL)
                 .addInput(Items.CHORUS_FRUIT, Items.CHORUS_FRUIT, Items.CHORUS_FRUIT)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.END_STYLE_SASHIMI).save(consumer);
+                .setBowlCarrier().setResult(FoodBiteRegistry.END_STYLE_SASHIMI).save(consumer);
 
         PotRecipeBuilder.builder().addInput(TagCommon.RAW_FISHES_TROPICAL, TagCommon.RAW_FISHES_TROPICAL, TagCommon.RAW_FISHES_TROPICAL, TagCommon.RAW_FISHES_TROPICAL)
                 .addInput(Items.CACTUS, Items.CACTUS, Items.CACTUS)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.DESERT_STYLE_SASHIMI).save(consumer);
+                .setBowlCarrier().setResult(FoodBiteRegistry.DESERT_STYLE_SASHIMI).save(consumer);
 
         PotRecipeBuilder.builder().addInput(TagCommon.RAW_FISHES_TROPICAL, TagCommon.RAW_FISHES_TROPICAL, TagCommon.RAW_FISHES_TROPICAL, TagCommon.RAW_FISHES_TROPICAL)
                 .addInput(ItemTags.FLOWERS, ItemTags.FLOWERS, ItemTags.FLOWERS, ItemTags.FLOWERS, ItemTags.FLOWERS)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.TUNDRA_STYLE_SASHIMI).save(consumer);
+                .setBowlCarrier().setResult(FoodBiteRegistry.TUNDRA_STYLE_SASHIMI).save(consumer);
 
         PotRecipeBuilder.builder().addInput(TagCommon.RAW_FISHES_TROPICAL, TagCommon.RAW_FISHES_TROPICAL, TagCommon.RAW_FISHES_TROPICAL, TagCommon.RAW_FISHES_TROPICAL)
                 .addInput(Items.SNOWBALL, Items.SNOWBALL, Items.SNOWBALL, Items.SNOWBALL, Blocks.SPRUCE_SAPLING)
-                .setNeedBowl(true).setResult(FoodBiteRegistry.COLD_STYLE_SASHIMI).save(consumer);
-    }
-
-    private void addSingleItemRecipe(Item inputItem, Item outputItem, Consumer<FinishedRecipe> consumer) {
-        this.addSingleItemRecipe(inputItem, outputItem, false, consumer);
+                .setBowlCarrier().setResult(FoodBiteRegistry.COLD_STYLE_SASHIMI).save(consumer);
     }
 
     private void addSingleItemRecipe(TagKey<Item> inputItem, Item outputItem, String idInput, Consumer<FinishedRecipe> consumer) {
-        this.addSingleItemRecipe(inputItem, outputItem, idInput, false, consumer);
+        this.addSingleItemRecipe(inputItem, outputItem, idInput, Ingredient.EMPTY, consumer);
     }
 
-    private void addSingleItemRecipe(Item inputItem, Item outputItem, boolean needBowl, Consumer<FinishedRecipe> consumer) {
-        for (int i = 1; i <= 9; i++) {
-            ItemLike[] inputs = this.getItemsWithCount(inputItem, i);
-            ItemStack output = new ItemStack(outputItem, i);
-            String idInput = this.getRecipeIdWithCount(inputItem, i);
-            String idOutput = this.getRecipeIdWithCount(outputItem, i);
-            String id = String.format("%s_to_%s", idInput, idOutput);
-            PotRecipeBuilder.builder().addInput(inputs).setResult(output).setNeedBowl(needBowl).save(consumer, id);
-        }
-    }
-
-    private void addSingleItemRecipe(TagKey<Item> inputItem, Item outputItem, String idInput, boolean needBowl, Consumer<FinishedRecipe> consumer) {
+    private void addSingleItemRecipe(TagKey<Item> inputItem, Item outputItem, String idInput, Ingredient carrier, Consumer<FinishedRecipe> consumer) {
         for (int i = 1; i <= 9; i++) {
             TagKey<Item>[] inputs = this.getItemsWithCount(inputItem, i);
             ItemStack output = new ItemStack(outputItem, i);
             String idOutput = this.getRecipeIdWithCount(outputItem, i);
             String id = String.format("%s_to_%s", idInput, idOutput);
-            PotRecipeBuilder.builder().addInput(inputs).setResult(output).setNeedBowl(needBowl).save(consumer, id);
+            PotRecipeBuilder.builder().addInput(inputs).setResult(output).setCarrier(carrier).save(consumer, id);
         }
     }
 
-    private void addSameItemRecipe(Item inputItem, int count, ItemStack output, Consumer<FinishedRecipe> consumer) {
-        this.addSameItemRecipe(inputItem, count, output, false, consumer);
+    private void addSameItemRecipe(Item inputItem, int count, ItemStack output, ItemLike carrier, Consumer<FinishedRecipe> consumer) {
+        addSameItemRecipe(inputItem, count, output, Ingredient.of(carrier), consumer);
     }
 
-    private void addSameItemRecipe(Item inputItem, int count, ItemStack output, boolean needBowl, Consumer<FinishedRecipe> consumer) {
+    private void addSameItemRecipe(Item inputItem, int count, ItemStack output, Ingredient carrier, Consumer<FinishedRecipe> consumer) {
         ItemLike[] inputs = this.getItemsWithCount(inputItem, count);
         String idInput = this.getRecipeIdWithCount(inputItem, count);
         String idOutput = this.getRecipeIdWithCount(output.getItem(), output.getCount());
         String id = String.format("%s_to_%s", idInput, idOutput);
-        PotRecipeBuilder.builder().addInput(inputs).setResult(output).setNeedBowl(needBowl).save(consumer, id);
+        PotRecipeBuilder.builder().addInput(inputs).setResult(output).setCarrier(carrier).save(consumer, id);
     }
 
     private String getRecipeIdWithCount(ItemLike itemLike, int count) {

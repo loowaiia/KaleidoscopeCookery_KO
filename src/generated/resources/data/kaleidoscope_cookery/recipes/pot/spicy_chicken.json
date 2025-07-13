@@ -1,5 +1,8 @@
 {
   "type": "kaleidoscope_cookery:pot",
+  "carrier": {
+    "item": "minecraft:bowl"
+  },
   "ingredients": [
     {
       "tag": "forge:crops/chilipepper"
@@ -23,7 +26,6 @@
       "tag": "forge:raw_chicken"
     }
   ],
-  "need_bowl": true,
   "result": {
     "item": "kaleidoscope_cookery:spicy_chicken"
   },

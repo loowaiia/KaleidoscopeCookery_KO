@@ -1,5 +1,8 @@
 {
   "type": "kaleidoscope_cookery:pot",
+  "carrier": {
+    "item": "minecraft:bowl"
+  },
   "ingredients": [
     {
       "item": "kaleidoscope_cookery:raw_cow_offal"
@@ -20,7 +23,6 @@
       "tag": "forge:crops/lettuce"
     }
   ],
-  "need_bowl": true,
   "result": {
     "item": "kaleidoscope_cookery:stir_fried_beef_offal"
   },

@@ -23,7 +23,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,9 +61,6 @@ public class PotRecipeCategory implements IRecipeCategory<PotRecipe> {
         this.bgDraw.draw(guiGraphics);
         Component stirFryCount = Component.translatable("jei.kaleidoscope_cookery.pot.stir_fry_count", recipe.getStirFryCount());
         drawCenteredString(guiGraphics, stirFryCount, WIDTH / 2, 85);
-        if (recipe.isNeedBowl()) {
-            guiHelper.createDrawableItemLike(Items.BOWL).draw(guiGraphics, 133, 18);
-        }
     }
 
     private void drawCenteredString(GuiGraphics guiGraphics, Component text, int centerX, int y) {
@@ -81,6 +77,9 @@ public class PotRecipeCategory implements IRecipeCategory<PotRecipe> {
             int xOffset = (i % 3) * 18 + 15;
             int yOffset = (i / 3) * 18 + 24;
             builder.addSlot(RecipeIngredientRole.INPUT, xOffset, yOffset).addIngredients(inputs.get(i)).setBackground(slotDraw, -1, -1);
+        }
+        if (!recipe.getCarrier().isEmpty()) {
+            builder.addSlot(RecipeIngredientRole.INPUT, 133, 18).addIngredients(recipe.getCarrier());
         }
         builder.addSlot(RecipeIngredientRole.OUTPUT, 143, 60).addItemStack(output).setBackground(slotDraw, -1, -1);
     }

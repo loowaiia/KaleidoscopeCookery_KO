@@ -1,5 +1,8 @@
 {
   "type": "kaleidoscope_cookery:pot",
+  "carrier": {
+    "item": "minecraft:bowl"
+  },
   "ingredients": [
     {
       "tag": "forge:cooked_eggs"
@@ -14,7 +17,6 @@
       "tag": "forge:crops/tomato"
     }
   ],
-  "need_bowl": true,
   "result": {
     "item": "kaleidoscope_cookery:scramble_egg_with_tomatoes"
   },

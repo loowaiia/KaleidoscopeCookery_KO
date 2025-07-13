@@ -5,7 +5,6 @@
       "item": "minecraft:mutton"
     }
   ],
-  "need_bowl": false,
   "result": {
     "item": "minecraft:cooked_mutton"
   },

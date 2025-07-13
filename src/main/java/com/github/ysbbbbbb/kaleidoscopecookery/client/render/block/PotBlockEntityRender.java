@@ -51,7 +51,7 @@ public class PotBlockEntityRender implements BlockEntityRenderer<PotBlockEntity>
         poseStack.scale(0.5f, 0.5f, 0.5f);
 
         // 炒菜阶段，或者炒完，但是需要碗才能装的菜，只渲染原材料
-        if (pot.getStatus() != PotBlockEntity.FINISHED || pot.isNeedBowl()) {
+        if (pot.getStatus() != PotBlockEntity.FINISHED || pot.hasCarrier()) {
             for (int i = 0; i < pot.getContainerSize(); i++) {
                 ItemStack item = pot.getItem(i);
                 if (!item.isEmpty()) {
@@ -62,7 +62,7 @@ public class PotBlockEntityRender implements BlockEntityRenderer<PotBlockEntity>
         }
 
         // 结束阶段，并且不需要碗的菜，直接渲染结果
-        if (pot.getStatus() == PotBlockEntity.FINISHED && !pot.isNeedBowl()) {
+        if (pot.getStatus() == PotBlockEntity.FINISHED && !pot.hasCarrier()) {
             renderItem(pot, poseStack, buffer, packedOverlay, source, 0, time, data, itemRenderer, pot.getResult());
         }
 

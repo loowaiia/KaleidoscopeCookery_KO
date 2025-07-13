@@ -1,0 +1,22 @@
+{
+  "type": "kaleidoscope_cookery:pot",
+  "carrier": {
+    "item": "kaleidoscope_cookery:cooked_rice"
+  },
+  "ingredients": [
+    {
+      "tag": "minecraft:flowers"
+    },
+    {
+      "item": "minecraft:red_mushroom"
+    },
+    {
+      "item": "minecraft:brown_mushroom"
+    }
+  ],
+  "result": {
+    "item": "kaleidoscope_cookery:suspicious_stew_rice_bowl"
+  },
+  "stir_fry_count": 3,
+  "time": 200
+}

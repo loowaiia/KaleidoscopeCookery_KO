@@ -8,7 +8,6 @@
       "tag": "forge:eggs"
     }
   ],
-  "need_bowl": false,
   "result": {
     "count": 2,
     "item": "kaleidoscope_cookery:fried_egg"

@@ -1,5 +1,8 @@
 {
   "type": "kaleidoscope_cookery:pot",
+  "carrier": {
+    "item": "minecraft:bowl"
+  },
   "ingredients": [
     {
       "tag": "forge:raw_mutton"
@@ -26,7 +29,6 @@
       "item": "minecraft:magma_block"
     }
   ],
-  "need_bowl": true,
   "result": {
     "item": "kaleidoscope_cookery:blaze_lamb_chop"
   },

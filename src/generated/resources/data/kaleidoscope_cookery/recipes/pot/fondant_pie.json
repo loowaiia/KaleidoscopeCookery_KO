@@ -1,5 +1,8 @@
 {
   "type": "kaleidoscope_cookery:pot",
+  "carrier": {
+    "item": "minecraft:bowl"
+  },
   "ingredients": [
     {
       "item": "minecraft:honey_bottle"
@@ -17,7 +20,6 @@
       "item": "minecraft:pumpkin_pie"
     }
   ],
-  "need_bowl": true,
   "result": {
     "item": "kaleidoscope_cookery:fondant_pie"
   },

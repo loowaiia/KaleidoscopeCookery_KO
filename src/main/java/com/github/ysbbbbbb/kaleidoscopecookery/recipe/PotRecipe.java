@@ -20,26 +20,26 @@ public class PotRecipe implements Recipe<PotBlockEntity> {
     private final ResourceLocation id;
     private final int time;
     private final int stirFryCount;
-    private final boolean needBowl;
     private final NonNullList<Ingredient> ingredients;
+    private final Ingredient carrier;
     private final ItemStack result;
 
-    public PotRecipe(ResourceLocation id, int time, int stirFryCount, boolean needBowl, List<Ingredient> ingredients, ItemStack result) {
+    public PotRecipe(ResourceLocation id, int time, int stirFryCount, Ingredient carrier, List<Ingredient> ingredients, ItemStack result) {
         this.id = id;
         this.time = time;
         this.stirFryCount = stirFryCount;
-        this.needBowl = needBowl;
+        this.carrier = carrier;
         this.ingredients = NonNullList.of(Ingredient.EMPTY, fillInputs(ingredients));
         this.result = result;
     }
 
     @Override
-    public boolean matches(PotBlockEntity pContainer, Level pLevel) {
-        return RecipeMatcher.findMatches(pContainer.getItems(), ingredients) != null;
+    public boolean matches(PotBlockEntity container, Level level) {
+        return RecipeMatcher.findMatches(container.getItems(), ingredients) != null;
     }
 
     @Override
-    public ItemStack assemble(PotBlockEntity pContainer, RegistryAccess pRegistryAccess) {
+    public ItemStack assemble(PotBlockEntity container, RegistryAccess registryAccess) {
         return this.result.copy();
     }
 
@@ -56,8 +56,8 @@ public class PotRecipe implements Recipe<PotBlockEntity> {
         return stirFryCount;
     }
 
-    public boolean isNeedBowl() {
-        return needBowl;
+    public Ingredient getCarrier() {
+        return carrier;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class PotRecipe implements Recipe<PotBlockEntity> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
+    public ItemStack getResultItem(RegistryAccess registryAccess) {
         return this.result;
     }
 

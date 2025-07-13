@@ -5,7 +5,6 @@
       "item": "minecraft:beef"
     }
   ],
-  "need_bowl": false,
   "result": {
     "item": "minecraft:cooked_beef"
   },

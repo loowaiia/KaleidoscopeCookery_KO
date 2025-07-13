@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
@@ -26,7 +27,7 @@ public class PotRecipeBuilder implements RecipeBuilder {
     private static final String NAME = "pot";
     private int time = 200;
     private int stirFryCount = 3;
-    private boolean needBowl = false;
+    private Ingredient carrier = Ingredient.EMPTY;
     private List<Ingredient> ingredients = Lists.newArrayList();
     private ItemStack result = ItemStack.EMPTY;
 
@@ -44,8 +45,18 @@ public class PotRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
-    public PotRecipeBuilder setNeedBowl(boolean needBowl) {
-        this.needBowl = needBowl;
+    public PotRecipeBuilder setCarrier(Ingredient ingredient) {
+        this.carrier = ingredient;
+        return this;
+    }
+
+    public PotRecipeBuilder setCarrier(ItemLike itemLike) {
+        this.carrier = Ingredient.of(itemLike);
+        return this;
+    }
+
+    public PotRecipeBuilder setBowlCarrier() {
+        this.carrier = Ingredient.of(Items.BOWL);
         return this;
     }
 
@@ -130,22 +141,22 @@ public class PotRecipeBuilder implements RecipeBuilder {
 
     @Override
     public void save(Consumer<FinishedRecipe> recipeOutput, ResourceLocation id) {
-        recipeOutput.accept(new PotFinishedRecipe(id, this.time, this.stirFryCount, this.needBowl, this.ingredients, this.result));
+        recipeOutput.accept(new PotFinishedRecipe(id, this.time, this.stirFryCount, this.carrier, this.ingredients, this.result));
     }
 
     public class PotFinishedRecipe implements FinishedRecipe {
         private final ResourceLocation id;
         private final int time;
         private final int stirFryCount;
-        private final boolean needBowl;
+        private final Ingredient carrier;
         private final List<Ingredient> ingredients;
         private final ItemStack result;
 
-        public PotFinishedRecipe(ResourceLocation id, int time, int stirFryCount, boolean needBowl, List<Ingredient> ingredients, ItemStack result) {
+        public PotFinishedRecipe(ResourceLocation id, int time, int stirFryCount, Ingredient carrier, List<Ingredient> ingredients, ItemStack result) {
             this.id = id;
             this.time = time;
             this.stirFryCount = stirFryCount;
-            this.needBowl = needBowl;
+            this.carrier = carrier;
             this.ingredients = ingredients;
             this.result = result;
         }
@@ -154,7 +165,9 @@ public class PotRecipeBuilder implements RecipeBuilder {
         public void serializeRecipeData(JsonObject json) {
             json.addProperty("time", this.time);
             json.addProperty("stir_fry_count", this.stirFryCount);
-            json.addProperty("need_bowl", this.needBowl);
+            if (!this.carrier.isEmpty()) {
+                json.add("carrier", this.carrier.toJson());
+            }
 
             JsonArray ingredientsJson = new JsonArray();
             this.ingredients.stream().filter(i -> i != Ingredient.EMPTY).forEach(i -> ingredientsJson.add(i.toJson()));

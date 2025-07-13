@@ -1,5 +1,8 @@
 {
   "type": "kaleidoscope_cookery:pot",
+  "carrier": {
+    "item": "minecraft:bowl"
+  },
   "ingredients": [
     {
       "item": "minecraft:bone"
@@ -26,7 +29,6 @@
       "tag": "forge:raw_beef"
     }
   ],
-  "need_bowl": true,
   "result": {
     "item": "kaleidoscope_cookery:pan_seared_knight_steak"
   },
