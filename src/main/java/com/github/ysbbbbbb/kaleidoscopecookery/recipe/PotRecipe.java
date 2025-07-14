@@ -1,10 +1,10 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.recipe;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.PotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -15,7 +15,7 @@ import net.minecraftforge.common.util.RecipeMatcher;
 
 import java.util.List;
 
-public class PotRecipe implements Recipe<PotBlockEntity> {
+public class PotRecipe implements Recipe<SimpleContainer> {
     public static final int RECIPES_SIZE = 9;
     private final ResourceLocation id;
     private final int time;
@@ -34,12 +34,12 @@ public class PotRecipe implements Recipe<PotBlockEntity> {
     }
 
     @Override
-    public boolean matches(PotBlockEntity container, Level level) {
-        return RecipeMatcher.findMatches(container.getItems(), ingredients) != null;
+    public boolean matches(SimpleContainer container, Level level) {
+        return RecipeMatcher.findMatches(container.items, ingredients) != null;
     }
 
     @Override
-    public ItemStack assemble(PotBlockEntity container, RegistryAccess registryAccess) {
+    public ItemStack assemble(SimpleContainer container, RegistryAccess registryAccess) {
         return this.result.copy();
     }
 

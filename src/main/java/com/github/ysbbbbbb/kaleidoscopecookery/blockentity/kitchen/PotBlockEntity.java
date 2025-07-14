@@ -1,79 +1,77 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IPot;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModParticles;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenShovelItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.recipe.PotRecipe;
-import com.github.ysbbbbbb.kaleidoscopecookery.util.IntRange;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.items.ItemHandlerHelper;
 
-import javax.annotation.Nullable;
-import java.util.Optional;
+import java.util.List;
 
-import static com.github.ysbbbbbb.kaleidoscopecookery.block.Kitchen.PotBlock.HAS_OIL;
-import static com.github.ysbbbbbb.kaleidoscopecookery.block.Kitchen.PotBlock.SHOW_OIL;
+import static com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.PotBlock.HAS_OIL;
+import static com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.PotBlock.SHOW_OIL;
+import static com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry.*;
 
-public class PotBlockEntity extends BlockEntity implements Container {
-    public static final IntRange INGREDIENT_TICK = IntRange.second(0, 30);
-
+public class PotBlockEntity extends BaseBlockEntity implements IPot {
     public static final int PUT_INGREDIENT = 0;
     public static final int COOKING = 1;
     public static final int FINISHED = 2;
+    public static final int BURNT = 3;
 
-    private static final String SEED = "Seed";
+    private static final int PUT_INGREDIENT_TIME = 60 * 20;
+    private static final int TAKEOUT_TIME = 40 * 20;
+    private static final int BURNT_TIME = 20 * 20;
+
+    private static final String INPUTS = "Inputs";
+    private static final String CARRIER = "Carrier";
+    private static final String RESULT = "Result";
     private static final String STATUS = "Status";
     private static final String CURRENT_TICK = "CurrentTick";
     private static final String STIR_FRY_COUNT = "StirFryCount";
-    private static final String CARRIER = "Carrier";
-    private static final String RECIPE_ID = "RecipeId";
-    private static final String RESULT_TICK = "ResultTick";
-    private static final String RESULT_STACK = "ResultStack";
-    private static final String BURNT_LEVEL = "BurntLevel";
+    private static final String SEED = "Seed";
 
-    private NonNullList<ItemStack> items = NonNullList.withSize(PotRecipe.RECIPES_SIZE, ItemStack.EMPTY);
+    private NonNullList<ItemStack> inputs = NonNullList.withSize(PotRecipe.RECIPES_SIZE, ItemStack.EMPTY);
+    private Ingredient carrier = Ingredient.EMPTY;
     private ItemStack result = ItemStack.EMPTY;
     private int status = PUT_INGREDIENT;
     private int currentTick = 0;
-    private @Nullable ResourceLocation recipeId;
-    private @Nullable IntRange getResultTick;
     private int stirFryCount = 0;
-    private Ingredient carrier = Ingredient.EMPTY;
-    private int burntLevel = 0;
 
-    private long seed;
+    /**
+     * 用于渲染动画时数据
+     */
+    public long seed;
     public StirFryAnimationData animationData = new StirFryAnimationData();
 
     public PotBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -81,137 +79,175 @@ public class PotBlockEntity extends BlockEntity implements Container {
         this.seed = System.currentTimeMillis();
     }
 
-    public void tick() {
-        if (this.level == null) {
+    @Override
+    public boolean hasHeatSource(Level level) {
+        BlockState belowState = level.getBlockState(worldPosition.below());
+        if (belowState.hasProperty(BlockStateProperties.LIT) && belowState.getValue(BlockStateProperties.LIT)) {
+            return true;
+        }
+        return belowState.is(TagMod.HEAT_SOURCE_BLOCKS_WITHOUT_LIT);
+    }
+
+    public void tick(Level level) {
+        if (!this.hasHeatSource(level)) {
             return;
         }
         RandomSource random = level.random;
-
-        // 下方没有点燃属性？不更新
-        Optional<Boolean> value = level.getBlockState(worldPosition.below()).getOptionalValue(BlockStateProperties.LIT);
-        if (value.isEmpty() || !value.get()) {
-            return;
-        }
-
-        this.currentTick++;
-        // 每 5tick 刷新一次
-        if (this.currentTick % 5 == 0) {
-            this.refresh();
-        }
-
-        if (this.currentTick % 20 == 0) {
+        if (currentTick > 0) {
+            this.currentTick--;
+            // 每 5tick 刷新一次
+            if (this.currentTick % 5 == 0) {
+                this.refresh();
+            }
             // 模拟油炸声音
-            level.playSound(null, this.worldPosition, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 0.5f + random.nextFloat() / 0.5f, 0.8f + random.nextFloat() / 0.5f);
+            if (this.currentTick % 20 == 0) {
+                level.playSound(null, this.worldPosition,
+                        SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS,
+                        0.5f + random.nextFloat() / 0.5f,
+                        0.8f + random.nextFloat() / 0.5f);
+            }
         }
 
         // 放素材阶段
         if (this.status == PUT_INGREDIENT) {
-            // 有菜，且炒菜时间超过了
-            if (INGREDIENT_TICK.after(currentTick)) {
-                onPreparationTimeout(this.level);
-            }
-            if (this.currentTick % 10 == 0 && this.level instanceof ServerLevel serverLevel) {
-                serverLevel.sendParticles(ModParticles.COOKING.get(),
-                        worldPosition.getX() + 0.5 + random.nextDouble() / 5 * (random.nextBoolean() ? 1 : -1),
-                        worldPosition.getY() + 0.1 + random.nextDouble() / 3,
-                        worldPosition.getZ() + 0.5 + random.nextDouble() / 5 * (random.nextBoolean() ? 1 : -1),
-                        1, 0, 0, 0, 0);
-            }
+            tickPutIngredient(level, random);
             return;
         }
-
-        if (this.getResultTick == null) {
-            return;
-        }
-
         // 炒菜阶段
         if (this.status == COOKING) {
-            if (this.currentTick > this.getResultTick.start()) {
-                level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1F,
-                        (random.nextFloat() - random.nextFloat()) * 0.8F);
-                this.result = getResult(this.level);
-                this.status = FINISHED;
-                this.setChanged();
-                if (level != null) {
-                    BlockState state = level.getBlockState(worldPosition);
-                    level.setBlockAndUpdate(worldPosition, state.setValue(SHOW_OIL, false));
-                }
-            }
+            tickCooking(level, random);
+            return;
         }
-
         // 出结果阶段
         if (this.status == FINISHED) {
-            int time = this.currentTick - this.getResultTick.start();
-            // 前 20 秒白烟
-            if (time < 20 * 20) {
-                if (this.currentTick % 10 == 0 && this.level instanceof ServerLevel serverLevel) {
-                    serverLevel.sendParticles(ModParticles.COOKING.get(),
-                            worldPosition.getX() + 0.5,
-                            worldPosition.getY() + 0.1 + random.nextDouble() / 2,
-                            worldPosition.getZ() + 0.5,
-                            1, 0, 0, 0, 0);
-                }
-            } else {
-                // 如果开始超时，那么菜慢慢变黑
-                this.burntLevel = (time - 20 * 20) / 25;
-                this.burntLevel = Mth.clamp(this.burntLevel, 0, 16);
-
-                // 依据过头情况，粒子数量逐渐增加
-                if (this.currentTick % 2 == 0 && this.level instanceof ServerLevel serverLevel && this.burntLevel >= 2) {
-                    serverLevel.sendParticles(ParticleTypes.SMOKE,
-                            worldPosition.getX() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
-                            worldPosition.getY() + 0.25 + random.nextDouble() / 3,
-                            worldPosition.getZ() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
-                            this.burntLevel / 2, 0, 0, 0, 0.05);
-                }
-            }
-
-            // 如果超时了，那么随机产生木炭
-            if (this.getResultTick.after(this.currentTick) && this.level != null) {
-                onFinishedTimeout(level);
-            }
+            tickFinished(random);
+            return;
+        }
+        // 炒糊
+        if (this.status == BURNT) {
+            tickBurnt(level, random);
         }
     }
 
-    private void onFinishedTimeout(Level level) {
-        this.reset();
-        RandomSource random = level.random;
-        level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1F,
-                (random.nextFloat() - random.nextFloat()) * 0.8F);
-        if (this.level instanceof ServerLevel serverLevel) {
+    private void tickBurnt(Level level, RandomSource random) {
+        int particleCount = 10 - this.currentTick / 5;
+        // 依据过头情况，粒子数量逐渐增加
+        if (this.currentTick % 2 == 0 && this.level instanceof ServerLevel serverLevel) {
             serverLevel.sendParticles(ParticleTypes.SMOKE,
                     worldPosition.getX() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
                     worldPosition.getY() + 0.25 + random.nextDouble() / 3,
                     worldPosition.getZ() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
-                    8, 0, 0, 0, 0.05);
-
-            int count = 1 + random.nextInt(3);
-            Block.popResource(level, worldPosition, new ItemStack(Items.CHARCOAL, count));
+                    particleCount, 0, 0, 0, 0.05);
+        }
+        if (currentTick == 0) {
+            this.reset();
+            level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1F,
+                    (random.nextFloat() - random.nextFloat()) * 0.8F);
+            if (level instanceof ServerLevel serverLevel) {
+                serverLevel.sendParticles(ParticleTypes.SMOKE,
+                        worldPosition.getX() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
+                        worldPosition.getY() + 0.25 + random.nextDouble() / 3,
+                        worldPosition.getZ() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
+                        8, 0, 0, 0, 0.05);
+                int count = 1 + random.nextInt(3);
+                Block.popResource(level, worldPosition, new ItemStack(Items.CHARCOAL, count));
+            }
         }
     }
 
-    private void onPreparationTimeout(Level level) {
-        if (!this.isEmpty()) {
-            // 自动切炒菜阶段
-            this.startCooking(level);
-            return;
-        }
-        // 清空
-        this.reset();
-        RandomSource random = level.random;
-        level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1F,
-                (random.nextFloat() - random.nextFloat()) * 0.8F);
-        if (this.level instanceof ServerLevel serverLevel) {
+    private void tickFinished(RandomSource random) {
+        if (this.currentTick % 10 == 0 && this.level instanceof ServerLevel serverLevel) {
             serverLevel.sendParticles(ModParticles.COOKING.get(),
-                    worldPosition.getX() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
-                    worldPosition.getY() + 0.1 + random.nextDouble() / 3,
-                    worldPosition.getZ() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
-                    8, 0, 0, 0, 0.05);
+                    worldPosition.getX() + 0.5,
+                    worldPosition.getY() + 0.1 + random.nextDouble() / 2,
+                    worldPosition.getZ() + 0.5,
+                    1, 0, 0, 0, 0);
+        }
+        if (this.currentTick == 0) {
+            // 炒菜完成，进入出锅阶段
+            this.status = BURNT;
+            this.currentTick = BURNT_TIME;
+            this.setChanged();
         }
     }
 
-    public void onShovelHit(Level level, Player player, ItemStack shovel) {
-        if (!player.level().isClientSide) {
+    private void tickCooking(Level level, RandomSource random) {
+        if (this.currentTick == 0) {
+            level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1F,
+                    (random.nextFloat() - random.nextFloat()) * 0.8F);
+            this.status = FINISHED;
+            // 检查翻炒次数
+            if (this.stirFryCount > 0) {
+                this.result = getItem(SUSPICIOUS_STIR_FRY).getDefaultInstance();
+            }
+            this.currentTick = TAKEOUT_TIME;
+            this.setChanged();
+            BlockState state = level.getBlockState(worldPosition);
+            level.setBlockAndUpdate(worldPosition, state.setValue(SHOW_OIL, false));
+        }
+    }
+
+    private void tickPutIngredient(Level level, RandomSource random) {
+        if (this.currentTick % 10 == 0 && level instanceof ServerLevel serverLevel) {
+            serverLevel.sendParticles(ModParticles.COOKING.get(),
+                    worldPosition.getX() + 0.5 + random.nextDouble() / 5 * (random.nextBoolean() ? 1 : -1),
+                    worldPosition.getY() + 0.1 + random.nextDouble() / 3,
+                    worldPosition.getZ() + 0.5 + random.nextDouble() / 5 * (random.nextBoolean() ? 1 : -1),
+                    1, 0, 0, 0, 0);
+        }
+        // 有菜，且炒菜时间超过了
+        if (currentTick == 0) {
+            if (this.isEmpty()) {
+                // 清空
+                this.reset();
+                level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1F,
+                        (random.nextFloat() - random.nextFloat()) * 0.8F);
+                if (this.level instanceof ServerLevel serverLevel) {
+                    serverLevel.sendParticles(ModParticles.COOKING.get(),
+                            worldPosition.getX() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
+                            worldPosition.getY() + 0.1 + random.nextDouble() / 3,
+                            worldPosition.getZ() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
+                            8, 0, 0, 0, 0.05);
+                }
+            } else {
+                // 自动切炒菜阶段
+                this.startCooking(level);
+            }
+        }
+    }
+
+    @Override
+    public boolean onPlaceOil(Level level, LivingEntity user, ItemStack stack) {
+        if (stack.is(TagMod.OIL)) {
+            placeOil(level, user, level.random);
+            stack.shrink(1);
+            return true;
+        } else if (stack.is(ModItems.KITCHEN_SHOVEL.get()) && KitchenShovelItem.hasOil(stack)) {
+            placeOil(level, user, level.random);
+            KitchenShovelItem.setHasOil(stack, false);
+            return true;
+        }
+        return false;
+    }
+
+    private void placeOil(Level level, LivingEntity user, RandomSource random) {
+        this.currentTick = PUT_INGREDIENT_TIME;
+        BlockState state = level.getBlockState(worldPosition);
+        level.setBlockAndUpdate(worldPosition, state.setValue(HAS_OIL, true).setValue(SHOW_OIL, true));
+        level.playSound(user, worldPosition, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1F,
+                (random.nextFloat() - random.nextFloat()) * 0.8F);
+        for (int i = 0; i < 10; i++) {
+            level.addParticle(ParticleTypes.SMOKE,
+                    worldPosition.getX() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
+                    worldPosition.getY() + 0.25 + random.nextDouble() / 3,
+                    worldPosition.getZ() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
+                    0, 0.05, 0);
+        }
+    }
+
+    @Override
+    public void onShovelHit(Level level, LivingEntity user, ItemStack shovel) {
+        if (!level.isClientSide) {
             this.seed = System.currentTimeMillis();
             this.refresh();
         }
@@ -235,139 +271,133 @@ public class PotBlockEntity extends BlockEntity implements Container {
 
         // 炒菜阶段
         if (this.status == COOKING) {
-            this.stirFryCount++;
+            if (this.stirFryCount > 0) {
+                this.stirFryCount--;
+            }
         }
     }
 
     private void startCooking(Level level) {
-        level.getRecipeManager().getRecipeFor(ModRecipes.POT_RECIPE, this, level).ifPresentOrElse(recipe -> {
+        SimpleContainer container = this.getContainer();
+        level.getRecipeManager().getRecipeFor(ModRecipes.POT_RECIPE, container, level).ifPresentOrElse(recipe -> {
             // 如果合成表符合，那么进入炒菜阶段
-            this.recipeId = recipe.getId();
             this.carrier = recipe.getCarrier();
-            int time = recipe.getTime() / 20;
-            // 最后给 20 秒时间来取出成品，20 秒取出黑暗料理
-            this.getResultTick = IntRange.second(time, time + 40);
+            this.result = recipe.assemble(container, level.registryAccess());
+            this.currentTick = recipe.getTime();
+            this.stirFryCount = recipe.getStirFryCount();
         }, () -> {
             // 不符合，进入迷之炒菜阶段
-            this.recipeId = null;
-            this.getResultTick = IntRange.second(10, 50);
+            this.carrier = Ingredient.of(Items.BOWL);
+            this.result = getItem(SUSPICIOUS_STIR_FRY).getDefaultInstance();
+            this.currentTick = 10 * 20; // 迷之炒菜时间
+            this.stirFryCount = 0; // 迷之炒菜不计翻炒次数
         });
         this.status = COOKING;
-        this.currentTick = 0;
         this.refresh();
     }
 
-    private ItemStack getResult(Level level) {
-        Item suspiciousStirFry = FoodBiteRegistry.getItem(FoodBiteRegistry.SUSPICIOUS_STIR_FRY);
-        ItemStack result = suspiciousStirFry.getDefaultInstance();
-        if (this.recipeId != null) {
-            var recipe = level.getRecipeManager().getRecipeFor(ModRecipes.POT_RECIPE, this, level, this.recipeId);
-            if (recipe.isPresent()) {
-                PotRecipe potRecipe = recipe.get().getSecond();
-                if (this.stirFryCount >= potRecipe.getStirFryCount()) {
-                    result = potRecipe.getResult().copy();
-                }
-            }
+    @Override
+    public boolean takeOutProduct(Level level, LivingEntity user) {
+        // 仅在炒菜完成或炒糊阶段可以取出
+        if (this.status != FINISHED && this.status != BURNT) {
+            return false;
         }
-        if (result.is(suspiciousStirFry)) {
-            this.carrier = Ingredient.of(Items.BOWL);
+        // 烧焦时取出的是黑暗料理
+        ItemStack finallyResult = this.status == FINISHED ? this.result : getItem(DARK_CUISINE).getDefaultInstance();
+        ItemStack mainHandItem = user.getMainHandItem();
+        if (!this.carrier.isEmpty()) {
+            return this.takeOutWithCarrier(level, user, mainHandItem, finallyResult);
+        } else {
+            return this.takeOutWithoutCarrier(level, user, mainHandItem, finallyResult);
         }
-        return result;
     }
 
-    public void takeOut(Player player) {
-        if (this.status != FINISHED) {
-            return;
+    private boolean takeOutWithoutCarrier(Level level, LivingEntity user, ItemStack mainHandItem, ItemStack finallyResult) {
+        if (mainHandItem.is(ModItems.KITCHEN_SHOVEL.get())) {
+            ItemUtils.getItemToLivingEntity(user, finallyResult);
+            this.reset();
+            return true;
+        } else {
+            user.hurt(level.damageSources().inFire(), 1);
+            this.sendActionBarMessage(user, "need_kitchen_shovel");
+            return false;
         }
-        if (this.getResultTick == null) {
-            return;
-        }
+    }
 
-        // 超时取出的是黑暗料理
-        ItemStack finallyResult = this.getResult(level);
-        int time = this.currentTick - this.getResultTick.start();
-        if (time > 20 * 20) {
-            finallyResult = new ItemStack(FoodBiteRegistry.getItem(FoodBiteRegistry.DARK_CUISINE));
-        }
-
-        ItemStack mainHandItem = player.getMainHandItem();
-        if (!this.carrier.isEmpty()) {
-            Component carrierName = carrier.getItems()[0].getHoverName();
-            if (this.carrier.test(mainHandItem)) {
-                if (mainHandItem.getCount() < finallyResult.getCount()) {
-                    if (player instanceof ServerPlayer serverPlayer) {
-                        MutableComponent component = Component.translatable("tip.kaleidoscope_cookery.pot.carrier_count_not_enough",
-                                finallyResult.getCount(), carrierName);
-                        serverPlayer.connection.send(new ClientboundSetActionBarTextPacket(component));
-                    }
-                    return;
-                }
-                ItemHandlerHelper.giveItemToPlayer(player, finallyResult);
-                mainHandItem.shrink(finallyResult.getCount());
-                this.reset();
+    private boolean takeOutWithCarrier(Level level, LivingEntity user, ItemStack mainHandItem, ItemStack finallyResult) {
+        Component carrierName = carrier.getItems()[0].getHoverName();
+        if (this.carrier.test(mainHandItem)) {
+            if (mainHandItem.getCount() < finallyResult.getCount()) {
+                this.sendActionBarMessage(user, "carrier_count_not_enough", finallyResult.getCount(), carrierName);
+                return false;
             } else {
-                player.hurt(player.level().damageSources().inFire(), 1);
-                if (player instanceof ServerPlayer serverPlayer) {
-                    MutableComponent component = Component.translatable("tip.kaleidoscope_cookery.pot.need_carrier", carrierName);
-                    serverPlayer.connection.send(new ClientboundSetActionBarTextPacket(component));
-                }
+                mainHandItem.shrink(finallyResult.getCount());
+                ItemUtils.getItemToLivingEntity(user, finallyResult);
+                this.reset();
+                return true;
             }
         } else {
-            if (mainHandItem.is(ModItems.KITCHEN_SHOVEL.get())) {
-                if (player.isSecondaryUseActive()) {
-                    ItemHandlerHelper.giveItemToPlayer(player, finallyResult);
-                    this.reset();
-                }
-            } else {
-                player.hurt(player.level().damageSources().inFire(), 1);
-                if (player instanceof ServerPlayer serverPlayer) {
-                    MutableComponent component = Component.translatable("tip.kaleidoscope_cookery.pot.need_kitchen_shovel");
-                    serverPlayer.connection.send(new ClientboundSetActionBarTextPacket(component));
-                }
-            }
+            user.hurt(level.damageSources().inFire(), 1);
+            this.sendActionBarMessage(user, "need_carrier", carrierName);
+            return false;
         }
     }
 
-    public void addIngredient(ItemStack itemStack, Player player) {
-        if (this.status != PUT_INGREDIENT) {
-            return;
+    private void sendActionBarMessage(LivingEntity user, String type, Object... args) {
+        if (user instanceof ServerPlayer serverPlayer) {
+            String key = "tip.kaleidoscope_cookery.pot." + type;
+            MutableComponent message = Component.translatable(key, args);
+            serverPlayer.connection.send(new ClientboundSetActionBarTextPacket(message));
         }
-        if (itemStack.isEmpty()) {
-            for (int i = this.items.size() - 1; i >= 0; i--) {
-                ItemStack stack = this.items.get(i);
-                if (!stack.isEmpty()) {
-                    this.items.set(i, ItemStack.EMPTY);
-                    ItemHandlerHelper.giveItemToPlayer(player, stack);
-                    player.hurt(player.level().damageSources().inFire(), 1);
-                    return;
-                }
-            }
+    }
+
+    @Override
+    public boolean addIngredient(Level level, LivingEntity user, ItemStack itemStack) {
+        if (this.status != PUT_INGREDIENT) {
+            return false;
         }
         // 只允许食物和特定 tag 的东西放入
         if (!itemStack.isEdible() && !itemStack.is(TagItem.POT_INGREDIENT)) {
-            return;
+            return false;
         }
-        for (int i = 0; i < this.getContainerSize(); i++) {
-            ItemStack item = this.getItem(i);
+        for (int i = 0; i < this.inputs.size(); i++) {
+            ItemStack item = this.inputs.get(i);
             if (item.isEmpty()) {
-                this.setItem(i, itemStack.copyWithCount(1));
+                this.inputs.set(i, itemStack.copyWithCount(1));
                 itemStack.shrink(1);
-                player.level().playSound(null, this.worldPosition, SoundEvents.LANTERN_PLACE, SoundSource.BLOCKS, 1.0F, 0.5F);
-                return;
+                level.playSound(null, this.worldPosition, SoundEvents.LANTERN_PLACE, SoundSource.BLOCKS, 1.0F, 0.5F);
+                return true;
             }
         }
+        return false;
+    }
+
+    @Override
+    public boolean removeIngredient(Level level, LivingEntity user) {
+        if (this.status != PUT_INGREDIENT) {
+            return false;
+        }
+        for (int i = this.inputs.size() - 1; i >= 0; i--) {
+            ItemStack stack = this.inputs.get(i);
+            if (!stack.isEmpty()) {
+                this.inputs.set(i, ItemStack.EMPTY);
+                ItemUtils.getItemToLivingEntity(user, stack);
+                if (this.hasHeatSource(level)) {
+                    user.hurt(level.damageSources().inFire(), 1);
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     public void reset() {
-        this.currentTick = 0;
-        this.recipeId = null;
-        this.getResultTick = null;
-        this.result = ItemStack.EMPTY;
-        this.stirFryCount = 0;
+        this.inputs.clear();
         this.carrier = Ingredient.EMPTY;
-        this.burntLevel = 0;
-        this.items.clear();
+        this.result = ItemStack.EMPTY;
         this.status = PUT_INGREDIENT;
+        this.currentTick = 0;
+        this.stirFryCount = 0;
         this.setChanged();
         if (level != null) {
             BlockState state = level.getBlockState(worldPosition);
@@ -375,76 +405,55 @@ public class PotBlockEntity extends BlockEntity implements Container {
         }
     }
 
-    public void refresh() {
-        this.setChanged();
-        if (level != null) {
-            BlockState state = level.getBlockState(worldPosition);
-            level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
-        }
-    }
-
     @Override
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        ContainerHelper.saveAllItems(tag, this.items);
-        tag.putLong(SEED, this.seed);
+        tag.put(INPUTS, ContainerHelper.saveAllItems(new CompoundTag(), this.inputs));
+        tag.putString(CARRIER, this.carrier.toJson().toString());
+        tag.put(RESULT, this.result.serializeNBT());
         tag.putInt(STATUS, this.status);
         tag.putInt(CURRENT_TICK, this.currentTick);
         tag.putInt(STIR_FRY_COUNT, this.stirFryCount);
-        tag.putString(CARRIER, this.carrier.toJson().toString());
-        tag.putInt(BURNT_LEVEL, this.burntLevel);
-        if (this.recipeId != null) {
-            tag.putString(RECIPE_ID, this.recipeId.toString());
-        }
-        if (this.getResultTick != null) {
-            tag.put(RESULT_TICK, this.getResultTick.serialize());
-        }
-        tag.put(RESULT_STACK, this.result.serializeNBT());
+        tag.putLong(SEED, this.seed);
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(tag, this.items);
-        this.seed = tag.getLong(SEED);
+        this.inputs = NonNullList.withSize(PotRecipe.RECIPES_SIZE, ItemStack.EMPTY);
+        if (tag.contains(INPUTS, Tag.TAG_COMPOUND)) {
+            ContainerHelper.loadAllItems(tag.getCompound(INPUTS), this.inputs);
+        }
+        if (tag.contains(CARRIER, Tag.TAG_STRING)) {
+            JsonElement element = JsonParser.parseString(tag.getString(CARRIER));
+            this.carrier = Ingredient.fromJson(element);
+        }
+        if (tag.contains(RESULT, Tag.TAG_COMPOUND)) {
+            this.result = ItemStack.of(tag.getCompound(RESULT));
+        }
         this.status = tag.getInt(STATUS);
         this.currentTick = tag.getInt(CURRENT_TICK);
         this.stirFryCount = tag.getInt(STIR_FRY_COUNT);
-        this.carrier = Ingredient.fromJson(JsonParser.parseString(tag.getString(CARRIER)));
-        this.burntLevel = tag.getInt(BURNT_LEVEL);
-        if (tag.contains(RECIPE_ID)) {
-            this.recipeId = new ResourceLocation(tag.getString(RECIPE_ID));
+        this.seed = tag.getLong(SEED);
+    }
+
+    public List<ItemStack> getInputs() {
+        return inputs;
+    }
+
+    public SimpleContainer getContainer() {
+        SimpleContainer container = new SimpleContainer(PotRecipe.RECIPES_SIZE);
+        for (int i = 0; i < this.inputs.size(); i++) {
+            ItemStack stack = this.inputs.get(i);
+            if (!stack.isEmpty()) {
+                container.setItem(i, stack);
+            }
         }
-        if (tag.contains(RESULT_TICK)) {
-            this.getResultTick = IntRange.deserialize(tag.getCompound(RESULT_TICK));
-        }
-        this.result = ItemStack.of(tag.getCompound(RESULT_STACK));
+        return container;
     }
 
-    @Override
-    public CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
-    }
-
-    @Nullable
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    public NonNullList<ItemStack> getItems() {
-        return items;
-    }
-
-    @Override
-    public int getContainerSize() {
-        return items.size();
-    }
-
-    @Override
     public boolean isEmpty() {
-        for (ItemStack stack : this.items) {
+        for (ItemStack stack : this.inputs) {
             if (!stack.isEmpty()) {
                 return false;
             }
@@ -452,61 +461,8 @@ public class PotBlockEntity extends BlockEntity implements Container {
         return true;
     }
 
-    @Override
-    public ItemStack getItem(int index) {
-        return (0 <= index && index < this.items.size()) ? this.items.get(index) : ItemStack.EMPTY;
-    }
-
-    @Override
-    public ItemStack removeItem(int index, int count) {
-        return ContainerHelper.removeItem(this.items, index, count);
-    }
-
-    @Override
-    public ItemStack removeItemNoUpdate(int pSlot) {
-        return ContainerHelper.takeItem(this.items, pSlot);
-    }
-
-    @Override
-    public void setItem(int pIndex, ItemStack pStack) {
-        if (0 <= pIndex && pIndex < this.items.size()) {
-            this.items.set(pIndex, pStack);
-        }
-    }
-
-    @Override
-    public boolean stillValid(Player pPlayer) {
-        return Container.stillValidBlockEntity(this, pPlayer);
-    }
-
-    @Override
-    public void clearContent() {
-        this.items.clear();
-    }
-
-    public long getSeed() {
-        return seed;
-    }
-
     public int getStatus() {
         return status;
-    }
-
-    @Nullable
-    public IntRange getGetResultTick() {
-        return getResultTick;
-    }
-
-    public int getCurrentTick() {
-        return currentTick;
-    }
-
-    public int getStirFryCount() {
-        return stirFryCount;
-    }
-
-    public int getBurntLevel() {
-        return burntLevel;
     }
 
     public boolean hasCarrier() {
@@ -515,6 +471,14 @@ public class PotBlockEntity extends BlockEntity implements Container {
 
     public ItemStack getResult() {
         return result;
+    }
+
+    public long getSeed() {
+        return seed;
+    }
+
+    public int getCurrentTick() {
+        return currentTick;
     }
 
     public static class StirFryAnimationData {

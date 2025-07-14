@@ -1,17 +1,27 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.util;
 
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class ItemUtils {
-    public static boolean itemHandlerIsEmpty(IItemHandler itemHandler) {
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            if (!itemHandler.getStackInSlot(i).isEmpty()) {
-                return false;
+    public static void getItemToLivingEntity(LivingEntity entity, ItemStack stack) {
+        if (entity.getMainHandItem().isEmpty()) {
+            entity.setItemInHand(InteractionHand.MAIN_HAND, stack);
+        } else if (entity instanceof Player player) {
+            ItemHandlerHelper.giveItemToPlayer(player, stack);
+        } else {
+            // 否则直接在实体所处位置生成物品
+            ItemEntity dropItem = entity.spawnAtLocation(stack);
+            if (dropItem != null) {
+                dropItem.setPickUpDelay(0);
             }
         }
-        return true;
     }
 
     public static Pair<Integer, ItemStack> getLastStack(IItemHandler itemHandler) {

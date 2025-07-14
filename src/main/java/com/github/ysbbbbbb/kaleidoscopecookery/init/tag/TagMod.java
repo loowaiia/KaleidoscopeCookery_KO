@@ -52,6 +52,12 @@ public interface TagMod {
      * 吸引猫躺下的方块
      */
     TagKey<Block> CAT_LIE_ON_BLOCKS = blockTag("cat_lie_on_blocks");
+    /**
+     * 可以当做本模组热源的方块
+     * <p>
+     * 默认是任何具有 LIT 标签的方块或拥有此 tag 的方块，故这里需要添加的是没有 LIT 标签的热源方块
+     */
+    TagKey<Block> HEAT_SOURCE_BLOCKS_WITHOUT_LIT = blockTag("heat_source_blocks_without_lit");
 
     static TagKey<Item> itemTag(String name) {
         return TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, name));

@@ -1,5 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IChoppingBoard;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
@@ -7,38 +9,37 @@ import com.github.ysbbbbbb.kaleidoscopecookery.recipe.ChoppingBoardRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class ChoppingBoardBlockEntity extends BlockEntity {
+public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppingBoard {
     private static final String MODEL_ID = "ModelId";
     private static final String CURRENT_CUT_STACK = "CurrentCutStack";
     private static final String RESULT_ITEM = "ResultItem";
     private static final String MAX_CUT_COUNT = "MaxCutCount";
     private static final String CURRENT_CUT_COUNT = "CurrentCutCount";
-
     /**
      * 仅用于客户端渲染
      */
     public @Nullable ResourceLocation[] cacheModels = null;
     public @Nullable ResourceLocation previousModel = null;
-
+    /**
+     * 服务端客户端共通数据
+     */
     private @Nullable ResourceLocation modelId = null;
     private int maxCutCount = 0;
     private int currentCutCount = 0;
@@ -49,22 +50,21 @@ public class ChoppingBoardBlockEntity extends BlockEntity {
         super(ModBlocks.CHOPPING_BOARD_BE.get(), pos, blockState);
     }
 
-    public boolean onPutOn(ItemStack stack) {
-        if (this.level == null) {
-            return false;
-        }
+    @Override
+    public boolean onPutItem(Level level, LivingEntity user, ItemStack putOnItem) {
         if (!this.result.isEmpty()) {
             return false;
         }
-        SimpleContainer container = new SimpleContainer(stack);
-        Optional<ChoppingBoardRecipe> recipeOptional = this.level.getRecipeManager().getRecipeFor(ModRecipes.CHOPPING_BOARD_RECIPE, container, this.level);
+        SimpleContainer container = new SimpleContainer(putOnItem);
+        Optional<ChoppingBoardRecipe> recipeOptional = level.getRecipeManager()
+                .getRecipeFor(ModRecipes.CHOPPING_BOARD_RECIPE, container, level);
         if (recipeOptional.isPresent()) {
             ChoppingBoardRecipe recipe = recipeOptional.get();
             this.modelId = recipe.getModelId();
             this.maxCutCount = recipe.getCutCount();
             this.currentCutCount = 0;
-            this.currentCutStack = stack.split(1);
-            this.result = recipe.assemble(container, this.level.registryAccess());
+            this.currentCutStack = putOnItem.split(1);
+            this.result = recipe.assemble(container, level.registryAccess());
             this.refresh();
             level.playSound(null, this.worldPosition,
                     SoundEvents.WOOD_PLACE,
@@ -75,25 +75,50 @@ public class ChoppingBoardBlockEntity extends BlockEntity {
         return false;
     }
 
-    public boolean onCut(Player player) {
-        if (this.level == null) {
-            return false;
-        }
+    @Override
+    public boolean onCutItem(Level level, LivingEntity user, ItemStack cutterItem) {
         if (this.result.isEmpty()) {
             return false;
         }
+        // 如果已经切完，执行取出逻辑
         if (this.currentCutCount >= this.maxCutCount) {
-            return false;
-        }
-        if (player.getMainHandItem().is(TagMod.KITCHEN_KNIFE)) {
+            Block.popResource(level, worldPosition, this.result.copy());
+            this.resetBoardData();
+            level.playSound(null, this.worldPosition,
+                    SoundEvents.WOOD_PLACE,
+                    SoundSource.BLOCKS,
+                    1, 2 + level.random.nextFloat() * 0.2f);
+            return true;
+        } else if (cutterItem.is(TagMod.KITCHEN_KNIFE)) {
+            // 否则，检测是否是刀具，进行切菜逻辑
             this.currentCutCount++;
             this.playParticlesSound();
             this.refresh();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean onTakeOut(Level level, LivingEntity user) {
+        if (this.currentCutCount == 0 && !this.currentCutStack.isEmpty()) {
+            if (user instanceof Player player) {
+                ItemHandlerHelper.giveItemToPlayer(player, this.currentCutStack);
+            } else {
+                Block.popResource(level, this.worldPosition, this.currentCutStack);
+            }
+            this.resetBoardData();
+            level.playSound(null, this.worldPosition,
+                    SoundEvents.ITEM_FRAME_REMOVE_ITEM,
+                    SoundSource.BLOCKS,
+                    1, 1.2f + level.random.nextFloat() * 0.2f);
             return true;
         }
         return false;
     }
 
+    @Override
     public void playParticlesSound() {
         if (this.level instanceof ServerLevel serverLevel) {
             RandomSource random = serverLevel.getRandom();
@@ -109,50 +134,13 @@ public class ChoppingBoardBlockEntity extends BlockEntity {
         }
     }
 
-    public boolean onTakeOut(Player player) {
-        if (this.level == null) {
-            return false;
-        }
-        if (player.isSecondaryUseActive() && this.currentCutCount == 0 && !this.currentCutStack.isEmpty()) {
-            ItemHandlerHelper.giveItemToPlayer(player, this.currentCutStack);
-            this.modelId = null;
-            this.result = ItemStack.EMPTY;
-            this.currentCutStack = ItemStack.EMPTY;
-            this.currentCutCount = 0;
-            this.maxCutCount = 0;
-            this.refresh();
-            level.playSound(null, this.worldPosition,
-                    SoundEvents.ITEM_FRAME_REMOVE_ITEM,
-                    SoundSource.BLOCKS,
-                    1, 1.2f + level.random.nextFloat() * 0.2f);
-            return true;
-        }
-        if (this.result.isEmpty()) {
-            return false;
-        }
-        if (this.currentCutCount < this.maxCutCount) {
-            return false;
-        }
-        Block.popResource(level, worldPosition, this.result.copy());
+    private void resetBoardData() {
         this.modelId = null;
         this.result = ItemStack.EMPTY;
         this.currentCutStack = ItemStack.EMPTY;
         this.currentCutCount = 0;
         this.maxCutCount = 0;
         this.refresh();
-        level.playSound(null, this.worldPosition,
-                SoundEvents.WOOD_PLACE,
-                SoundSource.BLOCKS,
-                1, 2 + level.random.nextFloat() * 0.2f);
-        return true;
-    }
-
-    public void refresh() {
-        this.setChanged();
-        if (level != null) {
-            BlockState state = level.getBlockState(worldPosition);
-            level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
-        }
     }
 
     @Override
@@ -183,17 +171,6 @@ public class ChoppingBoardBlockEntity extends BlockEntity {
         }
     }
 
-    @Override
-    public CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
-    }
-
-    @Nullable
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
     @Nullable
     public ResourceLocation getModelId() {
         return modelId;
@@ -205,9 +182,5 @@ public class ChoppingBoardBlockEntity extends BlockEntity {
 
     public int getCurrentCutCount() {
         return currentCutCount;
-    }
-
-    public ItemStack getCurrentCutStack() {
-        return currentCutStack;
     }
 }

@@ -1,5 +1,6 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.block.Kitchen;
+package com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IKitchenwareRacks;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenwareRacksBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -71,7 +72,7 @@ public class KitchenwareRacksBlock extends HorizontalDirectionalBlock implements
         Vec3 location = hitResult.getLocation().subtract(Vec3.atCenterOf(pos)).yRot(yRotRad);
         boolean isLeftClick = location.x > 0;
 
-        if (level.getBlockEntity(pos) instanceof KitchenwareRacksBlockEntity racks && racks.onClick(player, mainHandItem, isLeftClick)) {
+        if (level.getBlockEntity(pos) instanceof IKitchenwareRacks racks && racks.onClick(player, mainHandItem, isLeftClick)) {
             return InteractionResult.SUCCESS;
         }
         return super.use(state, level, pos, player, hand, hitResult);

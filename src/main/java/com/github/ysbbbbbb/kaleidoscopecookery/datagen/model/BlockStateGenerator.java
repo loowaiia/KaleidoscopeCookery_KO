@@ -1,11 +1,11 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen.model;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.Kitchen.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.RiceCropBlock;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.misc.ChiliRistraBlock;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.TableBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.*;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.misc.ChiliRistraBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import net.minecraft.core.Direction;
@@ -42,8 +42,14 @@ public class BlockStateGenerator extends BlockStateProvider {
 
         horizontalBlock(ModBlocks.POT.get(), blockState -> {
             if (blockState.getValue(PotBlock.HAS_OIL) && blockState.getValue(PotBlock.SHOW_OIL)) {
+                if (blockState.getValue(PotBlock.HAS_BASE)) {
+                    return new ModelFile.UncheckedModelFile(modLoc("block/pot_base_has_oil"));
+                }
                 return new ModelFile.UncheckedModelFile(modLoc("block/pot_has_oil"));
             } else {
+                if (blockState.getValue(PotBlock.HAS_BASE)) {
+                    return new ModelFile.UncheckedModelFile(modLoc("block/pot_base"));
+                }
                 return new ModelFile.UncheckedModelFile(modLoc("block/pot"));
             }
         });

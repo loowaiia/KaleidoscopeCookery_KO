@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package com.github.ysbbbbbb.kaleidoscopecookery.block.Kitchen;
+package com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

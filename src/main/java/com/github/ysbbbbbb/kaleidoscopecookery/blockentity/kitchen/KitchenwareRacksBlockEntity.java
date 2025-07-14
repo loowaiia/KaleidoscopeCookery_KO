@@ -1,24 +1,18 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IKitchenwareRacks;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.items.ItemHandlerHelper;
 
-import javax.annotation.Nullable;
-
-public class KitchenwareRacksBlockEntity extends BlockEntity {
+public class KitchenwareRacksBlockEntity extends BaseBlockEntity implements IKitchenwareRacks {
     private static final String LEFT_ITEM = "LeftItem";
     private static final String RIGHT_ITEM = "RightItem";
 
@@ -29,45 +23,33 @@ public class KitchenwareRacksBlockEntity extends BlockEntity {
         super(ModBlocks.KITCHENWARE_RACKS_BE.get(), pPos, pBlockState);
     }
 
-    public boolean onClick(Player player, ItemStack stack, boolean isLeft) {
+    @Override
+    public boolean onClick(LivingEntity user, ItemStack stack, boolean isLeft) {
         ItemStack stackInRacks = isLeft ? itemLeft : itemRight;
-
+        // 取出物品
         if (stack.isEmpty() && !stackInRacks.isEmpty()) {
-            if (player.getMainHandItem().isEmpty()) {
-                player.setItemInHand(InteractionHand.MAIN_HAND, stackInRacks);
-            } else {
-                ItemHandlerHelper.giveItemToPlayer(player, stackInRacks);
-            }
+            ItemUtils.getItemToLivingEntity(user, stackInRacks);
             if (isLeft) {
                 itemLeft = ItemStack.EMPTY;
             } else {
                 itemRight = ItemStack.EMPTY;
             }
-            player.playSound(SoundEvents.ITEM_FRAME_REMOVE_ITEM, 1.0F, 1.0F);
+            user.playSound(SoundEvents.ITEM_FRAME_REMOVE_ITEM, 1.0F, 1.0F);
             this.refresh();
             return true;
         }
-
+        // 放入物品
         if (stack.is(Tags.Items.TOOLS) && stackInRacks.isEmpty()) {
             if (isLeft) {
                 itemLeft = stack.split(1);
             } else {
                 itemRight = stack.split(1);
             }
-            player.playSound(SoundEvents.ITEM_FRAME_ADD_ITEM, 1.0F, 1.0F);
+            user.playSound(SoundEvents.ITEM_FRAME_ADD_ITEM, 1.0F, 1.0F);
             this.refresh();
             return true;
         }
-
         return false;
-    }
-
-    public void refresh() {
-        this.setChanged();
-        if (level != null) {
-            BlockState state = level.getBlockState(worldPosition);
-            level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
-        }
     }
 
     @Override
@@ -85,20 +67,11 @@ public class KitchenwareRacksBlockEntity extends BlockEntity {
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
-    }
-
-    @Nullable
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
     public ItemStack getItemLeft() {
         return itemLeft;
     }
 
+    @Override
     public ItemStack getItemRight() {
         return itemRight;
     }

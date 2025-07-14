@@ -14,6 +14,8 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
+import java.util.List;
+
 public class PotBlockEntityRender implements BlockEntityRenderer<PotBlockEntity> {
     private final BlockEntityRendererProvider.Context context;
 
@@ -51,26 +53,26 @@ public class PotBlockEntityRender implements BlockEntityRenderer<PotBlockEntity>
         poseStack.scale(0.5f, 0.5f, 0.5f);
 
         // 炒菜阶段，或者炒完，但是需要碗才能装的菜，只渲染原材料
-        if (pot.getStatus() != PotBlockEntity.FINISHED || pot.hasCarrier()) {
-            for (int i = 0; i < pot.getContainerSize(); i++) {
-                ItemStack item = pot.getItem(i);
+        boolean showInputs = pot.getStatus() != PotBlockEntity.FINISHED && pot.getStatus() != PotBlockEntity.BURNT;
+        if (showInputs || pot.hasCarrier()) {
+            List<ItemStack> items = pot.getInputs();
+            for (int i = 0; i < items.size(); i++) {
+                ItemStack item = items.get(i);
                 if (!item.isEmpty()) {
-                    renderItem(pot, poseStack, buffer, packedOverlay, source, i, time, data, itemRenderer, item);
+                    renderItem(pot, poseStack, buffer, packedLight, packedOverlay, source, i, time, data, itemRenderer, item);
                     poseStack.translate(0, 0, 0.025);
                 }
             }
-        }
-
-        // 结束阶段，并且不需要碗的菜，直接渲染结果
-        if (pot.getStatus() == PotBlockEntity.FINISHED && !pot.hasCarrier()) {
-            renderItem(pot, poseStack, buffer, packedOverlay, source, 0, time, data, itemRenderer, pot.getResult());
+        } else {
+            // 结束阶段，并且不需要碗的菜，直接渲染结果
+            renderItem(pot, poseStack, buffer, packedLight, packedOverlay, source, 0, time, data, itemRenderer, pot.getResult());
         }
 
         poseStack.popPose();
     }
 
     private void renderItem(PotBlockEntity pot, PoseStack poseStack, MultiBufferSource buffer,
-                            int packedOverlay, RandomSource source, int index,
+                            int packedLight, int packedOverlay, RandomSource source, int index,
                             long time, PotBlockEntity.StirFryAnimationData data,
                             ItemRenderer itemRenderer, ItemStack item) {
         poseStack.pushPose();
@@ -82,8 +84,12 @@ public class PotBlockEntityRender implements BlockEntityRenderer<PotBlockEntity>
             poseStack.mulPose(Axis.XN.rotationDegrees(720f / 1000 * time));
         }
         // 焦糊程度，菜变黑
-        int light = OverlayTexture.u(16 - pot.getBurntLevel());
-        itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, light, packedOverlay, poseStack, buffer, pot.getLevel(), 0);
+        if (pot.getStatus() == PotBlockEntity.BURNT) {
+            int tick = pot.getCurrentTick();
+            int burntLevel = Mth.clamp(tick / 25, 0, 16);
+            packedLight = OverlayTexture.u(burntLevel);
+        }
+        itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, pot.getLevel(), 0);
 
         poseStack.popPose();
     }

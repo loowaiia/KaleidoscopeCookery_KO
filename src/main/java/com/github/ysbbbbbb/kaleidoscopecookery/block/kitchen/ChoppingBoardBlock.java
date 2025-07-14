@@ -1,5 +1,6 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.block.Kitchen;
+package com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IChoppingBoard;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.ChoppingBoardBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import net.minecraft.core.BlockPos;
@@ -53,18 +54,19 @@ public class ChoppingBoardBlock extends HorizontalDirectionalBlock implements En
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (level.getBlockEntity(pos) instanceof ChoppingBoardBlockEntity choppingBoard) {
-            if (choppingBoard.onPutOn(player.getItemInHand(hand))) {
+        if (level.getBlockEntity(pos) instanceof IChoppingBoard choppingBoard) {
+            ItemStack itemInHand = player.getItemInHand(hand);
+            if (choppingBoard.onPutItem(level, player, itemInHand)) {
                 return InteractionResult.SUCCESS;
             }
             ItemStack mainHandItem = player.getMainHandItem();
             if (hand == InteractionHand.OFF_HAND) {
                 return InteractionResult.PASS;
             }
-            if (choppingBoard.onCut(player)) {
+            if (choppingBoard.onCutItem(level, player, itemInHand)) {
                 return InteractionResult.SUCCESS;
             }
-            if (choppingBoard.onTakeOut(player)) {
+            if (player.isSecondaryUseActive() && choppingBoard.onTakeOut(level, player)) {
                 return InteractionResult.SUCCESS;
             }
             if (mainHandItem.is(TagMod.KITCHEN_KNIFE) && player.getOffhandItem().isEmpty()) {
