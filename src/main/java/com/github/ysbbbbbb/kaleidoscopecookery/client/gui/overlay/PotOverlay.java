@@ -14,6 +14,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
@@ -45,7 +46,8 @@ public class PotOverlay implements IGuiOverlay {
         if (!blockState.is(ModBlocks.POT.get())) {
             return;
         }
-        if (!(level.getBlockEntity(blockPos) instanceof PotBlockEntity pot)) {
+        BlockEntity blockEntity = level.getBlockEntity(blockPos);
+        if (!(blockEntity instanceof PotBlockEntity pot)) {
             return;
         }
         Font font = Minecraft.getInstance().font;
@@ -55,8 +57,7 @@ public class PotOverlay implements IGuiOverlay {
             y = y - 12;
         }
 
-        BlockState belowState = level.getBlockState(blockPos.below());
-        if (blockState.getValue(PotBlock.HAS_OIL) && belowState.hasProperty(BlockStateProperties.LIT) && belowState.getValue(BlockStateProperties.LIT)) {
+        if (blockState.getValue(PotBlock.HAS_OIL) && pot.hasHeatSource(level)) {
             int status = pot.getStatus();
             if (status == PotBlockEntity.PUT_INGREDIENT) {
                 drawWordWrap(guiGraphics, font, Component.translatable("tip.kaleidoscope_cookery.pot.add_ingredient"), x, y, 0xFFFFFF);

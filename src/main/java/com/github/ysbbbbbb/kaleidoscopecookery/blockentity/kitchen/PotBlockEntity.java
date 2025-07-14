@@ -29,6 +29,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -179,6 +180,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
             // 检查翻炒次数
             if (this.stirFryCount > 0) {
                 this.result = getItem(SUSPICIOUS_STIR_FRY).getDefaultInstance();
+                this.carrier = Ingredient.of(Items.BOWL);
             }
             this.currentTick = TAKEOUT_TIME;
             this.setChanged();
@@ -314,11 +316,17 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
 
     private boolean takeOutWithoutCarrier(Level level, LivingEntity user, ItemStack mainHandItem, ItemStack finallyResult) {
         if (mainHandItem.is(ModItems.KITCHEN_SHOVEL.get())) {
+            // 如果是玩家，则需要判断是否潜行才能取出
+            if (user instanceof Player player && !player.isSecondaryUseActive()) {
+                return false;
+            }
             ItemUtils.getItemToLivingEntity(user, finallyResult);
             this.reset();
             return true;
         } else {
-            user.hurt(level.damageSources().inFire(), 1);
+            if (this.hasHeatSource(level)) {
+                user.hurt(level.damageSources().inFire(), 1);
+            }
             this.sendActionBarMessage(user, "need_kitchen_shovel");
             return false;
         }
@@ -336,11 +344,15 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
                 this.reset();
                 return true;
             }
-        } else {
-            user.hurt(level.damageSources().inFire(), 1);
-            this.sendActionBarMessage(user, "need_carrier", carrierName);
-            return false;
         }
+        // 没有锅铲时才会触发提示和伤害
+        if (!mainHandItem.is(ModItems.KITCHEN_SHOVEL.get())) {
+            if (this.hasHeatSource(level)) {
+                user.hurt(level.damageSources().inFire(), 1);
+            }
+            this.sendActionBarMessage(user, "need_carrier", carrierName);
+        }
+        return false;
     }
 
     private void sendActionBarMessage(LivingEntity user, String type, Object... args) {

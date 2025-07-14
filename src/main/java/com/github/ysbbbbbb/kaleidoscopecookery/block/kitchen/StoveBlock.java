@@ -107,6 +107,10 @@ public class StoveBlock extends HorizontalDirectionalBlock {
             && !livingEntity.isSteppingCarefully()
             && !livingEntity.isInvulnerable()
             && livingEntity.invulnerableTime <= 10) {
+            // 排除创造模式玩家
+            if (livingEntity instanceof Player player && player.isCreative()) {
+                return;
+            }
             livingEntity.invulnerableTime = 20;
             serverLevel.broadcastDamageEvent(livingEntity, livingEntity.damageSources().hotFloor());
         }
