@@ -60,27 +60,17 @@ public class PotRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
-    public PotRecipeBuilder addInput(ItemLike... itemLikes) {
-        for (ItemLike itemLike : itemLikes) {
-            this.ingredients.add(Ingredient.of(itemLike));
-        }
-        return this;
-    }
-
-    @SafeVarargs
-    public final PotRecipeBuilder addInput(TagKey<Item>... tag) {
-        for (TagKey<Item> tagKey : tag) {
-            if (tagKey != null) {
+    @SuppressWarnings("all")
+    public PotRecipeBuilder addInput(Object... ingredients) {
+        for (Object ingredient : ingredients) {
+            if (ingredient instanceof ItemLike itemLike) {
+                this.ingredients.add(Ingredient.of(itemLike));
+            } else if (ingredient instanceof ItemStack stack) {
+                this.ingredients.add(Ingredient.of(stack));
+            } else if (ingredient instanceof TagKey tagKey) {
                 this.ingredients.add(Ingredient.of(tagKey));
-            }
-        }
-        return this;
-    }
-
-    public PotRecipeBuilder addInput(Ingredient... ingredients) {
-        for (Ingredient ingredient : ingredients) {
-            if (ingredient != Ingredient.EMPTY) {
-                this.ingredients.add(ingredient);
+            } else if (ingredient instanceof Ingredient ingredientObj) {
+                this.ingredients.add(ingredientObj);
             }
         }
         return this;

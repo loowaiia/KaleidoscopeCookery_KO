@@ -19,7 +19,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -39,23 +38,19 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
         return new StockpotRecipeBuilder();
     }
 
-    public StockpotRecipeBuilder addInput(ItemLike... itemLikes) {
-        for (ItemLike itemLike : itemLikes) {
-            this.ingredients.add(Ingredient.of(itemLike));
+    @SuppressWarnings("all")
+    public StockpotRecipeBuilder addInput(Object... ingredients) {
+        for (Object ingredient : ingredients) {
+            if (ingredient instanceof ItemLike itemLike) {
+                this.ingredients.add(Ingredient.of(itemLike));
+            } else if (ingredient instanceof ItemStack stack) {
+                this.ingredients.add(Ingredient.of(stack));
+            } else if (ingredient instanceof TagKey tagKey) {
+                this.ingredients.add(Ingredient.of(tagKey));
+            } else if (ingredient instanceof Ingredient ingredientObj) {
+                this.ingredients.add(ingredientObj);
+            }
         }
-        return this;
-    }
-
-    @SafeVarargs
-    public final StockpotRecipeBuilder addInput(TagKey<Item>... ingredients) {
-        for (TagKey<Item> tagKey : ingredients) {
-            this.ingredients.add(Ingredient.of(tagKey));
-        }
-        return this;
-    }
-
-    public StockpotRecipeBuilder addInput(Ingredient... ingredients) {
-        this.ingredients.addAll(Arrays.asList(ingredients));
         return this;
     }
 

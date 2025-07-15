@@ -12,12 +12,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 public class TagPoiType extends PoiTypeTagsProvider {
-    public TagPoiType(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider, @Nullable ExistingFileHelper existingFileHelper) {
-        super(pOutput, pProvider, KaleidoscopeCookery.MOD_ID, existingFileHelper);
+    public TagPoiType(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+        super(output, provider, KaleidoscopeCookery.MOD_ID, existingFileHelper);
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider pProvider) {
+    protected void addTags(HolderLookup.Provider provider) {
         this.tag(PoiTypeTags.ACQUIRABLE_JOB_SITE).add(ModPoi.STOVE.getKey());
     }
 }
