@@ -1,12 +1,12 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.compat.jei.category;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.recipe.soupbase.ISoupBase;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.StockpotRecipe;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.SoupBaseManager;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
-import com.github.ysbbbbbb.kaleidoscopecookery.mixin.MobBucketItemAccessor;
-import com.github.ysbbbbbb.kaleidoscopecookery.recipe.StockpotRecipe;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -22,22 +22,17 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Map;
 
 public class StockpotRecipeCategory implements IRecipeCategory<StockpotRecipe> {
     public static final RecipeType<StockpotRecipe> TYPE = RecipeType.create(KaleidoscopeCookery.MOD_ID, "stockpot", StockpotRecipe.class);
     private static final ResourceLocation BG = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "textures/gui/jei/stockpot.png");
     private static final MutableComponent TITLE = Component.translatable("block.kaleidoscope_cookery.stockpot");
-    private static final Map<ResourceLocation, Item> RECIPE_TO_BUCKET_MAP = Maps.newHashMap();
     public static final int WIDTH = 176;
     public static final int HEIGHT = 102;
     private final IDrawable bgDraw;
@@ -57,30 +52,8 @@ public class StockpotRecipeCategory implements IRecipeCategory<StockpotRecipe> {
         if (level == null) {
             return List.of();
         }
-        // 先尝试获取所有的生物桶
-        Map<EntityType<?>, Item> entityTypeToBucketMap = Maps.newHashMap();
-        ForgeRegistries.ITEMS.getValues().stream()
-                .filter(item -> item instanceof MobBucketItemAccessor)
-                .forEach(item -> {
-                    MobBucketItemAccessor mobBucketItem = (MobBucketItemAccessor) item;
-                    entityTypeToBucketMap.put(mobBucketItem.kaleidoscope$GetFishType(), item);
-                });
-
-        // 读取合成表
         List<StockpotRecipe> stockpotRecipes = Lists.newArrayList();
         stockpotRecipes.addAll(level.getRecipeManager().getAllRecipesFor(ModRecipes.STOCKPOT_RECIPE));
-
-        // 将生物桶映射到对应的配方
-        stockpotRecipes.forEach(recipe -> {
-            EntityType<?> entityType = recipe.getInputEntityType();
-            if (entityType != null && entityTypeToBucketMap.containsKey(entityType)) {
-                Item bucketItem = entityTypeToBucketMap.get(entityType);
-                RECIPE_TO_BUCKET_MAP.put(recipe.getId(), bucketItem);
-            } else {
-                Item bucket = recipe.getSoupBase().getBucket();
-                RECIPE_TO_BUCKET_MAP.put(recipe.getId(), bucket);
-            }
-        });
         return stockpotRecipes;
     }
 
@@ -93,15 +66,19 @@ public class StockpotRecipeCategory implements IRecipeCategory<StockpotRecipe> {
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, StockpotRecipe recipe, IFocusGroup focuses) {
         NonNullList<Ingredient> inputs = recipe.getIngredients();
-        ItemStack output = recipe.getResult();
+        ItemStack output = recipe.result();
         for (int i = 0; i < inputs.size(); i++) {
             int xOffset = (i % 3) * 18 + 15;
             int yOffset = (i / 3) * 18 + 25;
             builder.addSlot(RecipeIngredientRole.INPUT, xOffset, yOffset).addIngredients(inputs.get(i)).setBackground(slotDraw, -1, -1);
         }
-        Item bucket = RECIPE_TO_BUCKET_MAP.get(recipe.getId());
-        if (bucket != null) {
-            builder.addSlot(RecipeIngredientRole.INPUT, 72, 61).addIngredients(Ingredient.of(bucket));
+        ISoupBase soupBase = SoupBaseManager.getSoupBase(recipe.soupBase());
+        if (soupBase == null) {
+            throw new RuntimeException("No soup found for " + recipe.soupBase());
+        }
+        ItemStack displayStack = soupBase.getDisplayStack();
+        if (!displayStack.isEmpty()) {
+            builder.addSlot(RecipeIngredientRole.INPUT, 72, 61).addIngredients(Ingredient.of(displayStack));
         }
         builder.addSlot(RecipeIngredientRole.OUTPUT, 143, 60).addItemStack(output);
     }

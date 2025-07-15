@@ -4,23 +4,23 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public interface IPot {
+public interface IStockpot {
     /**
-     * 锅的起始状态。此时可以放入原料
+     * 起始状态。此时锅内没有任何东西，需要放入汤底
      */
-    int PUT_INGREDIENT = 0;
+    int PUT_SOUP_BASE = 0;
+    /**
+     * 放入汤底后，等待放入原料。此时锅内有汤底，但没有原料
+     */
+    int PUT_INGREDIENT = 1;
     /**
      * 放入原料后，锅开始烹饪
      */
-    int COOKING = 1;
+    int COOKING = 2;
     /**
      * 烹饪完成。此时可以取出产品
      */
-    int FINISHED = 2;
-    /**
-     * 烹饪超时，此时只能取出黑暗料理
-     */
-    int BURNT = 3;
+    int FINISHED = 3;
 
     /**
      * 获取当前状态
@@ -38,16 +38,41 @@ public interface IPot {
     boolean hasHeatSource(Level level);
 
     /**
-     * 执行放油逻辑
-     * <p>
-     * 注意这个方法没有检查当前方块是否有油
+     * 检查锅是否有盖子，盖子盖上后汤锅才会进行烹饪
+     *
+     * @return 如果有盖子则返回 true，否则返回 false
+     */
+    boolean hasLid();
+
+    /**
+     * 揭开、盖上锅盖
      *
      * @param level 使用者所处的 level
      * @param user  使用者
-     * @param stack 油，或者带油的锅铲
-     * @return 如果放油成功则返回 true，否则返回 false
+     * @param stack 使用者所持有的物品，如果是锅盖则盖上锅盖，如果是空物品则揭开锅盖
+     * @return 如果操作成功则返回 true，否则返回 false
      */
-    boolean onPlaceOil(Level level, LivingEntity user, ItemStack stack);
+    boolean onLitClick(Level level, LivingEntity user, ItemStack stack);
+
+    /**
+     * 添加汤底到锅中
+     *
+     * @param level  使用者所处的 level
+     * @param user   使用者
+     * @param bucket 要添加的汤底物品
+     * @return 如果添加成功则返回 true，否则返回 false
+     */
+    boolean addSoupBase(Level level, LivingEntity user, ItemStack bucket);
+
+    /**
+     * 移除锅中的汤底
+     *
+     * @param level  使用者所处的 level
+     * @param user   使用者
+     * @param bucket 承装汤底的容器
+     * @return 如果移除成功则返回 true，否则返回 false
+     */
+    boolean removeSoupBase(Level level, LivingEntity user, ItemStack bucket);
 
     /**
      * 添加原料到锅中
@@ -67,15 +92,6 @@ public interface IPot {
      * @return 如果移除成功则返回 true，否则返回 false
      */
     boolean removeIngredient(Level level, LivingEntity user);
-
-    /**
-     * 锅铲点击锅时的逻辑
-     *
-     * @param level  使用者所处的 level
-     * @param user   使用者
-     * @param shovel 锅铲
-     */
-    void onShovelHit(Level level, LivingEntity user, ItemStack shovel);
 
     /**
      * 从锅中取出产品

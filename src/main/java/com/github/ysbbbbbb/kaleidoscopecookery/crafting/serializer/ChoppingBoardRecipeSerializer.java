@@ -1,6 +1,6 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.recipe.serializer;
+package com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.recipe.ChoppingBoardRecipe;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.ChoppingBoardRecipe;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;

@@ -81,7 +81,7 @@ public class TableBlockEntityRender implements BlockEntityRenderer<TableBlockEnt
         }
 
         poseStack.pushPose();
-        poseStack.translate(0.5, 1.25, 0.5);
+        poseStack.translate(0.5, 1.3125, 0.5);
         poseStack.scale(0.65F, 0.65F, 0.65F);
 
         if (count == 1) {
@@ -91,63 +91,63 @@ public class TableBlockEntityRender implements BlockEntityRenderer<TableBlockEnt
         } else if (count == 2) {
             poseStack.pushPose();
             this.rotation(poseStack, axis);
-            poseStack.translate(0, 0, -0.25);
+            poseStack.translate(-0.25, 0, 0.1);
             ItemStack stack1 = items.getStackInSlot(0);
             itemRenderer.renderStatic(stack1, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
             poseStack.popPose();
 
             poseStack.pushPose();
             this.rotation(poseStack, axis);
-            poseStack.translate(0, 0, 0.375);
+            poseStack.translate(0.25, 0.01, -0.1);
             ItemStack stack2 = items.getStackInSlot(1);
             itemRenderer.renderStatic(stack2, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
             poseStack.popPose();
         } else if (count == 3) {
             poseStack.pushPose();
             this.rotation(poseStack, axis);
-            poseStack.translate(-0.25, 0, -0.25);
+            poseStack.translate(0.25, 0, -0.2);
             ItemStack stack1 = items.getStackInSlot(0);
             itemRenderer.renderStatic(stack1, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
             poseStack.popPose();
 
             poseStack.pushPose();
             this.rotation(poseStack, axis);
-            poseStack.translate(-0.25, 0, 0.375);
+            poseStack.translate(-0.25, 0.01, 0);
             ItemStack stack2 = items.getStackInSlot(1);
             itemRenderer.renderStatic(stack2, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
             poseStack.popPose();
 
             poseStack.pushPose();
             this.rotation(poseStack, axis);
-            poseStack.translate(0.375, 0, 0);
+            poseStack.translate(0.24, 0.02, 0.2);
             ItemStack stack3 = items.getStackInSlot(2);
             itemRenderer.renderStatic(stack3, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
             poseStack.popPose();
         } else {
             poseStack.pushPose();
             this.rotation(poseStack, axis);
-            poseStack.translate(-0.25, 0, -0.25);
+            poseStack.translate(0.25, 0, -0.3);
             ItemStack stack1 = items.getStackInSlot(0);
             itemRenderer.renderStatic(stack1, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
             poseStack.popPose();
 
             poseStack.pushPose();
             this.rotation(poseStack, axis);
-            poseStack.translate(-0.25, 0, 0.375);
+            poseStack.translate(-0.24, 0.01, -0.1);
             ItemStack stack2 = items.getStackInSlot(1);
             itemRenderer.renderStatic(stack2, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
             poseStack.popPose();
 
             poseStack.pushPose();
             this.rotation(poseStack, axis);
-            poseStack.translate(0.35, 0, -0.255);
+            poseStack.translate(0.24, 0.02, 0.1);
             ItemStack stack3 = items.getStackInSlot(2);
             itemRenderer.renderStatic(stack3, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
             poseStack.popPose();
 
             poseStack.pushPose();
             this.rotation(poseStack, axis);
-            poseStack.translate(0.35, 0, 0.37);
+            poseStack.translate(-0.25, 0.03, 0.3);
             ItemStack stack4 = items.getStackInSlot(3);
             itemRenderer.renderStatic(stack4, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, table.getLevel(), 0);
             poseStack.popPose();
@@ -158,9 +158,9 @@ public class TableBlockEntityRender implements BlockEntityRenderer<TableBlockEnt
 
     private void rotation(PoseStack poseStack, Direction.Axis axis) {
         if (axis == Direction.Axis.X) {
-            poseStack.mulPose(Axis.YP.rotationDegrees(30));
+            poseStack.mulPose(Axis.YP.rotationDegrees(180));
         } else {
-            poseStack.mulPose(Axis.YP.rotationDegrees(150));
+            poseStack.mulPose(Axis.YP.rotationDegrees(90));
         }
     }
 }

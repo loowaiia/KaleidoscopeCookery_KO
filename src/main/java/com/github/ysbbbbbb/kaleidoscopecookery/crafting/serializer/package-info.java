@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package com.github.ysbbbbbb.kaleidoscopecookery.recipe.serializer;
+package com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

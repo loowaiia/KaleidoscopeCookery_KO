@@ -58,7 +58,8 @@ public class ChiliRistraBlock extends Block {
         if (hand != InteractionHand.MAIN_HAND) {
             return InteractionResult.PASS;
         }
-        if (!player.getMainHandItem().isEmpty() && !player.getMainHandItem().is(ModItems.RED_CHILI.get())) {
+        ItemStack mainHandItem = player.getMainHandItem();
+        if (!mainHandItem.isEmpty() && !mainHandItem.is(ModItems.RED_CHILI.get())) {
             return InteractionResult.PASS;
         }
         if (state.getValue(SHEARED)) {
@@ -67,7 +68,7 @@ public class ChiliRistraBlock extends Block {
             level.setBlock(pos, state.setValue(SHEARED, true), Block.UPDATE_ALL);
         }
         ItemStack redChili = new ItemStack(ModItems.RED_CHILI.get(), 3);
-        if (player.getMainHandItem().isEmpty()) {
+        if (mainHandItem.isEmpty()) {
             player.setItemInHand(InteractionHand.MAIN_HAND, redChili);
         } else {
             ItemHandlerHelper.giveItemToPlayer(player, redChili);

@@ -1,35 +1,28 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IShawarmaSpit;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.ShawarmaSpitBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModParticles;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.ItemHandlerHelper;
 
-import javax.annotation.Nullable;
-
-public class ShawarmaSpitBlockEntity extends BlockEntity {
+public class ShawarmaSpitBlockEntity extends BaseBlockEntity implements IShawarmaSpit {
     private static final int MAX_ITEMS = 8;
 
     public static final String COOKING_ITEM = "CookingItem";
@@ -45,6 +38,7 @@ public class ShawarmaSpitBlockEntity extends BlockEntity {
         super(ModBlocks.SHAWARMA_SPIT_BE.get(), pPos, pBlockState);
     }
 
+    @Override
     public boolean onPutCookingItem(Level level, ItemStack itemStack) {
         // 先判断能否放入物品
         if (!this.cookingItem.isEmpty() || !this.cookedItem.isEmpty()) {
@@ -73,6 +67,7 @@ public class ShawarmaSpitBlockEntity extends BlockEntity {
         }).orElse(false);
     }
 
+    @Override
     public boolean onTakeCookedItem(Level level, LivingEntity entity) {
         ItemStack mainHandItem = entity.getMainHandItem();
 
@@ -97,19 +92,10 @@ public class ShawarmaSpitBlockEntity extends BlockEntity {
         this.cookTime = 0;
         this.refresh();
 
-        if (mainHandItem.isEmpty()) {
-            entity.setItemInHand(InteractionHand.MAIN_HAND, copy);
-        } else {
-            if (entity instanceof Player player) {
-                ItemHandlerHelper.giveItemToPlayer(player, copy);
-            } else {
-                Block.popResource(level, this.worldPosition, copy);
-            }
-        }
         if (!mainHandItem.is(TagMod.KITCHEN_KNIFE) && this.getBlockState().getValue(ShawarmaSpitBlock.POWERED)) {
             entity.hurt(level.damageSources().inFire(), 1);
         }
-
+        ItemUtils.getItemToLivingEntity(entity, copy);
         if (level instanceof ServerLevel) {
             level.playSound(null,
                     worldPosition.getX() + 0.5,
@@ -172,14 +158,6 @@ public class ShawarmaSpitBlockEntity extends BlockEntity {
         }
     }
 
-    public void refresh() {
-        this.setChanged();
-        if (level != null) {
-            BlockState state = level.getBlockState(worldPosition);
-            level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
-        }
-    }
-
     @Override
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
@@ -198,16 +176,5 @@ public class ShawarmaSpitBlockEntity extends BlockEntity {
             this.cookedItem = ItemStack.of(tag.getCompound(COOKED_ITEM));
         }
         this.cookTime = tag.getInt(COOK_TIME);
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
-    }
-
-    @Nullable
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
     }
 }

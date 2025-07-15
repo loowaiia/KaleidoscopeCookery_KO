@@ -12,10 +12,9 @@
       "item": "minecraft:bone_meal"
     }
   ],
-  "input_entity_type": "minecraft:cod",
   "result": {
     "item": "kaleidoscope_cookery:seafood_miso_soup"
   },
-  "soup_base": "minecraft:water",
+  "soup_base": "minecraft:cod_bucket",
   "time": 300
 }

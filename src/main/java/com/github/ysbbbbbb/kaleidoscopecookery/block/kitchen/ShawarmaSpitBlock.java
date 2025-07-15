@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IShawarmaSpit;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.ShawarmaSpitBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.google.common.collect.Lists;
@@ -77,7 +78,7 @@ public class ShawarmaSpitBlock extends HorizontalDirectionalBlock implements Sim
             return InteractionResult.PASS;
         }
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof ShawarmaSpitBlockEntity shawarmaSpit) {
+        if (blockEntity instanceof IShawarmaSpit shawarmaSpit) {
             ItemStack heldItem = player.getItemInHand(hand);
             if (shawarmaSpit.onPutCookingItem(level, heldItem)) {
                 return InteractionResult.SUCCESS;

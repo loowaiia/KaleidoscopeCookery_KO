@@ -178,22 +178,11 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
         builder.add(AXIS, POSITION, HAS_CARPET, WATERLOGGED);
     }
 
-    /**
-     * 根据指定方向和位置，计算桌子的连接状态和朝向
-     */
-    private BlockState getConnectedState(LevelAccessor levelAccessor, BlockPos pos, BlockState baseState) {
-        BlockState northState = levelAccessor.getBlockState(pos.north());
-        BlockState southState = levelAccessor.getBlockState(pos.south());
-        if (northState.is(this) && southState.is(this)) {
-            return baseState.setValue(POSITION, MIDDLE).setValue(AXIS, Direction.Axis.Z);
+    private BlockState checkEastWestState(LevelAccessor levelAccessor, BlockPos pos, BlockState baseState) {
+        // 如果自己本身已经成为 Z 方向的组合桌，那么不更新
+        if (baseState.getValue(AXIS) == Direction.Axis.Z && baseState.getValue(POSITION) != SINGLE) {
+            return baseState;
         }
-        if (!northState.is(this) && southState.is(this)) {
-            return baseState.setValue(POSITION, LEFT).setValue(AXIS, Direction.Axis.Z);
-        }
-        if (northState.is(this) && !southState.is(this)) {
-            return baseState.setValue(POSITION, RIGHT).setValue(AXIS, Direction.Axis.Z);
-        }
-
         BlockState westState = levelAccessor.getBlockState(pos.west());
         BlockState eastState = levelAccessor.getBlockState(pos.east());
         if (eastState.is(this) && westState.is(this)) {
@@ -205,7 +194,25 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
         if (!eastState.is(this) && westState.is(this)) {
             return baseState.setValue(POSITION, RIGHT).setValue(AXIS, Direction.Axis.X);
         }
+        return baseState.setValue(POSITION, SINGLE);
+    }
 
+    private BlockState checkNorthSouthState(LevelAccessor levelAccessor, BlockPos pos, BlockState baseState) {
+        // 如果自己本身已经成为 X 方向的组合桌，那么不更新
+        if (baseState.getValue(AXIS) == Direction.Axis.X && baseState.getValue(POSITION) != SINGLE) {
+            return baseState;
+        }
+        BlockState northState = levelAccessor.getBlockState(pos.north());
+        BlockState southState = levelAccessor.getBlockState(pos.south());
+        if (northState.is(this) && southState.is(this)) {
+            return baseState.setValue(POSITION, MIDDLE).setValue(AXIS, Direction.Axis.Z);
+        }
+        if (!northState.is(this) && southState.is(this)) {
+            return baseState.setValue(POSITION, LEFT).setValue(AXIS, Direction.Axis.Z);
+        }
+        if (northState.is(this) && !southState.is(this)) {
+            return baseState.setValue(POSITION, RIGHT).setValue(AXIS, Direction.Axis.Z);
+        }
         return baseState.setValue(POSITION, SINGLE);
     }
 
@@ -215,20 +222,12 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
             levelAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
         }
         if (direction.getAxis() == Direction.Axis.X) {
-            BlockState northState = levelAccessor.getBlockState(pos.north());
-            BlockState southState = levelAccessor.getBlockState(pos.south());
-            if (northState.is(this) || southState.is(this)) {
-                return state;
-            }
+            return checkEastWestState(levelAccessor, pos, state);
         }
         if (direction.getAxis() == Direction.Axis.Z) {
-            BlockState westState = levelAccessor.getBlockState(pos.west());
-            BlockState eastState = levelAccessor.getBlockState(pos.east());
-            if (westState.is(this) || eastState.is(this)) {
-                return state;
-            }
+            return checkNorthSouthState(levelAccessor, pos, state);
         }
-        return getConnectedState(levelAccessor, pos, state);
+        return state;
     }
 
     @Override
@@ -236,9 +235,17 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Level level = context.getLevel();
         BlockPos clickedPos = context.getClickedPos();
+        Direction direction = context.getHorizontalDirection();
         boolean hasWater = level.getFluidState(clickedPos).getType() == Fluids.WATER;
         BlockState base = this.defaultBlockState().setValue(WATERLOGGED, hasWater);
-        return getConnectedState(level, clickedPos, base);
+
+        if (direction.getAxis() == Direction.Axis.X) {
+            return checkNorthSouthState(level, clickedPos, base);
+        } else if (direction.getAxis() == Direction.Axis.Z) {
+            return checkEastWestState(level, clickedPos, base);
+        }
+
+        return base;
     }
 
     @Override

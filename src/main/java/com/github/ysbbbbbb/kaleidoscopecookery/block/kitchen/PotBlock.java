@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IPot;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.PotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
@@ -88,7 +89,7 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock,
             return InteractionResult.PASS;
         }
         // 开始执行炒菜逻辑检查
-        if (!(level.getBlockEntity(pos) instanceof PotBlockEntity pot)) {
+        if (!(level.getBlockEntity(pos) instanceof IPot pot)) {
             return InteractionResult.PASS;
         }
         ItemStack itemInHand = player.getItemInHand(hand);
@@ -98,7 +99,7 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock,
             return InteractionResult.SUCCESS;
         }
         // 再检查成品取出逻辑
-        if (pot.takeOutProduct(level, player)) {
+        if (pot.takeOutProduct(level, player, player.getMainHandItem())) {
             return InteractionResult.SUCCESS;
         }
         // 然后检查热源

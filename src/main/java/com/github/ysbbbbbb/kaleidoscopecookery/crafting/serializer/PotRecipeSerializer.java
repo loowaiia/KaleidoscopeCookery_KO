@@ -1,6 +1,6 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.recipe.serializer;
+package com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.recipe.PotRecipe;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.PotRecipe;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -55,11 +55,11 @@ public class PotRecipeSerializer implements RecipeSerializer<PotRecipe> {
 
     @Override
     public void toNetwork(FriendlyByteBuf buf, PotRecipe recipe) {
-        buf.writeVarInt(recipe.getTime());
-        buf.writeVarInt(recipe.getStirFryCount());
-        recipe.getCarrier().toNetwork(buf);
+        buf.writeVarInt(recipe.time());
+        buf.writeVarInt(recipe.stirFryCount());
+        recipe.carrier().toNetwork(buf);
         buf.writeVarInt(recipe.getIngredients().size());
         recipe.getIngredients().forEach(i -> i.toNetwork(buf));
-        buf.writeItem(recipe.getResult());
+        buf.writeItem(recipe.result());
     }
 }

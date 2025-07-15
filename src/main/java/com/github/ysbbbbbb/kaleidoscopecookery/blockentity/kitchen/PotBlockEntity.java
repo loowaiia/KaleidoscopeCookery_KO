@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IPot;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.PotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
@@ -9,7 +10,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModParticles;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenShovelItem;
-import com.github.ysbbbbbb.kaleidoscopecookery.recipe.PotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -45,11 +45,6 @@ import static com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.PotBlock.SHO
 import static com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry.*;
 
 public class PotBlockEntity extends BaseBlockEntity implements IPot {
-    public static final int PUT_INGREDIENT = 0;
-    public static final int COOKING = 1;
-    public static final int FINISHED = 2;
-    public static final int BURNT = 3;
-
     private static final int PUT_INGREDIENT_TIME = 60 * 20;
     private static final int TAKEOUT_TIME = 40 * 20;
     private static final int BURNT_TIME = 20 * 20;
@@ -283,10 +278,10 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
         SimpleContainer container = this.getContainer();
         level.getRecipeManager().getRecipeFor(ModRecipes.POT_RECIPE, container, level).ifPresentOrElse(recipe -> {
             // 如果合成表符合，那么进入炒菜阶段
-            this.carrier = recipe.getCarrier();
+            this.carrier = recipe.carrier();
             this.result = recipe.assemble(container, level.registryAccess());
-            this.currentTick = recipe.getTime();
-            this.stirFryCount = recipe.getStirFryCount();
+            this.currentTick = recipe.time();
+            this.stirFryCount = recipe.stirFryCount();
         }, () -> {
             // 不符合，进入迷之炒菜阶段
             this.carrier = Ingredient.of(Items.BOWL);
@@ -299,23 +294,22 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
     }
 
     @Override
-    public boolean takeOutProduct(Level level, LivingEntity user) {
+    public boolean takeOutProduct(Level level, LivingEntity user, ItemStack stack) {
         // 仅在炒菜完成或炒糊阶段可以取出
         if (this.status != FINISHED && this.status != BURNT) {
             return false;
         }
         // 烧焦时取出的是黑暗料理
         ItemStack finallyResult = this.status == FINISHED ? this.result : getItem(DARK_CUISINE).getDefaultInstance();
-        ItemStack mainHandItem = user.getMainHandItem();
         if (!this.carrier.isEmpty()) {
-            return this.takeOutWithCarrier(level, user, mainHandItem, finallyResult);
+            return this.takeOutWithCarrier(level, user, stack, finallyResult);
         } else {
-            return this.takeOutWithoutCarrier(level, user, mainHandItem, finallyResult);
+            return this.takeOutWithoutCarrier(level, user, stack, finallyResult);
         }
     }
 
-    private boolean takeOutWithoutCarrier(Level level, LivingEntity user, ItemStack mainHandItem, ItemStack finallyResult) {
-        if (mainHandItem.is(ModItems.KITCHEN_SHOVEL.get())) {
+    private boolean takeOutWithoutCarrier(Level level, LivingEntity user, ItemStack stack, ItemStack finallyResult) {
+        if (stack.is(ModItems.KITCHEN_SHOVEL.get())) {
             // 如果是玩家，则需要判断是否潜行才能取出
             if (user instanceof Player player && !player.isSecondaryUseActive()) {
                 return false;
@@ -473,6 +467,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
         return true;
     }
 
+    @Override
     public int getStatus() {
         return status;
     }

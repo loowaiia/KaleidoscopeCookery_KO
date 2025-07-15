@@ -55,7 +55,7 @@ public class KitchenShovelItem extends ShovelItem {
             && player != null && player.isSecondaryUseActive()
             && potBlockEntity.getStatus() == PotBlockEntity.FINISHED
             && !potBlockEntity.hasCarrier()) {
-            potBlockEntity.takeOutProduct(level, player);
+            potBlockEntity.takeOutProduct(level, player, stack);
             return InteractionResult.SUCCESS;
         }
         return super.onItemUseFirst(stack, context);

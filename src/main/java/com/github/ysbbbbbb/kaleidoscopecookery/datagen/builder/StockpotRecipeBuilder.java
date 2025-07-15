@@ -2,7 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
-import com.github.ysbbbbbb.kaleidoscopecookery.recipe.serializer.StockpotRecipeSerializer;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.StockpotRecipeSerializer;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -11,13 +11,11 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,10 +27,9 @@ import java.util.function.Consumer;
 public class StockpotRecipeBuilder implements RecipeBuilder {
     private static final String NAME = "stockpot";
     private List<Ingredient> ingredients = Lists.newArrayList();
-    private @Nullable EntityType<?> inputEntityType;
     private ItemStack result = ItemStack.EMPTY;
     private int time = StockpotRecipeSerializer.DEFAULT_TIME;
-    private Fluid soupBase = StockpotRecipeSerializer.DEFAULT_SOUP_BASE;
+    private ResourceLocation soupBase = StockpotRecipeSerializer.DEFAULT_SOUP_BASE;
     private ResourceLocation cookingTexture = StockpotRecipeSerializer.DEFAULT_COOKING_TEXTURE;
     private ResourceLocation finishedTexture = StockpotRecipeSerializer.DEFAULT_FINISHED_TEXTURE;
     private int cookingBubbleColor = StockpotRecipeSerializer.DEFAULT_COOKING_BUBBLE_COLOR;
@@ -62,8 +59,8 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
-    public StockpotRecipeBuilder addInputEntityType(EntityType<?> entityType) {
-        this.inputEntityType = entityType;
+    public StockpotRecipeBuilder setSoupBase(ResourceLocation soupBase) {
+        this.soupBase = soupBase;
         return this;
     }
 
@@ -88,11 +85,6 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
 
     public StockpotRecipeBuilder setTime(int time) {
         this.time = time;
-        return this;
-    }
-
-    public StockpotRecipeBuilder setSoupBase(Fluid soupBase) {
-        this.soupBase = soupBase;
         return this;
     }
 
@@ -152,31 +144,29 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
 
     @Override
     public void save(Consumer<FinishedRecipe> recipeOutput, ResourceLocation id) {
-        recipeOutput.accept(new StockpotFinishedRecipe(id, this.ingredients, this.inputEntityType, this.result,
-                this.time, this.soupBase, this.cookingTexture, this.finishedTexture, this.cookingBubbleColor, this.finishedBubbleColor));
+        recipeOutput.accept(new StockpotFinishedRecipe(id, this.ingredients, this.soupBase, this.result,
+                this.time, this.cookingTexture, this.finishedTexture, this.cookingBubbleColor, this.finishedBubbleColor));
     }
 
-    public class StockpotFinishedRecipe implements FinishedRecipe {
+    public static class StockpotFinishedRecipe implements FinishedRecipe {
         private final ResourceLocation id;
         private final List<Ingredient> ingredients;
-        private final @Nullable EntityType<?> inputEntityType;
+        private final ResourceLocation soupBase;
         private final ItemStack result;
         private final int time;
-        private final Fluid soupBase;
         private final ResourceLocation cookingTexture;
         private final ResourceLocation finishedTexture;
         private final int cookingBubbleColor;
         private final int finishedBubbleColor;
 
-        public StockpotFinishedRecipe(ResourceLocation id, List<Ingredient> ingredients, @Nullable EntityType<?> inputEntityType, ItemStack result,
-                                      int time, Fluid soupBase, ResourceLocation cookingTexture, ResourceLocation finishedTexture,
+        public StockpotFinishedRecipe(ResourceLocation id, List<Ingredient> ingredients, ResourceLocation soupBase, ItemStack result,
+                                      int time, ResourceLocation cookingTexture, ResourceLocation finishedTexture,
                                       int cookingBubbleColor, int finishedBubbleColor) {
             this.id = id;
             this.ingredients = ingredients;
-            this.inputEntityType = inputEntityType;
+            this.soupBase = soupBase;
             this.result = result;
             this.time = time;
-            this.soupBase = soupBase;
             this.cookingTexture = cookingTexture;
             this.finishedTexture = finishedTexture;
             this.cookingBubbleColor = cookingBubbleColor;
@@ -188,10 +178,7 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
             JsonArray ingredientsJson = new JsonArray();
             this.ingredients.stream().filter(i -> i != Ingredient.EMPTY).forEach(i -> ingredientsJson.add(i.toJson()));
             json.add("ingredients", ingredientsJson);
-            if (this.inputEntityType != null) {
-                json.addProperty("input_entity_type", Objects.requireNonNull(ForgeRegistries.ENTITY_TYPES.getKey(this.inputEntityType)).toString());
-            }
-
+            json.addProperty("soup_base", this.soupBase.toString());
             JsonObject itemJson = new JsonObject();
             itemJson.addProperty("item", Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.result.getItem())).toString());
             if (this.result.getCount() > 1) {
@@ -200,7 +187,6 @@ public class StockpotRecipeBuilder implements RecipeBuilder {
             json.add("result", itemJson);
 
             json.addProperty("time", this.time);
-            json.addProperty("soup_base", Objects.requireNonNull(ForgeRegistries.FLUIDS.getKey(this.soupBase)).toString());
             json.addProperty("cooking_texture", this.cookingTexture.toString());
             json.addProperty("finished_texture", this.finishedTexture.toString());
             json.addProperty("cooking_bubble_color", this.cookingBubbleColor);

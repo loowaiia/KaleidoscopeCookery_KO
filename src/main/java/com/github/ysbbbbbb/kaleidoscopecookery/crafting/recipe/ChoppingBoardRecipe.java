@@ -1,4 +1,4 @@
-package com.github.ysbbbbbb.kaleidoscopecookery.recipe;
+package com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import net.minecraft.resources.ResourceLocation;

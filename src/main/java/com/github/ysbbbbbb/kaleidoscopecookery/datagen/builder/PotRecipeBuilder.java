@@ -144,7 +144,7 @@ public class PotRecipeBuilder implements RecipeBuilder {
         recipeOutput.accept(new PotFinishedRecipe(id, this.time, this.stirFryCount, this.carrier, this.ingredients, this.result));
     }
 
-    public class PotFinishedRecipe implements FinishedRecipe {
+    public static class PotFinishedRecipe implements FinishedRecipe {
         private final ResourceLocation id;
         private final int time;
         private final int stirFryCount;
