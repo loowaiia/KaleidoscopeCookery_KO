@@ -1,8 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"render_type": "cutout",
+	"texture_size": [32, 32],
 	"textures": {
 		"1": "kaleidoscope_cookery:block/plate",
+		"2": "kaleidoscope_cookery:block/dark_cuisine",
 		"particle": "kaleidoscope_cookery:block/plate"
 	},
 	"elements": [
@@ -10,12 +12,12 @@
 			"from": [1, 0, 1],
 			"to": [15, 2, 15],
 			"faces": {
-				"north": {"uv": [1, 2, 15, 0], "texture": "#1"},
-				"east": {"uv": [1, 2, 15, 0], "texture": "#1"},
-				"south": {"uv": [1, 2, 15, 0], "texture": "#1"},
-				"west": {"uv": [1, 2, 15, 0], "texture": "#1"},
-				"up": {"uv": [1, 1, 15, 15], "texture": "#1"},
-				"down": {"uv": [1, 1, 15, 15], "texture": "#1"}
+				"north": {"uv": [9, 9.5, 16, 8.5], "texture": "#2"},
+				"east": {"uv": [9, 9.5, 16, 8.5], "texture": "#2"},
+				"south": {"uv": [9, 9.5, 16, 8.5], "texture": "#2"},
+				"west": {"uv": [9, 9.5, 16, 8.5], "texture": "#2"},
+				"up": {"uv": [9, 9, 16, 16], "texture": "#2"},
+				"down": {"uv": [1, 1, 15, 15], "texture": "#1", "cullface": "down"}
 			}
 		}
 	],
