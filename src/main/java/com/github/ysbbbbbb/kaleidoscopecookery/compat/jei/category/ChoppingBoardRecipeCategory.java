@@ -1,9 +1,9 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.compat.jei.category;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.ChoppingBoardRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
-import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.ChoppingBoardRecipe;
 import com.google.common.collect.Lists;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -27,10 +27,13 @@ import java.util.List;
 
 public class ChoppingBoardRecipeCategory implements IRecipeCategory<ChoppingBoardRecipe> {
     public static final RecipeType<ChoppingBoardRecipe> TYPE = RecipeType.create(KaleidoscopeCookery.MOD_ID, "chopping_board", ChoppingBoardRecipe.class);
+
     private static final ResourceLocation BG = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "textures/gui/jei/chopping_board.png");
     private static final MutableComponent TITLE = Component.translatable("block.kaleidoscope_cookery.chopping_board");
+
     public static final int WIDTH = 176;
     public static final int HEIGHT = 78;
+
     private final IDrawable bgDraw;
     private final IDrawable iconDraw;
 

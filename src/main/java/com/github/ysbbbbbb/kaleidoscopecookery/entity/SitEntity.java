@@ -70,25 +70,25 @@ public class SitEntity extends Entity {
     }
 
     @Override
-    public boolean skipAttackInteraction(Entity pEntity) {
+    public boolean skipAttackInteraction(Entity targetEntity) {
         return true;
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurt(DamageSource damageSource, float damageAmount) {
         return false;
     }
 
     @Override
-    public void move(MoverType pType, Vec3 pPos) {
+    public void move(MoverType moverType, Vec3 movement) {
     }
 
     @Override
-    public void push(Entity entity) {
+    public void push(Entity pushedEntity) {
     }
 
     @Override
-    public void push(double pX, double pY, double pZ) {
+    public void push(double x, double y, double z) {
     }
 
     @Override
@@ -97,7 +97,7 @@ public class SitEntity extends Entity {
     }
 
     @Override
-    public void thunderHit(ServerLevel pLevel, LightningBolt pLightning) {
+    public void thunderHit(ServerLevel serverLevel, LightningBolt lightningBolt) {
     }
 
     @Override

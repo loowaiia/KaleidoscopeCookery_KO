@@ -118,7 +118,7 @@ public class ScarecrowEntity extends LivingEntity {
             return InteractionResult.SUCCESS;
         }
 
-        if (!(itemInHand.getItem() instanceof BlockItem blockItem) || !(blockItem.getBlock() instanceof SkullBlock skullBlock)) {
+        if (!(itemInHand.getItem() instanceof BlockItem blockItem) || !(blockItem.getBlock() instanceof SkullBlock)) {
             return InteractionResult.PASS;
         }
 

@@ -34,7 +34,6 @@ public class PotRecipeCategory implements IRecipeCategory<PotRecipe> {
     private static final MutableComponent TITLE = Component.translatable("block.kaleidoscope_cookery.pot");
     public static final int WIDTH = 176;
     public static final int HEIGHT = 102;
-    private final IGuiHelper guiHelper;
     private final IDrawable bgDraw;
     private final IDrawable slotDraw;
     private final IDrawable iconDraw;
@@ -43,7 +42,6 @@ public class PotRecipeCategory implements IRecipeCategory<PotRecipe> {
         this.slotDraw = guiHelper.getSlotDrawable();
         this.bgDraw = guiHelper.createDrawable(BG, 0, 0, WIDTH, HEIGHT);
         this.iconDraw = guiHelper.createDrawableItemLike(ModItems.POT.get());
-        this.guiHelper = guiHelper;
     }
 
     public static List<PotRecipe> getRecipes() {

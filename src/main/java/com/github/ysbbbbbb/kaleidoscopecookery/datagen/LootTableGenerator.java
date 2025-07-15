@@ -1,10 +1,10 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.misc.ChiliRistraBlock;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.EnamelBasinBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.RiceCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.EnamelBasinBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.misc.ChiliRistraBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;

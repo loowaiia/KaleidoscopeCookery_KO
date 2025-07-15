@@ -50,7 +50,6 @@ public class StrawHatItem extends ArmorItem {
                 }
                 ModelPart head = cachedModel.getHead();
                 head.copyFrom(original.head);
-                //head.y = head.y - 5;
                 return cachedModel;
             }
         });

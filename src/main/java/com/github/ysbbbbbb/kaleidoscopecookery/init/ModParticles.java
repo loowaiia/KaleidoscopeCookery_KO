@@ -3,7 +3,6 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.particle.StockpotParticleOptions;
 import com.mojang.serialization.Codec;
-import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;

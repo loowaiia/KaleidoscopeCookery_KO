@@ -22,7 +22,8 @@ public class ShawarmaSpitBlockEntityRender implements BlockEntityRenderer<Shawar
     }
 
     @Override
-    public void render(ShawarmaSpitBlockEntity shawarmaSpit, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
+    public void render(ShawarmaSpitBlockEntity shawarmaSpit, float partialTick, PoseStack poseStack,
+                       MultiBufferSource buffer, int packedLight, int packedOverlay) {
         ItemStack cookedItem = shawarmaSpit.cookedItem;
         if (cookedItem.isEmpty()) {
             return;
@@ -47,25 +48,25 @@ public class ShawarmaSpitBlockEntityRender implements BlockEntityRenderer<Shawar
         // 如果是上半部分
         if (half == DoubleBlockHalf.UPPER) {
             poseStack.translate(0.25, 0.5, 0.25);
-            for (int i = 0; i < renderItem.getCount(); i++) {
-                poseStack.pushPose();
-                poseStack.rotateAround(Axis.YP.rotationDegrees(i * 45), 0.25f, 0, 0.25f);
-                poseStack.scale(0.65F, 0.65F, 0.65F);
-                itemRenderer.renderStatic(renderItem, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, shawarmaSpit.getLevel(), 0);
-                poseStack.popPose();
-            }
+            this.renderItems(shawarmaSpit, poseStack, buffer, packedLight, packedOverlay, renderItem, itemRenderer);
         }
 
         // 如果是下半部分
         else if (half == DoubleBlockHalf.LOWER) {
             poseStack.translate(0.25, 0.875, 0.25);
-            for (int i = 0; i < renderItem.getCount(); i++) {
-                poseStack.pushPose();
-                poseStack.rotateAround(Axis.YP.rotationDegrees(i * 45), 0.25f, 0, 0.25f);
-                poseStack.scale(0.65F, 0.65F, 0.65F);
-                itemRenderer.renderStatic(renderItem, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, shawarmaSpit.getLevel(), 0);
-                poseStack.popPose();
-            }
+            this.renderItems(shawarmaSpit, poseStack, buffer, packedLight, packedOverlay, renderItem, itemRenderer);
+        }
+    }
+
+    private void renderItems(ShawarmaSpitBlockEntity shawarmaSpit, PoseStack poseStack, MultiBufferSource buffer, int packedLight,
+                             int packedOverlay, ItemStack renderItem, ItemRenderer itemRenderer) {
+        for (int i = 0; i < renderItem.getCount(); i++) {
+            poseStack.pushPose();
+            poseStack.rotateAround(Axis.YP.rotationDegrees(i * 45), 0.25f, 0, 0.25f);
+            poseStack.scale(0.65F, 0.65F, 0.65F);
+            itemRenderer.renderStatic(renderItem, ItemDisplayContext.FIXED, packedLight, packedOverlay,
+                    poseStack, buffer, shawarmaSpit.getLevel(), 0);
+            poseStack.popPose();
         }
     }
 }

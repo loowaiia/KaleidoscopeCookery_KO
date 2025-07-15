@@ -12,10 +12,11 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.ExtraCodecs;
 import org.joml.Vector3f;
 
+@SuppressWarnings("deprecation")
 public class StockpotParticleOptions extends DustParticleOptionsBase {
     public static final Codec<StockpotParticleOptions> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            ExtraCodecs.VECTOR3F.fieldOf("color").forGetter((options) -> options.color),
-            Codec.FLOAT.fieldOf("scale").forGetter((options) -> options.scale)
+            ExtraCodecs.VECTOR3F.fieldOf("color").forGetter(options -> options.color),
+            Codec.FLOAT.fieldOf("scale").forGetter(options -> options.scale)
     ).apply(instance, StockpotParticleOptions::new));
 
     public static final ParticleOptions.Deserializer<StockpotParticleOptions> DESERIALIZER = new ParticleOptions.Deserializer<>() {

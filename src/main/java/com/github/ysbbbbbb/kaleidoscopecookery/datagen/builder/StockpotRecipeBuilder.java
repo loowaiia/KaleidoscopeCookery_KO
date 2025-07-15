@@ -1,8 +1,8 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.StockpotRecipeSerializer;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

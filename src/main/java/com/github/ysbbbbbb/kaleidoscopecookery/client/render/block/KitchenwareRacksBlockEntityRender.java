@@ -18,35 +18,37 @@ public class KitchenwareRacksBlockEntityRender implements BlockEntityRenderer<Ki
     }
 
     @Override
-    public void render(KitchenwareRacksBlockEntity racks, float pPartialTick, PoseStack poseStack,
-                       MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        ItemStack itemLeft = racks.getItemLeft();
-        ItemStack itemRight = racks.getItemRight();
+    public void render(KitchenwareRacksBlockEntity blockEntity, float partialTick, PoseStack poseStack,
+                       MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+        ItemStack itemLeft = blockEntity.getItemLeft();
+        ItemStack itemRight = blockEntity.getItemRight();
 
-        int rotation = racks.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).get2DDataValue() * 90;
-        poseStack.pushPose();
+        int rotation = blockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).get2DDataValue() * 90;
         poseStack.translate(0.5, 0, 0.5);
         poseStack.mulPose(Axis.YN.rotationDegrees(rotation));
 
         if (!itemLeft.isEmpty()) {
             poseStack.pushPose();
             poseStack.translate(-0.2, 0.4375, -0.3);
-            poseStack.scale(0.75f, 0.75f, 0.75f);
-            poseStack.mulPose(Axis.XN.rotationDegrees(180));
-            poseStack.mulPose(Axis.YN.rotationDegrees(-25));
-            poseStack.mulPose(Axis.ZN.rotationDegrees(45));
-            context.getItemRenderer().renderStatic(itemLeft, ItemDisplayContext.FIXED, pPackedLight, pPackedOverlay, poseStack, pBuffer, racks.getLevel(), 0);
+            this.renderItem(blockEntity, poseStack, bufferSource, packedLight, packedOverlay, itemLeft);
             poseStack.popPose();
         }
-        if (!itemRight.isEmpty()) {
-            poseStack.translate(0.2, 0.4375, -0.3);
-            poseStack.scale(0.75f, 0.75f, 0.75f);
-            poseStack.mulPose(Axis.XN.rotationDegrees(180));
-            poseStack.mulPose(Axis.YN.rotationDegrees(-25));
-            poseStack.mulPose(Axis.ZN.rotationDegrees(45));
-            context.getItemRenderer().renderStatic(itemRight, ItemDisplayContext.FIXED, pPackedLight, pPackedOverlay, poseStack, pBuffer, racks.getLevel(), 0);
-        }
 
-        poseStack.popPose();
+        if (!itemRight.isEmpty()) {
+            poseStack.pushPose();
+            poseStack.translate(0.2, 0.4375, -0.3);
+            this.renderItem(blockEntity, poseStack, bufferSource, packedLight, packedOverlay, itemRight);
+            poseStack.popPose();
+        }
+    }
+
+    private void renderItem(KitchenwareRacksBlockEntity blockEntity, PoseStack poseStack, MultiBufferSource bufferSource,
+                            int packedLight, int packedOverlay, ItemStack itemStack) {
+        poseStack.scale(0.75f, 0.75f, 0.75f);
+        poseStack.mulPose(Axis.XN.rotationDegrees(180));
+        poseStack.mulPose(Axis.YN.rotationDegrees(-25));
+        poseStack.mulPose(Axis.ZN.rotationDegrees(45));
+        context.getItemRenderer().renderStatic(itemStack, ItemDisplayContext.FIXED, packedLight, packedOverlay,
+                poseStack, bufferSource, blockEntity.getLevel(), 0);
     }
 }

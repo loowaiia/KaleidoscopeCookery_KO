@@ -1,12 +1,15 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.BaseCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.ChiliCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.LettuceCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.RiceCropBlock;
-import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.*;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.ChairBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.CookStoolBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.FruitBasketBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.TableBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.misc.ChiliRistraBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.misc.OilBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.misc.StrawBlocks;
