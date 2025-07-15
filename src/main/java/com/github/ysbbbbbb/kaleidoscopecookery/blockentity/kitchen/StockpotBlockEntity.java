@@ -29,6 +29,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -48,6 +49,8 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
     private static final String CURRENT_TICK = "CurrentTick";
     private static final String TAKEOUT_COUNT = "TakeoutCount";
     private static final String LID_ITEM = "LidItem";
+
+    private final RecipeManager.CachedCheck<StockpotContainer, StockpotRecipe> quickCheck = RecipeManager.createCheck(ModRecipes.STOCKPOT_RECIPE);
 
     private NonNullList<ItemStack> inputs = NonNullList.withSize(StockpotRecipe.RECIPES_SIZE, ItemStack.EMPTY);
     private ResourceLocation recipeId = StockpotRecipeSerializer.EMPTY_ID;
@@ -97,46 +100,32 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
     }
 
     public void tick(Level level) {
-        // 下方没有火源
-        if (!hasHeatSource(level)) {
+        // 没放入汤底时，不进行任何 tick
+        if (this.status == PUT_SOUP_BASE) {
             return;
         }
-        boolean hasLid = hasLid();
+        // 下方没有火源
+        if (!this.hasHeatSource(level)) {
+            return;
+        }
+
+        boolean hasLid = this.hasLid();
         // 音效播放
-        if (status != PUT_SOUP_BASE && level.getGameTime() % 15 == 0) {
+        if (level.getGameTime() % 15 == 0) {
             float volume = hasLid ? 0.075f : 0.2f;
             float pitch = hasLid ? 0.1f + level.random.nextFloat() * 0.05f : 1f + level.random.nextFloat() * 0.1f;
             level.playSound(null,
                     worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5,
                     ModSounds.BLOCK_STOCKPOT.get(), SoundSource.BLOCKS, volume, pitch);
         }
-
         // 没有盖子时，不进行任何 tick，只生成粒子
         if (!hasLid) {
-            if (status != PUT_SOUP_BASE && level instanceof ServerLevel serverLevel && level.random.nextFloat() < 0.25F) {
-                int color = getBubbleColor();
-                serverLevel.sendParticles(new StockpotParticleOptions(Vec3.fromRGB24(color).toVector3f(), 1f),
-                        worldPosition.getX() + 0.25 + (level.random.nextFloat() * 0.5F),
-                        worldPosition.getY() + 0.375,
-                        worldPosition.getZ() + 0.25 + (level.random.nextFloat() * 0.5F),
-                        2,
-                        (level.random.nextFloat() - 0.5) * 0.1F,
-                        0,
-                        (level.random.nextFloat() - 0.5) * 0.1F,
-                        0
-                );
-            }
+            this.spawnParticleWithoutLid(level);
+            // 不在进行后续逻辑计算
             return;
-        }
-
-        // 有盖子时，生成白色粒子
-        if (status != PUT_SOUP_BASE && level instanceof ServerLevel serverLevel && level.random.nextFloat() < 0.05F) {
-            RandomSource random = serverLevel.random;
-            serverLevel.sendParticles(ModParticles.COOKING.get(),
-                    worldPosition.getX() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
-                    worldPosition.getY() + 0.375 + random.nextDouble() / 3,
-                    worldPosition.getZ() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
-                    1, 0, 0, 0, 0.05);
+        } else {
+            // 有盖子时，生成白色粒子
+            this.spawnParticleWithLid(level);
         }
 
         // 如果当前状态是放入素材，且素材不为空
@@ -158,6 +147,32 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             currentTick = -1;
             this.inputs.clear();
             this.refresh();
+        }
+    }
+
+    private void spawnParticleWithLid(Level level) {
+        if (level instanceof ServerLevel serverLevel && level.random.nextFloat() < 0.05F) {
+            RandomSource random = serverLevel.random;
+            serverLevel.sendParticles(ModParticles.COOKING.get(),
+                    worldPosition.getX() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
+                    worldPosition.getY() + 0.375 + random.nextDouble() / 3,
+                    worldPosition.getZ() + 0.5 + random.nextDouble() / 3 * (random.nextBoolean() ? 1 : -1),
+                    1, 0, 0, 0, 0.05);
+        }
+    }
+
+    private void spawnParticleWithoutLid(Level level) {
+        if (level instanceof ServerLevel serverLevel && serverLevel.random.nextFloat() < 0.25F) {
+            int color = this.getBubbleColor();
+            serverLevel.sendParticles(new StockpotParticleOptions(Vec3.fromRGB24(color).toVector3f(), 1f),
+                    worldPosition.getX() + 0.25 + (level.random.nextFloat() * 0.5F),
+                    worldPosition.getY() + 0.375,
+                    worldPosition.getZ() + 0.25 + (level.random.nextFloat() * 0.5F),
+                    2,
+                    (level.random.nextFloat() - 0.5) * 0.1F,
+                    0,
+                    (level.random.nextFloat() - 0.5) * 0.1F,
+                    0);
         }
     }
 
@@ -214,7 +229,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
 
     private void setRecipe(Level levelIn) {
         StockpotContainer container = new StockpotContainer(this.inputs, this.soupBaseId);
-        levelIn.getRecipeManager().getRecipeFor(ModRecipes.STOCKPOT_RECIPE, container, levelIn).ifPresentOrElse(recipe -> {
+        this.quickCheck.getRecipeFor(container, levelIn).ifPresentOrElse(recipe -> {
             this.recipeId = recipe.getId();
             this.recipe = recipe;
             this.result = recipe.assemble(container, levelIn.registryAccess());
@@ -232,11 +247,11 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
     @Override
     public boolean addSoupBase(Level level, LivingEntity user, ItemStack bucket) {
         // 必须打开盖子才能放入汤底
-        if (hasLid()) {
+        if (this.hasLid()) {
             return false;
         }
         // 当前状态是放入汤底
-        if (status != PUT_SOUP_BASE) {
+        if (this.status != PUT_SOUP_BASE) {
             return false;
         }
         for (var entry : SoupBaseManager.getAllSoupBases().entrySet()) {
@@ -259,7 +274,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
     @Override
     public boolean removeSoupBase(Level level, LivingEntity user, ItemStack bucket) {
         // 当前是放入食材，但是还没放
-        if (status == PUT_INGREDIENT && this.isEmpty() && SoupBaseManager.containsSoupBase(this.soupBaseId)) {
+        if (this.status == PUT_INGREDIENT && this.isEmpty() && SoupBaseManager.containsSoupBase(this.soupBaseId)) {
             ISoupBase soupBase = this.getSoupBase();
             if (soupBase == null || !soupBase.isContainer(bucket)) {
                 return false;
@@ -269,7 +284,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             this.status = PUT_SOUP_BASE;
             this.refresh();
 
-            ItemStack container = soupBase.getReturnContainer(level, user, bucket);
+            ItemStack container = soupBase.getReturnSoupBase(level, user, bucket);
             bucket.shrink(1);
             ItemUtils.getItemToLivingEntity(user, container);
             return true;
@@ -279,10 +294,10 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
 
     @Override
     public boolean addIngredient(Level level, LivingEntity user, ItemStack itemStack) {
-        if (hasLid()) {
+        if (this.hasLid()) {
             return false;
         }
-        if (status != PUT_INGREDIENT) {
+        if (this.status != PUT_INGREDIENT) {
             return false;
         }
         if (!itemStack.isEdible() && !itemStack.is(TagItem.POT_INGREDIENT)) {
@@ -318,7 +333,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             }
             ItemUtils.getItemToLivingEntity(user, stack.copy());
             this.inputs.set(i, ItemStack.EMPTY);
-            // 如果是汤底，且温度过高，玩家会受到伤害
+            // 如果是流体汤底，且温度过高，玩家会受到伤害
             ISoupBase soupBase = this.getSoupBase();
             if (soupBase instanceof FluidSoupBase fluidSoupBase && fluidSoupBase.getFluid().getFluidType().getTemperature() > 500) {
                 user.hurt(level.damageSources().inFire(), 1);
@@ -331,7 +346,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
 
     @Override
     public boolean takeOutProduct(Level level, LivingEntity user, ItemStack stack) {
-        if (hasLid()) {
+        if (this.hasLid()) {
             return false;
         }
         // 如果当前状态是烹饪完成
@@ -354,6 +369,7 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             this.soupBaseId = ModSoupBases.WATER;
             this.result = ItemStack.EMPTY;
             this.currentTick = -1;
+            this.renderEntity = null;
         }
         this.refresh();
         return true;

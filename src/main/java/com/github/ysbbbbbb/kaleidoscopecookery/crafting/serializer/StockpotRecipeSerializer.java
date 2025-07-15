@@ -28,8 +28,12 @@ public class StockpotRecipeSerializer implements RecipeSerializer<StockpotRecipe
     public static final ResourceLocation DEFAULT_FINISHED_TEXTURE = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "stockpot/default_finished");
 
     public static StockpotRecipe getEmptyRecipe() {
-        return new StockpotRecipe(EMPTY_ID, Lists.newArrayList(), DEFAULT_SOUP_BASE, ItemStack.EMPTY, DEFAULT_TIME,
-                DEFAULT_COOKING_TEXTURE, DEFAULT_FINISHED_TEXTURE, DEFAULT_COOKING_BUBBLE_COLOR, DEFAULT_FINISHED_BUBBLE_COLOR);
+        return new StockpotRecipe(EMPTY_ID,
+                Lists.newArrayList(), DEFAULT_SOUP_BASE,
+                ItemStack.EMPTY, DEFAULT_TIME,
+                DEFAULT_COOKING_TEXTURE, DEFAULT_FINISHED_TEXTURE,
+                DEFAULT_COOKING_BUBBLE_COLOR,
+                DEFAULT_FINISHED_BUBBLE_COLOR);
     }
 
     @Override
@@ -66,7 +70,8 @@ public class StockpotRecipeSerializer implements RecipeSerializer<StockpotRecipe
         ResourceLocation finishedTexture = buf.readResourceLocation();
         int cookingBubbleColor = buf.readVarInt();
         int finishedBubbleColor = buf.readVarInt();
-        return new StockpotRecipe(recipeId, inputs, soupBase, result, time, cookingTexture, finishedTexture,
+        return new StockpotRecipe(recipeId, inputs, soupBase, result,
+                time, cookingTexture, finishedTexture,
                 cookingBubbleColor, finishedBubbleColor);
     }
 

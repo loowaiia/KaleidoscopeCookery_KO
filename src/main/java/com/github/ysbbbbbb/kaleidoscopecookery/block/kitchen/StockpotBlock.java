@@ -39,13 +39,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+@SuppressWarnings({"deprecation", "unchecked"})
 public class StockpotBlock extends HorizontalDirectionalBlock implements EntityBlock, SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty HAS_LID = BooleanProperty.create("has_lid");
     public static final BooleanProperty HAS_BASE = BooleanProperty.create("has_base");
-    public static final VoxelShape AABB = Shapes.or(Block.box(2, 0, 2, 14, 5, 14),
+
+    private static final VoxelShape AABB = Shapes.or(
+            Block.box(2, 0, 2, 14, 5, 14),
             Block.box(1, 5, 1, 15, 7, 15));
-    public static final VoxelShape AABB_WITH_LID = Shapes.or(Block.box(2, 0, 2, 14, 9, 14),
+    private static final VoxelShape AABB_WITH_LID = Shapes.or(
+            Block.box(2, 0, 2, 14, 9, 14),
             Block.box(1, 5, 1, 15, 7, 15));
 
     public StockpotBlock() {
@@ -61,7 +65,6 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
     }
 
     @Nullable
-    @SuppressWarnings("all")
     protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(
             BlockEntityType<A> serverType, BlockEntityType<E> clientType, BlockEntityTicker<? super E> ticker) {
         return clientType == serverType ? (BlockEntityTicker<A>) ticker : null;

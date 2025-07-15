@@ -467,6 +467,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
         return true;
     }
 
+    @Override
     public int getStatus() {
         return status;
     }

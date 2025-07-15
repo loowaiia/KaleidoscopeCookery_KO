@@ -45,7 +45,7 @@ public class StrawBlocks extends RotatedPillarBlock {
             popResource(level, pos, new ItemStack(ModItems.RICE_SEED.get(), 4));
             if (level instanceof ServerLevel serverLevel) {
                 serverLevel.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                        10, 0.25, 0.1, 0.25, 0.1);
+                        10, 0.1, 0.1, 0.1, 0.05);
             }
         }
     }

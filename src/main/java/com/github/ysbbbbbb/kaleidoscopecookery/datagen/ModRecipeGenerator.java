@@ -437,10 +437,10 @@ public class ModRecipeGenerator extends RecipeProvider {
                 .setResult(ModItems.WILD_MUSHROOM_RABBIT_SOUP.get()).save(consumer);
         StockpotRecipeBuilder.builder().addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.CROPS_TOMATO,
                 TagCommon.CROPS_TOMATO, TagCommon.CROPS_TOMATO).setResult(ModItems.TOMATO_BEEF_BRISKET_SOUP.get()).save(consumer);
-        StockpotRecipeBuilder.builder().addInput(Items.PUFFERFISH, Items.PUFFERFISH, Items.SEAGRASS)
+        StockpotRecipeBuilder.builder().addInput(Items.PUFFERFISH, Items.PUFFERFISH, Items.PUFFERFISH, Items.SEAGRASS)
                 .setResult(ModItems.PUFFERFISH_SOUP.get()).save(consumer);
         StockpotRecipeBuilder.builder().addInput(Items.SEAGRASS).setSoupBase(ModSoupBases.PUFFERFISH_BUCKET)
-                .setResult(ModItems.PUFFERFISH_SOUP.get()).save(consumer, "pufferfish_soup_entity");
+                .setResult(ModItems.PUFFERFISH_SOUP.get(), 1).save(consumer, "pufferfish_soup_entity");
         StockpotRecipeBuilder.builder().addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.CROPS_TOMATO, TagCommon.CROPS_TOMATO, TagCommon.CROPS_LETTUCE)
                 .setResult(ModItems.BORSCHT.get()).save(consumer);
         StockpotRecipeBuilder.builder().addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.CROPS_TOMATO).addInput(Items.BEETROOT, Items.BEETROOT)

@@ -5,12 +5,37 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public interface IPot {
+    /**
+     * 锅的起始状态。此时可以放入原料
+     */
     int PUT_INGREDIENT = 0;
+    /**
+     * 放入原料后，锅开始烹饪
+     */
     int COOKING = 1;
+    /**
+     * 烹饪完成。此时可以取出产品
+     */
     int FINISHED = 2;
+    /**
+     * 烹饪超时，此时只能取出黑暗料理
+     */
     int BURNT = 3;
 
+    /**
+     * 获取当前状态
+     *
+     * @return 数字表示的状态
+     */
     int getStatus();
+
+    /**
+     * 检查锅下方是否有热源
+     *
+     * @param level 使用者所处的 level
+     * @return 如果有热源则返回 true，否则返回 false
+     */
+    boolean hasHeatSource(Level level);
 
     /**
      * 执行放油逻辑
@@ -61,12 +86,4 @@ public interface IPot {
      * @return 如果取出成功则返回 true，否则返回 false
      */
     boolean takeOutProduct(Level level, LivingEntity user, ItemStack stack);
-
-    /**
-     * 检查锅下方是否有热源
-     *
-     * @param level 使用者所处的 level
-     * @return 如果有热源则返回 true，否则返回 false
-     */
-    boolean hasHeatSource(Level level);
 }

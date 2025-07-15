@@ -13,6 +13,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class ItemUtils {
     public static void getItemToLivingEntity(LivingEntity entity, ItemStack stack) {
+        if (stack.isEmpty()) {
+            return;
+        }
         if (entity.getMainHandItem().isEmpty()) {
             RandomSource random = entity.level().random;
             entity.setItemInHand(InteractionHand.MAIN_HAND, stack);
