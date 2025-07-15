@@ -1,7 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init.registry;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModFoods;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.resources.ResourceLocation;
@@ -16,6 +15,8 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import static com.github.ysbbbbbb.kaleidoscopecookery.init.ModFoods.*;
 
 public class FoodBiteRegistry {
     public static final Map<ResourceLocation, FoodData> FOOD_DATA_MAP = Maps.newLinkedHashMap();
@@ -47,83 +48,81 @@ public class FoodBiteRegistry {
         FoodBiteRegistry registry = new FoodBiteRegistry();
 
         DARK_CUISINE = registry.registerFoodData("dark_cuisine", FoodData
-                .maxBites(3).setBlockFood(2, 0.1f)
-                .setBlockFood(ModFoods.DARK_CUISINE_BLOCK).setItemFood(ModFoods.DARK_CUISINE_ITEM)
+                .create(3, DARK_CUISINE_BLOCK, DARK_CUISINE_ITEM)
                 .setAnimateTick(FoodBiteAnimateTicks.DARK_CUISINE_ANIMATE_TICK));
 
         SUSPICIOUS_STIR_FRY = registry.registerFoodData("suspicious_stir_fry", FoodData
-                .maxBites(1).setBlockFood(2, 0.1f)
-                .setBlockFood(ModFoods.SUSPICIOUS_STIR_FRY).setItemFood(ModFoods.SUSPICIOUS_STIR_FRY)
+                .create(1, SUSPICIOUS_STIR_FRY_BLOCK, SUSPICIOUS_STIR_FRY_ITEM)
                 .setAnimateTick(FoodBiteAnimateTicks.SUSPICIOUS_STIR_FRY_ANIMATE_TICK));
 
         SLIME_BALL_MEAL = registry.registerFoodData("slime_ball_meal", FoodData
-                .maxBites(3).setFood(3, 0.2f));
+                .create(3, SLIME_BALL_MEAL_BLOCK, SLIME_BALL_MEAL_ITEM));
 
         FONDANT_PIE = registry.registerFoodData("fondant_pie", FoodData
-                .maxBites(4).setFood(4, 0.2f));
+                .create(4, FONDANT_PIE_BLOCK, FONDANT_PIE_ITEM));
 
         DONGPO_PORK = registry.registerFoodData("dongpo_pork", FoodData
-                .maxBites(3).setFood(3, 0.2f)
+                .create(3, DONGPO_PORK_BLOCK, DONGPO_PORK_ITEM)
                 .addLootItems(Items.BAMBOO));
 
         FONDANT_SPIDER_EYE = registry.registerFoodData("fondant_spider_eye", FoodData
-                .maxBites(4).setFood(4, 0.2f));
+                .create(4, FONDANT_SPIDER_EYE_BLOCK, FONDANT_SPIDER_EYE_ITEM));
 
         CHORUS_FRIED_EGG = registry.registerFoodData("chorus_fried_egg", FoodData
-                .maxBites(3).setFood(3, 0.2f));
+                .create(3, CHORUS_FRIED_EGG_BLOCK, CHORUS_FRIED_EGG_ITEM));
 
         BRAISED_FISH = registry.registerFoodData("braised_fish", FoodData
-                .maxBites(4).setFood(4, 0.2f)
+                .create(4, BRAISED_FISH_BLOCK, BRAISED_FISH_ITEM)
                 .addLootItems(Items.BONE, Items.BONE_MEAL));
 
         GOLDEN_SALAD = registry.registerFoodData("golden_salad", FoodData
-                .maxBites(6).setFood(6, 0.2f));
+                .create(6, GOLDEN_SALAD_BLOCK, GOLDEN_SALAD_ITEM));
 
         SPICY_CHICKEN = registry.registerFoodData("spicy_chicken", FoodData
-                .maxBites(4).setFood(4, 0.2f));
+                .create(4, SPICY_CHICKEN_BLOCK, SPICY_CHICKEN_ITEM));
 
         YAKITORI = registry.registerFoodData("yakitori", FoodData
-                .maxBites(4).setFood(4, 0.2f));
+                .create(4, YAKITORI_BLOCK, YAKITORI_ITEM));
 
         CRYSTAL_LAMB_CHOP = registry.registerFoodData("crystal_lamb_chop", FoodData
-                .maxBites(3).setFood(3, 0.2f)
+                .create(3, CRYSTAL_LAMB_CHOP_BLOCK, CRYSTAL_LAMB_CHOP_ITEM)
                 .addLootItems(Items.AMETHYST_SHARD));
 
         NETHER_STYLE_SASHIMI = registry.registerFoodData("nether_style_sashimi", FoodData
-                .maxBites(4).setFood(4, 0.2f)
+                .create(4, NETHER_STYLE_SASHIMI_BLOCK, NETHER_STYLE_SASHIMI_ITEM)
                 .addLootItems(Items.CRIMSON_FUNGUS, Items.WARPED_FUNGUS));
 
         PAN_SEARED_KNIGHT_STEAK = registry.registerFoodData("pan_seared_knight_steak", FoodData
-                .maxBites(4).setFood(4, 0.2f)
+                .create(4, PAN_SEARED_KNIGHT_STEAK_BLOCK, PAN_SEARED_KNIGHT_STEAK_ITEM)
                 .addLootItems(Items.BONE, Items.BONE_MEAL));
 
         STARGAZY_PIE = registry.registerFoodData("stargazy_pie", FoodData
-                .maxBites(4).setFood(4, 0.2f));
+                .create(4, STARGAZY_PIE_BLOCK, STARGAZY_PIE_ITEM));
 
         SWEET_AND_SOUR_ENDER_PEARLS = registry.registerFoodData("sweet_and_sour_ender_pearls", FoodData
-                .maxBites(3).setFood(3, 0.2f));
+                .create(3, SWEET_AND_SOUR_ENDER_PEARLS_BLOCK, SWEET_AND_SOUR_ENDER_PEARLS_ITEM));
 
         BLAZE_LAMB_CHOP = registry.registerFoodData("blaze_lamb_chop", FoodData
-                .maxBites(3).setFood(3, 0.2f)
+                .create(3, BLAZE_LAMB_CHOP_BLOCK, BLAZE_LAMB_CHOP_ITEM)
                 .addLootItems(Items.BLAZE_ROD));
 
         FROST_LAMB_CHOP = registry.registerFoodData("frost_lamb_chop", FoodData
-                .maxBites(3).setFood(3, 0.2f)
+                .create(3, FROST_LAMB_CHOP_BLOCK, FROST_LAMB_CHOP_ITEM)
                 .addLootItems(Items.BLUE_ICE));
 
         END_STYLE_SASHIMI = registry.registerFoodData("end_style_sashimi", FoodData
-                .maxBites(4).setFood(4, 0.2f)
+                .create(4, END_STYLE_SASHIMI_BLOCK, END_STYLE_SASHIMI_ITEM)
                 .addLootItems(Items.CHORUS_FRUIT));
 
         DESERT_STYLE_SASHIMI = registry.registerFoodData("desert_style_sashimi", FoodData
-                .maxBites(4).setFood(4, 0.2f)
+                .create(4, DESERT_STYLE_SASHIMI_BLOCK, DESERT_STYLE_SASHIMI_ITEM)
                 .addLootItems(Items.CACTUS));
 
         TUNDRA_STYLE_SASHIMI = registry.registerFoodData("tundra_style_sashimi", FoodData
-                .maxBites(4).setFood(4, 0.2f));
+                .create(4, TUNDRA_STYLE_SASHIMI_BLOCK, TUNDRA_STYLE_SASHIMI_ITEM));
 
         COLD_STYLE_SASHIMI = registry.registerFoodData("cold_style_sashimi", FoodData
-                .maxBites(4).setFood(4, 0.2f)
+                .create(4, COLD_STYLE_SASHIMI_BLOCK, COLD_STYLE_SASHIMI_ITEM)
                 .addLootItems(Items.SNOWBALL, Items.SNOWBALL));
     }
 
@@ -153,46 +152,19 @@ public class FoodBiteRegistry {
     public static final class FoodData {
         private final int maxBites;
         private final List<ItemLike> lootItems = Lists.newArrayList();
-        private FoodProperties blockFood = new FoodProperties.Builder().nutrition(0).saturationMod(0).alwaysEat().build();
-        private FoodProperties itemFood = new FoodProperties.Builder().nutrition(0).saturationMod(0).alwaysEat().build();
+        private final FoodProperties blockFood;
+        private final FoodProperties itemFood;
         private @Nullable FoodBiteAnimateTicks.AnimateTick animateTick = null;
 
-        private FoodData(int maxBites) {
+        private FoodData(int maxBites, FoodProperties blockFood, FoodProperties itemFood) {
             this.maxBites = maxBites;
             this.lootItems.add(Items.BOWL);
-        }
-
-        public static FoodData maxBites(int maxBites) {
-            return new FoodData(maxBites);
-        }
-
-        public FoodData setFood(int nutrition, float saturationModifier) {
-            int count = maxBites - 1;
-            this.blockFood = new FoodProperties.Builder().nutrition(nutrition / count)
-                    .saturationMod(saturationModifier / count).alwaysEat().build();
-            this.itemFood = new FoodProperties.Builder().nutrition(nutrition)
-                    .saturationMod(saturationModifier).alwaysEat().build();
-            return this;
-        }
-
-        public FoodData setBlockFood(FoodProperties blockFood) {
             this.blockFood = blockFood;
-            return this;
-        }
-
-        public FoodData setBlockFood(int nutrition, float saturationModifier) {
-            this.blockFood = new FoodProperties.Builder().nutrition(nutrition).saturationMod(saturationModifier).alwaysEat().build();
-            return this;
-        }
-
-        public FoodData setItemFood(FoodProperties itemFood) {
             this.itemFood = itemFood;
-            return this;
         }
 
-        public FoodData setItemFood(int nutrition, float saturationModifier) {
-            this.itemFood = new FoodProperties.Builder().nutrition(nutrition).saturationMod(saturationModifier).alwaysEat().build();
-            return this;
+        public static FoodData create(int maxBites, FoodProperties blockFood, FoodProperties itemFood) {
+            return new FoodData(maxBites, blockFood, itemFood);
         }
 
         public FoodData setAnimateTick(FoodBiteAnimateTicks.AnimateTick animateTick) {

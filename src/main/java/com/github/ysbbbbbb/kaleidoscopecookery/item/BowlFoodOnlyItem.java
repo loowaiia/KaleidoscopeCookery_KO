@@ -15,15 +15,6 @@ public class BowlFoodOnlyItem extends Item {
         super(new Item.Properties().food(properties));
     }
 
-    public BowlFoodOnlyItem(int nutrition, float saturation) {
-        super(new Item.Properties().food((new FoodProperties.Builder())
-                .nutrition(nutrition)
-                .saturationMod(saturation)
-                .alwaysEat()
-                .build()
-        ));
-    }
-
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
         ItemStack itemStack = super.finishUsingItem(stack, level, entity);
