@@ -96,10 +96,10 @@ public class ChoppingBoardBuilder implements RecipeBuilder {
 
     @Override
     public void save(Consumer<FinishedRecipe> recipeOutput, ResourceLocation id) {
-        recipeOutput.accept(new ChoppingBoardBuilder.ChoppingBoardRecipe(id, this.ingredient, this.result, this.cutCount, this.modelId));
+        recipeOutput.accept(new ChoppingBoardRecipe(id, this.ingredient, this.result, this.cutCount, this.modelId));
     }
 
-    public class ChoppingBoardRecipe implements FinishedRecipe {
+    public static class ChoppingBoardRecipe implements FinishedRecipe {
         private final ResourceLocation id;
         private final Ingredient ingredient;
         private final ItemStack result;

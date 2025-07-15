@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init.registry;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoupBases;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.BowlFoodBlockItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.network.NetworkHandler;
 import net.minecraft.world.level.block.Block;
@@ -19,6 +20,7 @@ public class CommonRegistry {
     public static void onSetupEvent(FMLCommonSetupEvent event) {
         event.enqueueWork(CommonRegistry::addComposter);
         event.enqueueWork(NetworkHandler::init);
+        event.enqueueWork(ModSoupBases::registerAll);
     }
 
     @SubscribeEvent

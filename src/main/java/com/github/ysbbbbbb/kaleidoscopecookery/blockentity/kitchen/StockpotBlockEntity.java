@@ -1,89 +1,71 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IStockpot;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.recipe.soupbase.ISoupBase;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.StockpotBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.particle.StockpotParticleOptions;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.container.StockpotContainer;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.StockpotRecipe;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.StockpotRecipeSerializer;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.FluidSoupBase;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.SoupBaseManager;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.*;
-import com.github.ysbbbbbb.kaleidoscopecookery.mixin.MobBucketItemAccessor;
-import com.github.ysbbbbbb.kaleidoscopecookery.recipe.StockpotRecipe;
-import com.github.ysbbbbbb.kaleidoscopecookery.recipe.serializer.StockpotRecipeSerializer;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.BlockDrop;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.SoundActions;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class StockpotBlockEntity extends BlockEntity implements Container {
-    public static final int PUT_SOUP_BASE = 0;
-    public static final int PUT_INGREDIENT = 1;
-    public static final int COOKING = 2;
-    public static final int FINISHED = 3;
-
+public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
     public static final int MAX_TAKEOUT_COUNT = 9;
 
-    private static final String INPUT_ENTITY_TYPE = "InputEntityType";
+    private static final String INPUTS = "Inputs";
+    private static final String RECIPE_ID = "RecipeId";
+    private static final String SOUP_BASE_ID = "SoupBaseId";
     private static final String RESULT = "Result";
     private static final String STATUS = "Status";
-    private static final String SOUP_BASE = "SoupBase";
     private static final String CURRENT_TICK = "CurrentTick";
     private static final String TAKEOUT_COUNT = "TakeoutCount";
-    private static final String COOKING_TEXTURE = "CookingTexture";
-    private static final String FINISHED_TEXTURE = "FinishedTexture";
-    private static final String SOUP_BASE_BUBBLE_COLOR = "SoupBaseBubbleColor";
-    private static final String COOKING_BUBBLE_COLOR = "CookingBubbleColor";
-    private static final String FINISHED_BUBBLE_COLOR = "FinishedBubbleColor";
     private static final String LID_ITEM = "LidItem";
 
-    private NonNullList<ItemStack> items = NonNullList.withSize(StockpotRecipe.RECIPES_SIZE, ItemStack.EMPTY);
-    // 由于原版没有很好的记录桶内生物类型的方式，这里使用一个 Item 来记录
-    private Item inputEntityType = null;
+    private NonNullList<ItemStack> inputs = NonNullList.withSize(StockpotRecipe.RECIPES_SIZE, ItemStack.EMPTY);
+    private ResourceLocation recipeId = StockpotRecipeSerializer.EMPTY_ID;
+    private ResourceLocation soupBaseId = ModSoupBases.WATER;
     private ItemStack result = ItemStack.EMPTY;
     private int status = PUT_SOUP_BASE;
-    private Fluid soupBase = Fluids.EMPTY;
     private int currentTick = -1;
     private int takeoutCount = 0;
-    private @Nullable ResourceLocation cookingTexture;
-    private @Nullable ResourceLocation finishedTexture;
-    private int soupBaseBubbleColor = 0xFFFFFF;
-    private int cookingBubbleColor = StockpotRecipeSerializer.DEFAULT_COOKING_BUBBLE_COLOR;
-    private int finishedBubbleColor = StockpotRecipeSerializer.DEFAULT_FINISHED_BUBBLE_COLOR;
     /**
      * 盖子，因为盖子可以当做盾牌，所以会记录很多额外内容，需要专门保存
      */
     private ItemStack lidItem = ItemStack.EMPTY;
 
-    // 仅用于客户端渲染缓存对象
-    public Entity renderEntity = null;
+    /**
+     * 主要用于客户端渲染的字段，recipe 里缓存了数据包中定义的部分客户端渲染需要的东西
+     */
+    public StockpotRecipe recipe = StockpotRecipeSerializer.getEmptyRecipe();
+    public @Nullable Entity renderEntity = null;
 
     public StockpotBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlocks.STOCKPOT_BE.get(), pPos, pBlockState);
@@ -95,18 +77,31 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
         }
     }
 
-    public void tick() {
-        if (level == null) {
-            return;
-        }
-        // 下方没有火源
+    @Override
+    public boolean hasHeatSource(Level level) {
         BlockState belowState = level.getBlockState(worldPosition.below());
-        if (!belowState.hasProperty(BlockStateProperties.LIT) || !belowState.getValue(BlockStateProperties.LIT)) {
+        if (belowState.hasProperty(BlockStateProperties.LIT) && belowState.getValue(BlockStateProperties.LIT)) {
+            return true;
+        }
+        return belowState.is(TagMod.HEAT_SOURCE_BLOCKS_WITHOUT_LIT);
+    }
+
+    @Override
+    public boolean hasLid() {
+        if (level == null) {
+            return false;
+        }
+        BlockState blockState = level.getBlockState(worldPosition);
+        return level != null && blockState.hasProperty(StockpotBlock.HAS_LID)
+               && blockState.getValue(StockpotBlock.HAS_LID);
+    }
+
+    public void tick(Level level) {
+        // 下方没有火源
+        if (!hasHeatSource(level)) {
             return;
         }
-        // 盖子
-        Boolean hasLid = level.getBlockState(worldPosition).getValue(StockpotBlock.HAS_LID);
-
+        boolean hasLid = hasLid();
         // 音效播放
         if (status != PUT_SOUP_BASE && level.getGameTime() % 15 == 0) {
             float volume = hasLid ? 0.075f : 0.2f;
@@ -119,7 +114,7 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
         // 没有盖子时，不进行任何 tick，只生成粒子
         if (!hasLid) {
             if (status != PUT_SOUP_BASE && level instanceof ServerLevel serverLevel && level.random.nextFloat() < 0.25F) {
-                int color = status == COOKING ? this.cookingBubbleColor : status == FINISHED ? this.finishedBubbleColor : this.soupBaseBubbleColor;
+                int color = getBubbleColor();
                 serverLevel.sendParticles(new StockpotParticleOptions(Vec3.fromRGB24(color).toVector3f(), 1f),
                         worldPosition.getX() + 0.25 + (level.random.nextFloat() * 0.5F),
                         worldPosition.getY() + 0.375,
@@ -133,6 +128,7 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
             }
             return;
         }
+
         // 有盖子时，生成白色粒子
         if (status != PUT_SOUP_BASE && level instanceof ServerLevel serverLevel && level.random.nextFloat() < 0.05F) {
             RandomSource random = serverLevel.random;
@@ -145,7 +141,7 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
 
         // 如果当前状态是放入素材，且素材不为空
         // 因为 isEmpty() 可能耗时，所以每隔 5 tick 检查一次
-        if (status == PUT_INGREDIENT && this.level.getGameTime() % 5 == 0 && !this.isEmpty()) {
+        if (status == PUT_INGREDIENT && level.getGameTime() % 5 == 0 && !this.isEmpty()) {
             this.setRecipe(level);
             status = COOKING;
             this.refresh();
@@ -159,234 +155,220 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
                 return;
             }
             status = FINISHED;
-            inputEntityType = null;
             currentTick = -1;
-            soupBase = Fluids.EMPTY;
-            this.items.clear();
+            this.inputs.clear();
             this.refresh();
         }
     }
 
-    public void onLitClick(Player player) {
-        if (level == null) {
-            return;
+    private int getBubbleColor() {
+        // 需要检查下 recipe 是否更新
+        if (this.level != null && this.recipeId != StockpotRecipeSerializer.EMPTY_ID && this.recipe.getId() == StockpotRecipeSerializer.EMPTY_ID) {
+            StockpotRecipe stockpotRecipe = this.level.getRecipeManager().byType(ModRecipes.STOCKPOT_RECIPE).get(this.recipeId);
+            this.recipe = Objects.requireNonNullElseGet(stockpotRecipe, StockpotRecipeSerializer::getEmptyRecipe);
         }
+        if (status == COOKING) {
+            return this.recipe.cookingBubbleColor();
+        }
+        if (status == FINISHED) {
+            return this.recipe.finishedBubbleColor();
+        }
+        ISoupBase soup = this.getSoupBase();
+        if (soup != null) {
+            return soup.getBubbleColor();
+        }
+        return 0xffffff;
+    }
 
+    @Override
+    public boolean onLitClick(Level level, LivingEntity user, ItemStack stack) {
         BlockState blockState = level.getBlockState(worldPosition);
-        Boolean hasLid = blockState.getValue(StockpotBlock.HAS_LID);
-        ItemStack mainHandItem = player.getMainHandItem();
+        boolean hasLid = this.hasLid();
 
         // 第一种情况，放上盖子
-        if (!hasLid && mainHandItem.is(ModItems.STOCKPOT_LID.get())) {
-            this.setLidItem(mainHandItem.split(1));
+        if (!hasLid && stack.is(ModItems.STOCKPOT_LID.get())) {
+            this.setLidItem(stack.split(1));
             this.setChanged();
             level.setBlockAndUpdate(worldPosition, blockState.setValue(StockpotBlock.HAS_LID, true));
-            player.playSound(SoundEvents.LANTERN_PLACE, 0.5F, 0.5F);
-            return;
+            user.playSound(SoundEvents.LANTERN_PLACE, 0.5F, 0.5F);
+            return true;
         }
 
         // 第二种情况，取下盖子
         if (hasLid) {
             ItemStack lid = this.getLidItem().isEmpty() ? ModItems.STOCKPOT_LID.get().getDefaultInstance() : this.getLidItem().copy();
             this.setLidItem(ItemStack.EMPTY);
-            if (mainHandItem.isEmpty()) {
-                player.setItemInHand(InteractionHand.MAIN_HAND, lid);
+            if (stack.isEmpty()) {
+                user.setItemInHand(InteractionHand.MAIN_HAND, lid);
             } else {
                 BlockDrop.popResource(level, worldPosition, 0.5, lid);
             }
             this.setChanged();
             level.setBlockAndUpdate(worldPosition, blockState.setValue(StockpotBlock.HAS_LID, false));
-            player.playSound(SoundEvents.LANTERN_BREAK, 0.5F, 0.5F);
+            user.playSound(SoundEvents.LANTERN_BREAK, 0.5F, 0.5F);
+            return true;
         }
+
+        return false;
     }
 
     private void setRecipe(Level levelIn) {
-        levelIn.getRecipeManager().getRecipeFor(ModRecipes.STOCKPOT_RECIPE, this, levelIn).ifPresentOrElse(recipe -> {
-            this.result = recipe.assemble(this, levelIn.registryAccess());
-            this.currentTick = recipe.getTime();
-            this.cookingTexture = recipe.getCookingTexture();
-            this.finishedTexture = recipe.getFinishedTexture();
-            this.cookingBubbleColor = recipe.getCookingBubbleColor();
-            this.finishedBubbleColor = recipe.getFinishedBubbleColor();
+        StockpotContainer container = new StockpotContainer(this.inputs, this.soupBaseId);
+        levelIn.getRecipeManager().getRecipeFor(ModRecipes.STOCKPOT_RECIPE, container, levelIn).ifPresentOrElse(recipe -> {
+            this.recipeId = recipe.getId();
+            this.recipe = recipe;
+            this.result = recipe.assemble(container, levelIn.registryAccess());
+            this.currentTick = recipe.time();
             this.takeoutCount = Math.min(this.result.getCount(), MAX_TAKEOUT_COUNT);
         }, () -> {
+            this.recipeId = StockpotRecipeSerializer.EMPTY_ID;
+            this.recipe = StockpotRecipeSerializer.getEmptyRecipe();
             this.result = Items.SUSPICIOUS_STEW.getDefaultInstance();
             this.currentTick = StockpotRecipeSerializer.DEFAULT_TIME;
-            this.cookingTexture = StockpotRecipeSerializer.DEFAULT_COOKING_TEXTURE;
-            this.finishedTexture = StockpotRecipeSerializer.DEFAULT_FINISHED_TEXTURE;
-            this.cookingBubbleColor = StockpotRecipeSerializer.DEFAULT_COOKING_BUBBLE_COLOR;
-            this.finishedBubbleColor = StockpotRecipeSerializer.DEFAULT_FINISHED_BUBBLE_COLOR;
             this.takeoutCount = 1;
         });
     }
 
-    public void onBucketClick(Player player) {
+    @Override
+    public boolean addSoupBase(Level level, LivingEntity user, ItemStack bucket) {
         // 必须打开盖子才能放入汤底
-        if (level == null || level.getBlockState(worldPosition).getValue(StockpotBlock.HAS_LID)) {
-            return;
-        }
-        ItemStack bucket = player.getMainHandItem();
-        if (!(bucket.getItem() instanceof BucketItem bucketItem)) {
-            return;
+        if (hasLid()) {
+            return false;
         }
         // 当前状态是放入汤底
-        if (status == PUT_SOUP_BASE) {
-            Fluid fluid = bucketItem.getFluid();
-            if (fluid == Fluids.EMPTY) {
-                return;
-            }
-            // 如果是生物桶呢？
-            if (bucket.getItem() instanceof MobBucketItemAccessor accessor && accessor.kaleidoscope$GetFishType() != null) {
-                this.inputEntityType = bucketItem;
-            }
-            SoundEvent sound = fluid.getFluidType().getSound(player, SoundActions.BUCKET_EMPTY);
-            if (sound != null) {
-                level.playSound(null, worldPosition.getX(), worldPosition.getY() + 0.5, worldPosition.getZ(),
-                        sound, SoundSource.BLOCKS, 1, 1);
-            }
-            player.setItemInHand(InteractionHand.MAIN_HAND, ItemUtils.createFilledResult(bucket, player, new ItemStack(Items.BUCKET)));
-            this.soupBase = fluid;
-            this.status = PUT_INGREDIENT;
-            // 仅判断水和熔岩
-            if (this.soupBase.is(FluidTags.WATER)) {
-                this.soupBaseBubbleColor = 0x3F76E4;
-            } else if (this.soupBase.is(FluidTags.LAVA)) {
-                this.soupBaseBubbleColor = 0xFF9838;
-            } else {
-                // FIXME 该如何自定义？
-                this.soupBaseBubbleColor = 0xFFFFFF;
-            }
-            this.refresh();
-            return;
+        if (status != PUT_SOUP_BASE) {
+            return false;
         }
-        // 当前是放入食材，但是还没放
-        if (status == PUT_INGREDIENT && this.isEmpty() && this.soupBase != Fluids.EMPTY && bucketItem.getFluid() == Fluids.EMPTY) {
-            SoundEvent sound = this.soupBase.getFluidType().getSound(player, SoundActions.BUCKET_FILL);
-            if (sound != null) {
-                level.playSound(null, worldPosition.getX(), worldPosition.getY() + 0.5, worldPosition.getZ(),
-                        sound, SoundSource.BLOCKS, 1, 1);
+        for (var entry : SoupBaseManager.getAllSoupBases().entrySet()) {
+            ResourceLocation key = entry.getKey();
+            ISoupBase soupBase = entry.getValue();
+            if (soupBase.isSoupBase(bucket)) {
+                this.soupBaseId = key;
+                this.status = PUT_INGREDIENT;
+                this.refresh();
+
+                ItemStack container = soupBase.getReturnContainer(level, user, bucket);
+                bucket.shrink(1);
+                ItemUtils.getItemToLivingEntity(user, container);
+                return true;
             }
-            ItemStack resultBucket = new ItemStack(Objects.requireNonNullElseGet(this.inputEntityType, () -> this.soupBase.getBucket()));
-            player.setItemInHand(InteractionHand.MAIN_HAND, ItemUtils.createFilledResult(bucket, player, resultBucket));
-            this.inputEntityType = null;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean removeSoupBase(Level level, LivingEntity user, ItemStack bucket) {
+        // 当前是放入食材，但是还没放
+        if (status == PUT_INGREDIENT && this.isEmpty() && SoupBaseManager.containsSoupBase(this.soupBaseId)) {
+            ISoupBase soupBase = this.getSoupBase();
+            if (soupBase == null || !soupBase.isContainer(bucket)) {
+                return false;
+            }
             this.renderEntity = null;
-            this.soupBase = Fluids.EMPTY;
+            this.soupBaseId = ModSoupBases.WATER;
             this.status = PUT_SOUP_BASE;
             this.refresh();
+
+            ItemStack container = soupBase.getReturnContainer(level, user, bucket);
+            bucket.shrink(1);
+            ItemUtils.getItemToLivingEntity(user, container);
+            return true;
         }
+        return false;
     }
 
-    public void onIngredientClick(Player player) {
-        if (level == null || level.getBlockState(worldPosition).getValue(StockpotBlock.HAS_LID)) {
-            return;
+    @Override
+    public boolean addIngredient(Level level, LivingEntity user, ItemStack itemStack) {
+        if (hasLid()) {
+            return false;
         }
-        if (status == PUT_INGREDIENT) {
-            ItemStack mainHandItem = player.getMainHandItem();
-            if (mainHandItem.isEmpty()) {
-                for (int i = this.getContainerSize() - 1; i >= 0; i--) {
-                    if (!this.getItem(i).isEmpty()) {
-                        player.setItemInHand(InteractionHand.MAIN_HAND, this.getItem(i).copy());
-                        level.playSound(null, player.getX(), player.getY() + 0.5, player.getZ(),
-                                SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F,
-                                ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                        this.removeItem(i, 1);
-                        if (this.soupBase.getFluidType().getTemperature() > 500) {
-                            player.hurt(level.damageSources().inFire(), 1);
-                        }
-                        this.refresh();
-                        return;
-                    }
-                }
-                return;
-            }
-
-            if (mainHandItem.isEdible() || mainHandItem.is(TagItem.POT_INGREDIENT)) {
-                // 检查是否有足够的空间放入食材
-                for (int i = 0; i < this.getContainerSize(); i++) {
-                    if (this.getItem(i).isEmpty()) {
-                        this.setItem(i, mainHandItem.split(1));
-                        level.playSound(null, player.getX(), player.getY() + 0.5, player.getZ(),
-                                SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F,
-                                ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                        this.refresh();
-                        return;
-                    }
-                }
-            }
+        if (status != PUT_INGREDIENT) {
+            return false;
         }
+        if (!itemStack.isEdible() && !itemStack.is(TagItem.POT_INGREDIENT)) {
+            return false;
+        }
+        // 检查是否有足够的空间放入食材
+        for (int i = 0; i < this.inputs.size(); i++) {
+            if (!this.inputs.get(i).isEmpty()) {
+                continue;
+            }
+            this.inputs.set(i, itemStack.split(1));
+            level.playSound(null, user.getX(), user.getY() + 0.5, user.getZ(),
+                    SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F,
+                    ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+            this.refresh();
+            return true;
+        }
+        return false;
     }
 
-    public void onBowlClick(Player player) {
-        if (level == null || level.getBlockState(worldPosition).getValue(StockpotBlock.HAS_LID)) {
-            return;
+    @Override
+    public boolean removeIngredient(Level level, LivingEntity user) {
+        if (hasLid()) {
+            return false;
         }
+        if (status != PUT_INGREDIENT) {
+            return false;
+        }
+        for (int i = this.inputs.size() - 1; i >= 0; i--) {
+            ItemStack stack = this.inputs.get(i);
+            if (stack.isEmpty()) {
+                continue;
+            }
+            ItemUtils.getItemToLivingEntity(user, stack.copy());
+            this.inputs.set(i, ItemStack.EMPTY);
+            // 如果是汤底，且温度过高，玩家会受到伤害
+            ISoupBase soupBase = this.getSoupBase();
+            if (soupBase instanceof FluidSoupBase fluidSoupBase && fluidSoupBase.getFluid().getFluidType().getTemperature() > 500) {
+                user.hurt(level.damageSources().inFire(), 1);
+            }
+            this.refresh();
+            return true;
+        }
+        return false;
+    }
 
+    @Override
+    public boolean takeOutProduct(Level level, LivingEntity user, ItemStack stack) {
+        if (hasLid()) {
+            return false;
+        }
         // 如果当前状态是烹饪完成
-        if (status == FINISHED && takeoutCount > 0) {
-            ItemStack bowl = player.getMainHandItem();
-            if (bowl.is(Items.BOWL)) {
-                // 放入碗中
-                ItemStack resultCopy = this.result.copy();
-                resultCopy.setCount(1);
-                bowl.shrink(1);
-                if (bowl.isEmpty()) {
-                    player.setItemInHand(InteractionHand.MAIN_HAND, resultCopy);
-                    level.playSound(null, player.getX(), player.getY() + 0.5, player.getZ(),
-                            SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F,
-                            ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                } else {
-                    ItemHandlerHelper.giveItemToPlayer(player, resultCopy);
-                }
-                takeoutCount--;
-                if (takeoutCount <= 0) {
-                    status = PUT_SOUP_BASE;
-                    this.inputEntityType = null;
-                    this.items.clear();
-                    this.result = ItemStack.EMPTY;
-                    this.soupBase = Fluids.EMPTY;
-                    this.cookingTexture = null;
-                    this.finishedTexture = null;
-                    this.soupBaseBubbleColor = 0xffffff;
-                    this.cookingBubbleColor = StockpotRecipeSerializer.DEFAULT_COOKING_BUBBLE_COLOR;
-                    this.finishedBubbleColor = StockpotRecipeSerializer.DEFAULT_FINISHED_BUBBLE_COLOR;
-                    this.currentTick = -1;
-                }
-                this.refresh();
-            }
+        if (status != FINISHED || this.result.isEmpty() || this.takeoutCount <= 0) {
+            return false;
         }
-    }
-
-    public void refresh() {
-        this.setChanged();
-        if (level != null) {
-            BlockState state = level.getBlockState(worldPosition);
-            level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
+        // 目前限定死了只能用碗来取出成品
+        if (!stack.is(Items.BOWL)) {
+            return false;
         }
+        // 放入碗中
+        stack.shrink(1);
+        ItemStack resultCopy = this.result.copyWithCount(1);
+        ItemUtils.getItemToLivingEntity(user, resultCopy);
+        this.takeoutCount--;
+        if (this.takeoutCount <= 0) {
+            this.status = PUT_SOUP_BASE;
+            this.inputs.clear();
+            this.recipeId = StockpotRecipeSerializer.EMPTY_ID;
+            this.soupBaseId = ModSoupBases.WATER;
+            this.result = ItemStack.EMPTY;
+            this.currentTick = -1;
+        }
+        this.refresh();
+        return true;
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        ContainerHelper.saveAllItems(tag, this.items);
-        if (this.inputEntityType != null) {
-            tag.putString(INPUT_ENTITY_TYPE, Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.inputEntityType)).toString());
-        } else {
-            tag.remove(INPUT_ENTITY_TYPE);
-        }
+        tag.put(INPUTS, ContainerHelper.saveAllItems(new CompoundTag(), this.inputs));
+        tag.putString(RECIPE_ID, this.recipeId.toString());
+        tag.putString(SOUP_BASE_ID, this.soupBaseId.toString());
         tag.put(RESULT, this.result.save(new CompoundTag()));
         tag.putInt(STATUS, this.status);
-        tag.putString(SOUP_BASE, Objects.requireNonNull(ForgeRegistries.FLUIDS.getKey(this.soupBase)).toString());
         tag.putInt(CURRENT_TICK, this.currentTick);
         tag.putInt(TAKEOUT_COUNT, this.takeoutCount);
-        if (this.cookingTexture != null) {
-            tag.putString(COOKING_TEXTURE, this.cookingTexture.toString());
-        }
-        if (this.finishedTexture != null) {
-            tag.putString(FINISHED_TEXTURE, this.finishedTexture.toString());
-        }
-        tag.putInt(SOUP_BASE_BUBBLE_COLOR, this.soupBaseBubbleColor);
-        tag.putInt(COOKING_BUBBLE_COLOR, this.cookingBubbleColor);
-        tag.putInt(FINISHED_BUBBLE_COLOR, this.finishedBubbleColor);
         if (!this.lidItem.isEmpty()) {
             tag.put(LID_ITEM, this.lidItem.save(new CompoundTag()));
         }
@@ -395,59 +377,33 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(tag, this.items);
-        if (tag.contains(INPUT_ENTITY_TYPE)) {
-            this.inputEntityType = ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(tag.getString(INPUT_ENTITY_TYPE)));
-        } else {
-            this.inputEntityType = null;
+        if (tag.contains(INPUTS)) {
+            this.inputs = NonNullList.withSize(StockpotRecipe.RECIPES_SIZE, ItemStack.EMPTY);
+            ContainerHelper.loadAllItems(tag.getCompound(INPUTS), this.inputs);
         }
-        this.result = ItemStack.of(tag.getCompound(RESULT));
+        if (tag.contains(RECIPE_ID)) {
+            this.recipeId = ResourceLocation.tryParse(tag.getString(RECIPE_ID));
+            if (this.level != null) {
+                StockpotRecipe stockpotRecipe = this.level.getRecipeManager().byType(ModRecipes.STOCKPOT_RECIPE).get(this.recipeId);
+                this.recipe = Objects.requireNonNullElseGet(stockpotRecipe, StockpotRecipeSerializer::getEmptyRecipe);
+            }
+        }
+        if (tag.contains(SOUP_BASE_ID)) {
+            this.soupBaseId = ResourceLocation.tryParse(tag.getString(SOUP_BASE_ID));
+        }
+        if (tag.contains(RESULT)) {
+            this.result = ItemStack.of(tag.getCompound(RESULT));
+        }
         this.status = tag.getInt(STATUS);
-        this.soupBase = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryParse(tag.getString(SOUP_BASE)));
         this.currentTick = tag.getInt(CURRENT_TICK);
         this.takeoutCount = tag.getInt(TAKEOUT_COUNT);
-        if (tag.contains(COOKING_TEXTURE)) {
-            this.cookingTexture = ResourceLocation.tryParse(tag.getString(COOKING_TEXTURE));
-        } else {
-            this.cookingTexture = null;
-        }
-        if (tag.contains(FINISHED_TEXTURE)) {
-            this.finishedTexture = ResourceLocation.tryParse(tag.getString(FINISHED_TEXTURE));
-        } else {
-            this.finishedTexture = null;
-        }
-        this.soupBaseBubbleColor = tag.getInt(SOUP_BASE_BUBBLE_COLOR);
-        this.cookingBubbleColor = tag.getInt(COOKING_BUBBLE_COLOR);
-        this.finishedBubbleColor = tag.getInt(FINISHED_BUBBLE_COLOR);
         if (tag.contains(LID_ITEM)) {
             this.lidItem = ItemStack.of(tag.getCompound(LID_ITEM));
         }
     }
 
-    @Override
-    public CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
-    }
-
-    @Nullable
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    public NonNullList<ItemStack> getItems() {
-        return items;
-    }
-
-    @Override
-    public int getContainerSize() {
-        return items.size();
-    }
-
-    @Override
     public boolean isEmpty() {
-        for (ItemStack stack : this.items) {
+        for (ItemStack stack : this.inputs) {
             if (!stack.isEmpty()) {
                 return false;
             }
@@ -455,46 +411,11 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
         return true;
     }
 
-    @Override
-    public ItemStack getItem(int index) {
-        return (0 <= index && index < this.items.size()) ? this.items.get(index) : ItemStack.EMPTY;
+    public NonNullList<ItemStack> getInputs() {
+        return inputs;
     }
 
     @Override
-    public ItemStack removeItem(int index, int count) {
-        return ContainerHelper.removeItem(this.items, index, count);
-    }
-
-    @Override
-    public ItemStack removeItemNoUpdate(int pSlot) {
-        return ContainerHelper.takeItem(this.items, pSlot);
-    }
-
-    @Override
-    public void setItem(int pIndex, ItemStack pStack) {
-        if (0 <= pIndex && pIndex < this.items.size()) {
-            this.items.set(pIndex, pStack);
-        }
-    }
-
-    @Override
-    public boolean stillValid(Player pPlayer) {
-        return Container.stillValidBlockEntity(this, pPlayer);
-    }
-
-    @Override
-    public void clearContent() {
-        this.items.clear();
-    }
-
-    public Fluid getSoupBase() {
-        return soupBase;
-    }
-
-    public ItemStack getResult() {
-        return result;
-    }
-
     public int getStatus() {
         return status;
     }
@@ -503,22 +424,17 @@ public class StockpotBlockEntity extends BlockEntity implements Container {
         return takeoutCount;
     }
 
-    @Nullable
-    public ResourceLocation getCookingTexture() {
-        return cookingTexture;
+    public ItemStack getResult() {
+        return result;
+    }
+
+    public ResourceLocation getSoupBaseId() {
+        return soupBaseId;
     }
 
     @Nullable
-    public ResourceLocation getFinishedTexture() {
-        return finishedTexture;
-    }
-
-    @Nullable
-    public EntityType<?> getInputEntityType() {
-        if (this.inputEntityType instanceof MobBucketItemAccessor accessor) {
-            return accessor.kaleidoscope$GetFishType();
-        }
-        return null;
+    public ISoupBase getSoupBase() {
+        return SoupBaseManager.getSoupBase(this.soupBaseId);
     }
 
     public ItemStack getLidItem() {

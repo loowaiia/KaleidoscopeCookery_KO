@@ -5,6 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder.ChoppingBoardBuil
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder.PotRecipeBuilder;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder.StockpotRecipeBuilder;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoupBases;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagCommon;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
@@ -13,7 +14,6 @@ import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -22,8 +22,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -424,12 +422,12 @@ public class ModRecipeGenerator extends RecipeProvider {
         StockpotRecipeBuilder.builder().addInput(TagCommon.RAW_FISHES_COD, TagCommon.RAW_FISHES_COD, TagCommon.RAW_FISHES_COD)
                 .addInput(Items.KELP, Items.BONE_MEAL).setResult(ModItems.SEAFOOD_MISO_SOUP.get()).save(consumer, "seafood_miso_soup_cod");
 
-        StockpotRecipeBuilder.builder().addInput(Items.KELP, Items.BONE_MEAL).addInputEntityType(EntityType.SALMON)
+        StockpotRecipeBuilder.builder().addInput(Items.KELP, Items.BONE_MEAL).setSoupBase(ModSoupBases.SALMON_BUCKET)
                 .setResult(ModItems.SEAFOOD_MISO_SOUP.get(), 1).save(consumer, "seafood_miso_soup_salmon_entity");
-        StockpotRecipeBuilder.builder().addInput(Items.KELP, Items.BONE_MEAL).addInputEntityType(EntityType.COD)
+        StockpotRecipeBuilder.builder().addInput(Items.KELP, Items.BONE_MEAL).setSoupBase(ModSoupBases.COD_BUCKET)
                 .setResult(ModItems.SEAFOOD_MISO_SOUP.get(), 1).save(consumer, "seafood_miso_soup_cod_entity");
 
-        StockpotRecipeBuilder.builder().addInput(Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH).setSoupBase(Fluids.LAVA)
+        StockpotRecipeBuilder.builder().addInput(Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH, Items.ROTTEN_FLESH).setSoupBase(ModSoupBases.LAVA)
                 .addInput(Blocks.SCULK, Blocks.SCULK).setResult(ModItems.FEARSOME_THICK_SOUP.get()).save(consumer);
         StockpotRecipeBuilder.builder().addInput(Items.CARROT, Items.CARROT).addInput(TagCommon.RAW_MUTTON, TagCommon.RAW_MUTTON)
                 .setResult(ModItems.LAMB_AND_RADISH_SOUP.get()).save(consumer);
@@ -441,7 +439,7 @@ public class ModRecipeGenerator extends RecipeProvider {
                 TagCommon.CROPS_TOMATO, TagCommon.CROPS_TOMATO).setResult(ModItems.TOMATO_BEEF_BRISKET_SOUP.get()).save(consumer);
         StockpotRecipeBuilder.builder().addInput(Items.PUFFERFISH, Items.PUFFERFISH, Items.SEAGRASS)
                 .setResult(ModItems.PUFFERFISH_SOUP.get()).save(consumer);
-        StockpotRecipeBuilder.builder().addInput(Items.SEAGRASS).addInputEntityType(EntityType.PUFFERFISH)
+        StockpotRecipeBuilder.builder().addInput(Items.SEAGRASS).setSoupBase(ModSoupBases.PUFFERFISH_BUCKET)
                 .setResult(ModItems.PUFFERFISH_SOUP.get()).save(consumer, "pufferfish_soup_entity");
         StockpotRecipeBuilder.builder().addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.CROPS_TOMATO, TagCommon.CROPS_TOMATO, TagCommon.CROPS_LETTUCE)
                 .setResult(ModItems.BORSCHT.get()).save(consumer);

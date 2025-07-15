@@ -1,9 +1,9 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.compat.jei.category;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.PotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
-import com.github.ysbbbbbb.kaleidoscopecookery.recipe.PotRecipe;
 import com.google.common.collect.Lists;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -59,7 +59,7 @@ public class PotRecipeCategory implements IRecipeCategory<PotRecipe> {
     @Override
     public void draw(PotRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         this.bgDraw.draw(guiGraphics);
-        Component stirFryCount = Component.translatable("jei.kaleidoscope_cookery.pot.stir_fry_count", recipe.getStirFryCount());
+        Component stirFryCount = Component.translatable("jei.kaleidoscope_cookery.pot.stir_fry_count", recipe.stirFryCount());
         drawCenteredString(guiGraphics, stirFryCount, WIDTH / 2, 85);
     }
 
@@ -72,14 +72,14 @@ public class PotRecipeCategory implements IRecipeCategory<PotRecipe> {
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, PotRecipe recipe, IFocusGroup focuses) {
         NonNullList<Ingredient> inputs = recipe.getIngredients();
-        ItemStack output = recipe.getResult();
+        ItemStack output = recipe.result();
         for (int i = 0; i < inputs.size(); i++) {
             int xOffset = (i % 3) * 18 + 15;
             int yOffset = (i / 3) * 18 + 24;
             builder.addSlot(RecipeIngredientRole.INPUT, xOffset, yOffset).addIngredients(inputs.get(i)).setBackground(slotDraw, -1, -1);
         }
-        if (!recipe.getCarrier().isEmpty()) {
-            builder.addSlot(RecipeIngredientRole.INPUT, 133, 18).addIngredients(recipe.getCarrier());
+        if (!recipe.carrier().isEmpty()) {
+            builder.addSlot(RecipeIngredientRole.INPUT, 133, 18).addIngredients(recipe.carrier());
         }
         builder.addSlot(RecipeIngredientRole.OUTPUT, 143, 60).addItemStack(output).setBackground(slotDraw, -1, -1);
     }
