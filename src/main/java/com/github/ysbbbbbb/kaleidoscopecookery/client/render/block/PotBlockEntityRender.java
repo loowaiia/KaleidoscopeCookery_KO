@@ -1,6 +1,8 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.render.block;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.PotBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.resources.ItemRenderReplacer;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.resources.ItemRenderReplacerReloadListener;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -8,6 +10,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -89,7 +92,9 @@ public class PotBlockEntityRender implements BlockEntityRenderer<PotBlockEntity>
             int burntLevel = Mth.clamp(tick / 25, 0, 16);
             packedLight = OverlayTexture.u(burntLevel);
         }
-        itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, pot.getLevel(), 0);
+
+        BakedModel model = ItemRenderReplacer.getModel(pot.getLevel(), item, ItemRenderReplacerReloadListener.INSTANCE.pot());
+        itemRenderer.render(item, ItemDisplayContext.FIXED, false, poseStack, buffer, packedLight, packedOverlay, model);
 
         poseStack.popPose();
     }

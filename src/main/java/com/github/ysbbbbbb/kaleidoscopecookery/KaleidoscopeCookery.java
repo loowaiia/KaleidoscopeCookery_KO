@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 @Mod(KaleidoscopeCookery.MOD_ID)
 public class KaleidoscopeCookery {
     public static final String MOD_ID = "kaleidoscope_cookery";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public KaleidoscopeCookery() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
