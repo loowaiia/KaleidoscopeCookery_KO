@@ -1,5 +1,4 @@
 {
-	"format_version": "1.21.6",
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
 	"render_type": "minecraft:cutout",
@@ -16,7 +15,7 @@
 				"east": {"uv": [0, 0, 8, 3.5], "texture": "#particle"},
 				"south": {"uv": [0, 0, 8, 3.5], "texture": "#particle"},
 				"west": {"uv": [0, 0, 8, 3.5], "texture": "#particle"},
-				"up": {"uv": [8, 0, 16, 8], "texture": "#particle"},
+				"up": {"uv": [8, 8, 16, 16], "texture": "#particle"},
 				"down": {"uv": [8, 0, 16, 8], "texture": "#particle"}
 			}
 		},
@@ -102,5 +101,6 @@
 			"color": 0,
 			"children": [0, 1, 2, 3]
 		}
-	]
+	],
+	"format_version": "1.21.6"
 }
