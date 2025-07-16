@@ -1,8 +1,7 @@
 {
-	"format_version": "1.21.6",
 	"credit": "Made with Blockbench",
-	"texture_size": [32, 32],
 	"render_type": "minecraft:cutout",
+	"texture_size": [32, 32],
 	"textures": {
 		"1": "kaleidoscope_cookery:block/plate",
 		"3": "kaleidoscope_cookery:block/tundra_style_sashimi",
@@ -19,7 +18,7 @@
 				"south": {"uv": [1, 2, 15, 0], "texture": "#1"},
 				"west": {"uv": [1, 2, 15, 0], "texture": "#1"},
 				"up": {"uv": [9, 9, 16, 16], "texture": "#3"},
-				"down": {"uv": [1, 1, 15, 15], "texture": "#1"}
+				"down": {"uv": [1, 1, 15, 15], "texture": "#1", "cullface": "down"}
 			}
 		}
 	],
@@ -54,5 +53,6 @@
 		"fixed": {
 			"scale": [0.5, 0.5, 0.5]
 		}
-	}
+	},
+	"format_version": "1.21.6"
 }

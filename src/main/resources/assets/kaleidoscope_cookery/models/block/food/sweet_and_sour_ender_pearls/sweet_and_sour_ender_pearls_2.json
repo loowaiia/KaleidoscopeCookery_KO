@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
-	"texture_size": [32, 32],
+	"ambientocclusion": false,
 	"render_type": "cutout",
+	"texture_size": [32, 32],
 	"textures": {
-		"1": "kaleidoscope_cookery:block/plate",
 		"3": "kaleidoscope_cookery:block/sweet_and_sour_ender_pearls",
 		"particle": "kaleidoscope_cookery:block/plate"
 	},
@@ -13,12 +13,12 @@
 			"to": [15, 2, 15],
 			"rotation": {"angle": 0, "axis": "y", "origin": [0, 1, 0]},
 			"faces": {
-				"north": {"uv": [1, 2, 15, 0], "texture": "#1"},
-				"east": {"uv": [8, 9.5, 15, 8.5], "texture": "#3"},
-				"south": {"uv": [1, 2, 15, 0], "texture": "#1"},
-				"west": {"uv": [1, 2, 15, 0], "texture": "#1"},
-				"up": {"uv": [0, 9, 7, 16], "texture": "#3"},
-				"down": {"uv": [1, 1, 15, 15], "texture": "#1"}
+				"north": {"uv": [9, 8.5, 16, 7.5], "texture": "#3"},
+				"east": {"uv": [9, 8.5, 16, 7.5], "texture": "#3"},
+				"south": {"uv": [9, 8.5, 16, 7.5], "texture": "#3"},
+				"west": {"uv": [9, 8.5, 16, 7.5], "texture": "#3"},
+				"up": {"uv": [9, 9, 16, 16], "texture": "#3"},
+				"down": {"uv": [1, 1, 15, 15], "texture": "#3", "cullface": "down"}
 			}
 		},
 		{
@@ -30,8 +30,21 @@
 				"east": {"uv": [13, 1, 15, 3], "texture": "#3"},
 				"south": {"uv": [13, 1, 15, 3], "texture": "#3"},
 				"west": {"uv": [13, 1, 15, 3], "texture": "#3"},
-				"up": {"uv": [13, 1, 15, 3], "texture": "#3"},
+				"up": {"uv": [7, 1, 9, 3], "texture": "#3"},
 				"down": {"uv": [13, 1, 15, 3], "texture": "#3"}
+			}
+		},
+		{
+			"from": [11, 2, 4],
+			"to": [13, 4, 6],
+			"rotation": {"angle": 0, "axis": "y", "origin": [11, 2, 4]},
+			"faces": {
+				"north": {"uv": [10, 6, 11, 7], "texture": "#3"},
+				"east": {"uv": [10, 6, 11, 7], "texture": "#3"},
+				"south": {"uv": [10, 6, 11, 7], "texture": "#3"},
+				"west": {"uv": [10, 6, 11, 7], "texture": "#3"},
+				"up": {"uv": [8.5, 6, 9.5, 7], "rotation": 90, "texture": "#3"},
+				"down": {"uv": [10, 6, 11, 7], "texture": "#3"}
 			}
 		},
 		{
@@ -111,6 +124,7 @@
 		0,
 		1,
 		2,
-		3
+		3,
+		4
 	]
 }
