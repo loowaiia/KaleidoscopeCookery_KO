@@ -118,9 +118,13 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock,
             return InteractionResult.FAIL;
         }
         // 检查油
-        if (!state.getValue(HAS_OIL) && !pot.onPlaceOil(level, player, itemInHand)) {
-            sendBarMessage(player, "tip.kaleidoscope_cookery.pot.need_oil");
-            return InteractionResult.FAIL;
+        if (!state.getValue(HAS_OIL)) {
+            if (pot.onPlaceOil(level, player, itemInHand)) {
+                return InteractionResult.SUCCESS;
+            } else {
+                sendBarMessage(player, "tip.kaleidoscope_cookery.pot.need_oil");
+                return InteractionResult.FAIL;
+            }
         }
         // 如果拿着锅铲，那么开始执行锅铲逻辑
         if (itemInHand.is(ModItems.KITCHEN_SHOVEL.get())) {

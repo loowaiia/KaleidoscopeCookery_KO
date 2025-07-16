@@ -27,7 +27,9 @@ public class BaseAdvancement {
         // 菜刀系列成就
         Advancement ironKnife = makeTask(ModItems.IRON_KITCHEN_KNIFE.get(), "iron_knife")
                 .parent(root)
-                .addCriterion("has_iron_knife", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.IRON_KITCHEN_KNIFE.get()))
+                .addCriterion("has_iron_knife", InventoryChangeTrigger.TriggerInstance.hasItems(
+                        ItemPredicate.Builder.item().of(TagMod.KITCHEN_KNIFE).build()
+                ))
                 .save(saver, modLoc("iron_knife"), existingFileHelper);
 
         Advancement netheriteKnife = makeGoal(ModItems.NETHERITE_KITCHEN_KNIFE.get(), "netherite_knife")

@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "kaleidoscope_cookery:iron_kitchen_knife"
-            ]
+            "tag": "kaleidoscope_cookery:kitchen_knife"
           }
         ]
       },
