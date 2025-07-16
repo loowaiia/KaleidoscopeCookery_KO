@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.client.init;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.gui.overlay.PotOverlay;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.render.block.*;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.resources.ItemRenderReplacerReloadListener;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenShovelItem;
@@ -11,6 +12,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -42,5 +44,10 @@ public class ClientSetupEvent {
     @SubscribeEvent
     public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
         event.registerAbove(CROSSHAIR.id(), "pot_overlay", new PotOverlay());
+    }
+
+    @SubscribeEvent
+    public static void onRegisterClientReloadListeners(RegisterClientReloadListenersEvent event) {
+        event.registerReloadListener(new ItemRenderReplacerReloadListener());
     }
 }
