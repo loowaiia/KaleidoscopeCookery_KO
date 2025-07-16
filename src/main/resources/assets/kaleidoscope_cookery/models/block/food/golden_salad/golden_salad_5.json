@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench",
-	"texture_size": [32, 32],
 	"render_type": "minecraft:cutout",
+	"texture_size": [32, 32],
 	"textures": {
 		"1": "kaleidoscope_cookery:block/plate",
 		"3": "kaleidoscope_cookery:block/golden_salad",
@@ -22,16 +22,26 @@
 			}
 		},
 		{
-			"from": [4.77301, 2, 12.05431],
-			"to": [11.77301, 8, 14.05431],
-			"rotation": {"angle": 22.5, "axis": "y", "origin": [7.75, 5.75, 8.44291]},
+			"from": [3.00345, 2, 9.21282],
+			"to": [10.00345, 8, 11.21282],
+			"rotation": {"angle": 22.5, "axis": "y", "origin": [9.98044, 5.75, 8.60142]},
 			"faces": {
 				"north": {"uv": [6, 2.5, 9.5, 5.5], "texture": "#3"},
 				"east": {"uv": [5.5, 2.5, 6.5, 5.5], "texture": "#3"},
 				"south": {"uv": [6, 2.5, 9.5, 5.5], "texture": "#3"},
 				"west": {"uv": [5.5, 2.5, 6.5, 5.5], "texture": "#3"},
-				"up": {"uv": [6, 1, 9.5, 2], "rotation": 180, "texture": "#3"},
-				"down": {"uv": [6, 2.5, 9.5, 3.5], "rotation": 180, "texture": "#3"}
+				"up": {"uv": [6, 2, 9.5, 1], "rotation": 180, "texture": "#3"}
+			}
+		},
+		{
+			"from": [11, 2, 6],
+			"to": [13, 4, 8],
+			"faces": {
+				"north": {"uv": [2, 0, 3, 1], "texture": "#3"},
+				"east": {"uv": [2, 0, 3, 1], "texture": "#3"},
+				"south": {"uv": [2, 0, 3, 1], "texture": "#3"},
+				"west": {"uv": [2, 0, 3, 1], "texture": "#3"},
+				"up": {"uv": [2, 0, 3, 1], "texture": "#3"}
 			}
 		}
 	],
@@ -81,6 +91,7 @@
 			"children": []
 		},
 		0,
-		1
+		1,
+		2
 	]
 }

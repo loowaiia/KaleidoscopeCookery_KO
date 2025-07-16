@@ -1,8 +1,7 @@
 {
-	"format_version": "1.21.6",
 	"credit": "Made with Blockbench",
-	"texture_size": [32, 32],
 	"render_type": "minecraft:cutout",
+	"texture_size": [32, 32],
 	"textures": {
 		"1": "kaleidoscope_cookery:block/plate",
 		"3": "kaleidoscope_cookery:block/frost_lamb_chop",
@@ -19,39 +18,13 @@
 				"south": {"uv": [1, 2, 15, 0], "texture": "#1"},
 				"west": {"uv": [1, 2, 15, 0], "texture": "#1"},
 				"up": {"uv": [9, 9, 16, 16], "texture": "#3"},
-				"down": {"uv": [1, 1, 15, 15], "texture": "#1"}
+				"down": {"uv": [1, 1, 15, 15], "texture": "#1", "cullface": "down"}
 			}
 		},
 		{
-			"from": [2, 2.3, 9],
-			"to": [6, 6.3, 13],
-			"rotation": {"angle": 0, "axis": "y", "origin": [2, 2, 9]},
-			"faces": {
-				"north": {"uv": [9.5, 5.5, 11.5, 7.5], "texture": "#3"},
-				"east": {"uv": [9.5, 5.5, 11.5, 7.5], "texture": "#3"},
-				"south": {"uv": [9.5, 5.5, 11.5, 7.5], "texture": "#3"},
-				"west": {"uv": [9.5, 5.5, 11.5, 7.5], "texture": "#3"},
-				"up": {"uv": [9.5, 5.5, 11.5, 7.5], "texture": "#3"},
-				"down": {"uv": [9.5, 5.5, 11.5, 7.5], "texture": "#3"}
-			}
-		},
-		{
-			"from": [1.75, 6.55, 8.75],
-			"to": [6.25, 2.05, 13.25],
-			"rotation": {"angle": 0, "axis": "y", "origin": [2, 2, 9]},
-			"faces": {
-				"north": {"uv": [9.5, 5.5, 11.5, 7.5], "texture": "#3"},
-				"east": {"uv": [9.5, 5.5, 11.5, 7.5], "texture": "#3"},
-				"south": {"uv": [9.5, 5.5, 11.5, 7.5], "texture": "#3"},
-				"west": {"uv": [9.5, 5.5, 11.5, 7.5], "texture": "#3"},
-				"up": {"uv": [9.5, 5.5, 11.5, 7.5], "texture": "#3"},
-				"down": {"uv": [9.5, 5.5, 11.5, 7.5], "texture": "#3"}
-			}
-		},
-		{
-			"from": [10, 2.3, 9],
-			"to": [13, 5.3, 12],
-			"rotation": {"angle": 22.5, "axis": "y", "origin": [11.5, 3.5, 10.5]},
+			"from": [6.5, 2.5, 11],
+			"to": [9.5, 5.5, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [9.5, 7.5, 11.5]},
 			"faces": {
 				"north": {"uv": [13, 1.5, 14.5, 3], "texture": "#3"},
 				"east": {"uv": [13, 1.5, 14.5, 3], "texture": "#3"},
@@ -62,9 +35,39 @@
 			}
 		},
 		{
-			"from": [10.15, 5.6, 8.65],
-			"to": [13.65, 2.1, 12.15],
-			"rotation": {"angle": 22.5, "axis": "y", "origin": [12, 3.45, 11.5]},
+			"from": [3, 2.5, 9],
+			"to": [6, 5.5, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [9.5, 7.5, 11.5]},
+			"faces": {
+				"north": {"uv": [13, 1.5, 14.5, 3], "texture": "#3"},
+				"east": {"uv": [13, 1.5, 14.5, 3], "texture": "#3"},
+				"south": {"uv": [13, 1.5, 14.5, 3], "texture": "#3"},
+				"west": {"uv": [13, 1.5, 14.5, 3], "texture": "#3"},
+				"up": {"uv": [13, 1.5, 14.5, 3], "texture": "#3"},
+				"down": {"uv": [13, 1.5, 14.5, 3], "texture": "#3"}
+			}
+		},
+		{
+			"name": "ice",
+			"from": [6.25, 5.7, 10.75],
+			"to": [9.75, 2.2, 14.25],
+			"shade": false,
+			"rotation": {"angle": 0, "axis": "y", "origin": [9.5, 10.95, 11.5]},
+			"faces": {
+				"north": {"uv": [6.5, 6, 8, 7.5], "texture": "#3"},
+				"east": {"uv": [6.5, 6, 8, 7.5], "texture": "#3"},
+				"south": {"uv": [6.5, 6, 8, 7.5], "texture": "#3"},
+				"west": {"uv": [6.5, 6, 8, 7.5], "texture": "#3"},
+				"up": {"uv": [6.5, 6, 8, 7.5], "texture": "#3"},
+				"down": {"uv": [6.5, 6, 8, 7.5], "texture": "#3"}
+			}
+		},
+		{
+			"name": "ice",
+			"from": [2.75, 5.7, 8.75],
+			"to": [6.25, 2.2, 12.25],
+			"shade": false,
+			"rotation": {"angle": 0, "axis": "y", "origin": [9.5, 10.95, 11.5]},
 			"faces": {
 				"north": {"uv": [6.5, 6, 8, 7.5], "texture": "#3"},
 				"east": {"uv": [6.5, 6, 8, 7.5], "texture": "#3"},
@@ -106,5 +109,6 @@
 		"fixed": {
 			"scale": [0.5, 0.5, 0.5]
 		}
-	}
+	},
+	"format_version": "1.21.6"
 }
