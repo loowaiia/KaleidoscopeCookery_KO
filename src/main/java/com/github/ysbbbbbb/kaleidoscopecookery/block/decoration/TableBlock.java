@@ -104,13 +104,13 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
 
         // 玩家手有物品，并且可以放入物品时
         if (!handEmpty && tableIndex < (tableItems.getSlots() - 1)) {
+            ItemStack split = itemInHand.split(1);
             if (tableItem.isEmpty()) {
-                tableItems.setStackInSlot(tableIndex, itemInHand.split(1));
+                tableItems.setStackInSlot(tableIndex, split);
             } else {
-                tableItems.setStackInSlot(tableIndex + 1, itemInHand.split(1));
+                tableItems.setStackInSlot(tableIndex + 1, split);
             }
             table.setChanged();
-            player.setItemInHand(hand, ItemStack.EMPTY);
             level.playSound(player, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, player.getSoundSource(), 1.0F, 1.0F);
             return InteractionResult.SUCCESS;
         }

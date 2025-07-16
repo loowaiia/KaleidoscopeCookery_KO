@@ -1,10 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
-import com.github.ysbbbbbb.kaleidoscopecookery.effect.BaseEffect;
-import com.github.ysbbbbbb.kaleidoscopecookery.effect.SulfurEffect;
-import com.github.ysbbbbbb.kaleidoscopecookery.effect.VigorEffect;
-import com.github.ysbbbbbb.kaleidoscopecookery.effect.WarmthEffect;
+import com.github.ysbbbbbb.kaleidoscopecookery.effect.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraftforge.registries.DeferredRegister;
@@ -13,7 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModEffects {
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(Registries.MOB_EFFECT, KaleidoscopeCookery.MOD_ID);
 
-    public static final RegistryObject<MobEffect> FLATULENCE = EFFECTS.register("flatulence", () -> new BaseEffect(0xFFC6C6));
+    public static final RegistryObject<MobEffect> FLATULENCE = EFFECTS.register("flatulence", () -> new FlatulenceEffect(0xFFC6C6));
     public static final RegistryObject<MobEffect> TUNDRA_STRIDER = EFFECTS.register("tundra_strider", () -> new BaseEffect(0xA1F8FC));
     public static final RegistryObject<MobEffect> WARMTH = EFFECTS.register("warmth", () -> new WarmthEffect(0xFF5F0E));
     public static final RegistryObject<MobEffect> SATIATED_SHIELD = EFFECTS.register("satiated_shield", () -> new BaseEffect(0xFF1313));

@@ -17,6 +17,7 @@ public class ModCreativeTabs {
             .icon(() -> ModItems.IRON_KITCHEN_KNIFE.get().getDefaultInstance())
             .displayItems((par, output) -> {
                 output.accept(ModItems.STOVE.get());
+                output.accept(ModItems.SHAWARMA_SPIT.get());
                 output.accept(ModItems.STRAW_BLOCK.get());
                 output.accept(ModItems.OIL_BLOCK.get());
                 output.accept(ModItems.POT.get());
@@ -26,7 +27,6 @@ public class ModCreativeTabs {
                 output.accept(ModItems.KITCHENWARE_RACKS.get());
                 output.accept(ModItems.FRUIT_BASKET.get());
                 output.accept(ModItems.SCARECROW.get());
-                output.accept(ModItems.SHAWARMA_SPIT.get());
                 output.accept(ModItems.ENAMEL_BASIN.get());
                 output.accept(ModItems.OIL.get());
                 output.accept(ModItems.CHILI_RISTRA.get());

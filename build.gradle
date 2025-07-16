@@ -106,6 +106,7 @@ dependencies {
     runtimeOnly fg.deobf('curse.maven:touhou-little-maid-355044:6440955-sources-6482784')
     runtimeOnly fg.deobf("maven.modrinth:farmers-delight:1.20.1-1.2.6-forge")
     runtimeOnly fg.deobf("maven.modrinth:appleskin:2.5.1+mc1.20.1-forge")
+    runtimeOnly fg.deobf("maven.modrinth:better-advancements:0.4.2.25-forge")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 

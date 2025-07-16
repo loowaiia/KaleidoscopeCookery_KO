@@ -32,13 +32,13 @@ public class FoodBiteRegistry {
     public static ResourceLocation GOLDEN_SALAD;
     public static ResourceLocation SPICY_CHICKEN;
     public static ResourceLocation YAKITORI;
-    public static ResourceLocation CRYSTAL_LAMB_CHOP;
-    public static ResourceLocation NETHER_STYLE_SASHIMI;
     public static ResourceLocation PAN_SEARED_KNIGHT_STEAK;
     public static ResourceLocation STARGAZY_PIE;
     public static ResourceLocation SWEET_AND_SOUR_ENDER_PEARLS;
+    public static ResourceLocation CRYSTAL_LAMB_CHOP;
     public static ResourceLocation BLAZE_LAMB_CHOP;
     public static ResourceLocation FROST_LAMB_CHOP;
+    public static ResourceLocation NETHER_STYLE_SASHIMI;
     public static ResourceLocation END_STYLE_SASHIMI;
     public static ResourceLocation DESERT_STYLE_SASHIMI;
     public static ResourceLocation TUNDRA_STYLE_SASHIMI;
@@ -84,14 +84,6 @@ public class FoodBiteRegistry {
         YAKITORI = registry.registerFoodData("yakitori", FoodData
                 .create(4, YAKITORI_BLOCK, YAKITORI_ITEM));
 
-        CRYSTAL_LAMB_CHOP = registry.registerFoodData("crystal_lamb_chop", FoodData
-                .create(3, CRYSTAL_LAMB_CHOP_BLOCK, CRYSTAL_LAMB_CHOP_ITEM)
-                .addLootItems(Items.AMETHYST_SHARD));
-
-        NETHER_STYLE_SASHIMI = registry.registerFoodData("nether_style_sashimi", FoodData
-                .create(4, NETHER_STYLE_SASHIMI_BLOCK, NETHER_STYLE_SASHIMI_ITEM)
-                .addLootItems(Items.CRIMSON_FUNGUS, Items.WARPED_FUNGUS));
-
         PAN_SEARED_KNIGHT_STEAK = registry.registerFoodData("pan_seared_knight_steak", FoodData
                 .create(4, PAN_SEARED_KNIGHT_STEAK_BLOCK, PAN_SEARED_KNIGHT_STEAK_ITEM)
                 .addLootItems(Items.BONE, Items.BONE_MEAL));
@@ -102,6 +94,10 @@ public class FoodBiteRegistry {
         SWEET_AND_SOUR_ENDER_PEARLS = registry.registerFoodData("sweet_and_sour_ender_pearls", FoodData
                 .create(3, SWEET_AND_SOUR_ENDER_PEARLS_BLOCK, SWEET_AND_SOUR_ENDER_PEARLS_ITEM));
 
+        CRYSTAL_LAMB_CHOP = registry.registerFoodData("crystal_lamb_chop", FoodData
+                .create(3, CRYSTAL_LAMB_CHOP_BLOCK, CRYSTAL_LAMB_CHOP_ITEM)
+                .addLootItems(Items.AMETHYST_SHARD));
+
         BLAZE_LAMB_CHOP = registry.registerFoodData("blaze_lamb_chop", FoodData
                 .create(3, BLAZE_LAMB_CHOP_BLOCK, BLAZE_LAMB_CHOP_ITEM)
                 .addLootItems(Items.BLAZE_ROD));
@@ -109,6 +105,10 @@ public class FoodBiteRegistry {
         FROST_LAMB_CHOP = registry.registerFoodData("frost_lamb_chop", FoodData
                 .create(3, FROST_LAMB_CHOP_BLOCK, FROST_LAMB_CHOP_ITEM)
                 .addLootItems(Items.BLUE_ICE));
+
+        NETHER_STYLE_SASHIMI = registry.registerFoodData("nether_style_sashimi", FoodData
+                .create(4, NETHER_STYLE_SASHIMI_BLOCK, NETHER_STYLE_SASHIMI_ITEM)
+                .addLootItems(Items.CRIMSON_FUNGUS, Items.WARPED_FUNGUS));
 
         END_STYLE_SASHIMI = registry.registerFoodData("end_style_sashimi", FoodData
                 .create(4, END_STYLE_SASHIMI_BLOCK, END_STYLE_SASHIMI_ITEM)

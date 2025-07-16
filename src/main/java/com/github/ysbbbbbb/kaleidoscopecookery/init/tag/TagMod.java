@@ -4,10 +4,19 @@ import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
 public interface TagMod {
+    /**
+     * 本模组的物品标签，用于成就
+     */
+    TagKey<Item> COOKERY_MOD_ITEMS = itemTag("cookery_mod_items");
+    /**
+     * 本模组的作物种子，用于成就
+     */
+    TagKey<Item> COOKERY_MOD_SEEDS = itemTag("cookery_mod_seeds");
     /**
      * 任意可以点燃本模组炉灶的物品
      */
@@ -59,11 +68,20 @@ public interface TagMod {
      */
     TagKey<Block> HEAT_SOURCE_BLOCKS_WITHOUT_LIT = blockTag("heat_source_blocks_without_lit");
 
+    /**
+     * 被本模组当做猪油来源的实体
+     */
+    TagKey<EntityType<?>> PIG_OIL_SOURCE = entityTag("pig_oil_source");
+
     static TagKey<Item> itemTag(String name) {
         return TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, name));
     }
 
     static TagKey<Block> blockTag(String name) {
         return TagKey.create(Registries.BLOCK, new ResourceLocation(KaleidoscopeCookery.MOD_ID, name));
+    }
+
+    static TagKey<EntityType<?>> entityTag(String name) {
+        return TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(KaleidoscopeCookery.MOD_ID, name));
     }
 }

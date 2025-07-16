@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -48,7 +49,14 @@ public class TagItem extends ItemTagsProvider {
         tag(PRESERVATION_FOOD).add(Items.ROTTEN_FLESH, Items.CHICKEN,
                 Items.PUFFERFISH, Items.SPIDER_EYE, Items.POISONOUS_POTATO);
         this.tag(TagMod.STRAW_BALE).add(HAY_BLOCK, ModItems.STRAW_BLOCK.get());
-        addPotIngredient();
+
+        this.tag(COOKERY_MOD_SEEDS).add(
+                ModItems.TOMATO_SEED.get(), ModItems.CHILI_SEED.get(),
+                ModItems.WILD_RICE_SEED.get(), ModItems.LETTUCE_SEED.get()
+        );
+
+        this.addModItems();
+        this.addPotIngredient();
 
         // 原版兼容
         tag(ItemTags.SHOVELS).add(ModItems.KITCHEN_SHOVEL.get());
@@ -86,6 +94,16 @@ public class TagItem extends ItemTagsProvider {
         tag(TagCommon.RAW_FISHES_TROPICAL).add(ModItems.SASHIMI.get());
         tag(TagCommon.RAW_FISHES_COD).add(COD);
         tag(TagCommon.RAW_FISHES_SALMON).add(SALMON);
+    }
+
+    private void addModItems() {
+        IntrinsicTagAppender<Item> modTags = tag(COOKERY_MOD_ITEMS);
+        for (Item item : ForgeRegistries.ITEMS) {
+            ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(item);
+            if (itemId != null && itemId.getNamespace().equals(KaleidoscopeCookery.MOD_ID)) {
+                modTags.add(item);
+            }
+        }
     }
 
     private void addPotIngredient() {

@@ -1,7 +1,9 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.advancements.critereon.ModEventTriggerType;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IChoppingBoard;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.ChoppingBoardBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModTrigger;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -64,6 +66,7 @@ public class ChoppingBoardBlock extends HorizontalDirectionalBlock implements En
                 return InteractionResult.PASS;
             }
             if (choppingBoard.onCutItem(level, player, itemInHand)) {
+                ModTrigger.EVENT.trigger(player, ModEventTriggerType.USE_CHOPPING_BOARD);
                 return InteractionResult.SUCCESS;
             }
             if (player.isSecondaryUseActive() && choppingBoard.onTakeOut(level, player)) {

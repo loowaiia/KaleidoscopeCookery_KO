@@ -4,6 +4,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenShovelItem;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.StockpotLidItem;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -92,7 +93,6 @@ public class ItemModelGenerator extends ItemModelProvider {
         basicItem(ModItems.CATERPILLAR.get());
         basicItem(ModItems.ENAMEL_BASIN.get());
         basicItem(ModItems.KITCHENWARE_RACKS.get());
-        basicItem(ModItems.SHAWARMA_SPIT.get());
 
         ResourceLocation chileRistra = ForgeRegistries.ITEMS.getKey(ModItems.CHILI_RISTRA.get());
         if (chileRistra != null) {
@@ -107,6 +107,15 @@ public class ItemModelGenerator extends ItemModelProvider {
             getBuilder(shovel.toString())
                     .override().model(shovelNoOil).predicate(KitchenShovelItem.HAS_OIL_PROPERTY, 0).end()
                     .override().model(shovelHasOil).predicate(KitchenShovelItem.HAS_OIL_PROPERTY, 1).end();
+        }
+
+        ResourceLocation stockpotLid = ForgeRegistries.ITEMS.getKey(ModItems.STOCKPOT_LID.get());
+        if (stockpotLid != null) {
+            ModelFile normal = new ModelFile.UncheckedModelFile(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "item/stockpot_lid_normal"));
+            ModelFile using = new ModelFile.UncheckedModelFile(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "item/stockpot_lid_using"));
+            getBuilder(stockpotLid.toString())
+                    .override().model(normal).predicate(StockpotLidItem.USING_PROPERTY, 0).end()
+                    .override().model(using).predicate(StockpotLidItem.USING_PROPERTY, 1).end();
         }
 
         FoodBiteRegistry.FOOD_DATA_MAP.forEach((key, value) -> {

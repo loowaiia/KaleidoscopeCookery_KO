@@ -1,13 +1,11 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.advancements.critereon.ModEventTriggerType;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IPot;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.PotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModParticles;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenShovelItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
@@ -218,10 +216,12 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
         if (stack.is(TagMod.OIL)) {
             placeOil(level, user, level.random);
             stack.shrink(1);
+            ModTrigger.EVENT.trigger(user, ModEventTriggerType.PUT_OIL_IN_POT);
             return true;
         } else if (stack.is(ModItems.KITCHEN_SHOVEL.get()) && KitchenShovelItem.hasOil(stack)) {
             placeOil(level, user, level.random);
             KitchenShovelItem.setHasOil(stack, false);
+            ModTrigger.EVENT.trigger(user, ModEventTriggerType.PUT_OIL_IN_POT);
             return true;
         }
         return false;
@@ -263,6 +263,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
         if (this.status == PUT_INGREDIENT) {
             if (!this.isEmpty()) {
                 this.startCooking(level);
+                ModTrigger.EVENT.trigger(user, ModEventTriggerType.STIR_FRY_IN_POT);
             }
         }
 
@@ -270,6 +271,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
         if (this.status == COOKING) {
             if (this.stirFryCount > 0) {
                 this.stirFryCount--;
+                ModTrigger.EVENT.trigger(user, ModEventTriggerType.STIR_FRY_IN_POT);
             }
         }
     }
@@ -320,6 +322,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
         } else {
             if (this.hasHeatSource(level)) {
                 user.hurt(level.damageSources().inFire(), 1);
+                ModTrigger.EVENT.trigger(user, ModEventTriggerType.HURT_WHEN_TAKEOUT_FROM_POT);
             }
             this.sendActionBarMessage(user, "need_kitchen_shovel");
             return false;
@@ -343,6 +346,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
         if (!mainHandItem.is(ModItems.KITCHEN_SHOVEL.get())) {
             if (this.hasHeatSource(level)) {
                 user.hurt(level.damageSources().inFire(), 1);
+                ModTrigger.EVENT.trigger(user, ModEventTriggerType.HURT_WHEN_TAKEOUT_FROM_POT);
             }
             this.sendActionBarMessage(user, "need_carrier", carrierName);
         }
@@ -390,6 +394,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
                 ItemUtils.getItemToLivingEntity(user, stack);
                 if (this.hasHeatSource(level)) {
                     user.hurt(level.damageSources().inFire(), 1);
+                    ModTrigger.EVENT.trigger(user, ModEventTriggerType.HURT_WHEN_TAKEOUT_FROM_POT);
                 }
                 return true;
             }

@@ -1,6 +1,8 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.entity;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.advancements.critereon.ModEventTriggerType;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModTrigger;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -125,12 +127,14 @@ public class ScarecrowEntity extends LivingEntity {
         if (player.getAbilities().instabuild && headItem.isEmpty()) {
             this.setItemSlot(EquipmentSlot.HEAD, itemInHand.copyWithCount(1));
             this.level().playSound(null, this.blockPosition(), SoundEvents.ITEM_FRAME_ADD_ITEM, this.getSoundSource());
+            ModTrigger.EVENT.trigger(player, ModEventTriggerType.PLACE_HEAD_ON_SCARECROW);
             return InteractionResult.SUCCESS;
         }
         if (!itemInHand.isEmpty() && itemInHand.getCount() > 1) {
             if (headItem.isEmpty()) {
                 this.setItemSlot(EquipmentSlot.HEAD, itemInHand.split(1));
                 this.level().playSound(null, this.blockPosition(), SoundEvents.ITEM_FRAME_ADD_ITEM, this.getSoundSource());
+                ModTrigger.EVENT.trigger(player, ModEventTriggerType.PLACE_HEAD_ON_SCARECROW);
                 return InteractionResult.SUCCESS;
             }
             return InteractionResult.PASS;
@@ -138,6 +142,7 @@ public class ScarecrowEntity extends LivingEntity {
         this.setItemSlot(EquipmentSlot.HEAD, itemInHand);
         this.level().playSound(null, this.blockPosition(), SoundEvents.ITEM_FRAME_ADD_ITEM, this.getSoundSource());
         player.setItemInHand(InteractionHand.MAIN_HAND, headItem);
+        ModTrigger.EVENT.trigger(player, ModEventTriggerType.PLACE_HEAD_ON_SCARECROW);
         return InteractionResult.SUCCESS;
     }
 

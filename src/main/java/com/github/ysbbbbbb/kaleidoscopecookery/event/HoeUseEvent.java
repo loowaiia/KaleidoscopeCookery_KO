@@ -1,6 +1,8 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.event;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.advancements.critereon.ModEventTriggerType;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -54,6 +56,7 @@ public class HoeUseEvent {
             level.setBlockAndUpdate(pos, Blocks.FARMLAND.defaultBlockState());
             level.playSound(null, pos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
             stack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(event.getHand()));
+            ModTrigger.EVENT.trigger(player, ModEventTriggerType.USE_HOE_ON_WATER_FIELD);
         }
         event.setCanceled(true);
         event.setCancellationResult(InteractionResult.SUCCESS);

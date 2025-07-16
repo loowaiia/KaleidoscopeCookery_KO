@@ -1,5 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.advancements.critereon.ModEventTriggerType;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModTrigger;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -145,6 +147,7 @@ public class StoveBlock extends HorizontalDirectionalBlock {
                         level.getRandom().nextFloat() * 0.4F + 0.8F);
                 itemInHand.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
             }
+            ModTrigger.EVENT.trigger(player, ModEventTriggerType.LIT_THE_STOVE);
             return InteractionResult.SUCCESS;
         }
         // 熄灭
@@ -165,6 +168,9 @@ public class StoveBlock extends HorizontalDirectionalBlock {
         BlockPos hitBlockPos = hitResult.getBlockPos();
         if (!level.isClientSide && projectile.isOnFire() && projectile.mayInteract(level, hitBlockPos) && !state.getValue(LIT)) {
             level.setBlock(hitBlockPos, state.setValue(BlockStateProperties.LIT, true), Block.UPDATE_ALL_IMMEDIATE);
+            if (projectile.getOwner() instanceof Player player) {
+                ModTrigger.EVENT.trigger(player, ModEventTriggerType.LIT_THE_STOVE);
+            }
         }
     }
 

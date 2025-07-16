@@ -1,7 +1,10 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.item;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
+import com.google.common.collect.Lists;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -9,6 +12,8 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,12 +21,20 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class BowlFoodBlockItem extends BlockItem {
+    private final List<MobEffectInstance> effectInstances = Lists.newArrayList();
+
     public BowlFoodBlockItem(Block pBlock, FoodProperties properties) {
         super(pBlock, new Item.Properties().stacksTo(16).food(properties));
+        properties.getEffects().forEach(effect -> {
+            if (effect.getSecond() >= 1F) {
+                effectInstances.add(effect.getFirst());
+            }
+        });
     }
 
     @Override
@@ -47,5 +60,12 @@ public class BowlFoodBlockItem extends BlockItem {
             });
         }
         return super.finishUsingItem(stack, level, entity);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        if (!this.effectInstances.isEmpty()) {
+            PotionUtils.addPotionTooltip(this.effectInstances, tooltip, 1.0F);
+        }
     }
 }
