@@ -7,7 +7,6 @@ import net.minecraft.world.item.Items;
 public class ModSoupBases {
     public static final ResourceLocation WATER = new ResourceLocation("minecraft", "water");
     public static final ResourceLocation LAVA = new ResourceLocation("minecraft", "lava");
-    public static final ResourceLocation MILK = new ResourceLocation("minecraft", "milk");
     public static final ResourceLocation AXOLOTL_BUCKET = new ResourceLocation("minecraft", "axolotl_bucket");
     public static final ResourceLocation COD_BUCKET = new ResourceLocation("minecraft", "cod_bucket");
     public static final ResourceLocation SALMON_BUCKET = new ResourceLocation("minecraft", "salmon_bucket");
