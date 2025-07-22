@@ -35,9 +35,16 @@ minecraft {
         }
         client {
             property 'forge.enabledGameTestNamespaces', mod_id
+            workingDirectory project.file('run/client_a')
+        }
+        client2 {
+            parent minecraft.runs.client
+            workingDirectory project.file('run/client_b')
+            args '--username', 'tartaric_acid'
         }
         server {
             property 'forge.enabledGameTestNamespaces', mod_id
+            workingDirectory project.file('run/server')
             args '--nogui'
         }
         gameTestServer {

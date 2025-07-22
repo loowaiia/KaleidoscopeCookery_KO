@@ -1,15 +1,14 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-public class ChairBlockEntity extends BlockEntity {
+public class ChairBlockEntity extends BaseBlockEntity {
     private static final String COLOR_TAG = "CarpetColor";
     private DyeColor color = DyeColor.WHITE;
 
@@ -27,16 +26,6 @@ public class ChairBlockEntity extends BlockEntity {
     public void load(CompoundTag tag) {
         super.load(tag);
         this.color = DyeColor.byId(tag.getInt(COLOR_TAG));
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     public DyeColor getColor() {
