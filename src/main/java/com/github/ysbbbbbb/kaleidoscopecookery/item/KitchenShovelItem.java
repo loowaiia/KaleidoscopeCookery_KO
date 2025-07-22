@@ -49,7 +49,7 @@ public class KitchenShovelItem extends ShovelItem {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         InteractionResult result = super.useOn(context);
-        if (result == InteractionResult.SUCCESS && hasOil(context.getItemInHand())) {
+        if (result.shouldAwardStats() && hasOil(context.getItemInHand())) {
             setHasOil(context.getItemInHand(), false);
         }
         return result;

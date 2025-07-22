@@ -6,6 +6,9 @@
   "ingredients": [
     {
       "tag": "forge:raw_fishes/cod"
+    },
+    {
+      "tag": "forge:crops/chilipepper"
     }
   ],
   "result": {
