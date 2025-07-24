@@ -3,38 +3,45 @@
 > A Minecraft mod that adds immersive cooking systems and delicious recipes to enhance your culinary adventure.
 
 ![Minecraft](https://img.shields.io/badge/Minecraft-Java%20Edition-brightgreen)
-![Forge](https://img.shields.io/badge/Forge-1.20.1-orange)
-![License](https://img.shields.io/badge/License-BSD%20%2B%20CC%20BY--NC--SA%204.0-blue)
+![Forge](https://img.shields.io/badge/Forge%20|%20NeoForge-1.20.1%20|%201.21.1-orange)
+![License](https://img.shields.io/badge/License-BSD%20|%20CC%20BY--NC--SA%204.0-blue)
 
-## 简介
+## Introduction
 
-这是一个为 Minecraft Java 版开发的模组，基于 Forge 1.20.1 平台。本模组致力于为 Minecraft 带来丰富的烹饪体验和全新的游戏内容。
+This is a mod developed for Minecraft Java Edition. This mod is committed to bringing a rich cooking experience and new game content to Minecraft.
 
-## 特性
+## Features
 
-- 🍳 全新的烹饪系统
-- 🥘 丰富的食物配方
-- 🔥 创新的烹饪设备
-- 🎮 沉浸式的游戏体验
+- 🍳 Brand new cooking system
+- 🥘 Rich food recipes
+- 🔥 Innovative cooking equipment
+- 🎮 Immersive gaming experience
 
-## 许可协议
+## Image 
+![img](https://cdn.modrinth.com/data/v17FatAc/images/01385799f37a2874ffd44638c52c9a1b3faa0347.png)
+![img](https://cdn.modrinth.com/data/v17FatAc/images/0d4c8bdb51059683adecab83ed426faa13deae5f.png)
+![img](https://cdn.modrinth.com/data/v17FatAc/images/1725db57e319df4a57d2e0bde60a59fafd2e2e88.png)
+![img](https://cdn.modrinth.com/data/v17FatAc/images/2b2dfb0e73b58e9f038ebb48364421ae323b9d5f.png)
+![img](https://cdn.modrinth.com/data/v17FatAc/images/4bc9e2bb5f4f2a8081a4b1875187eedfb7b212df.png)
 
-本项目采用双重许可协议：
+## License agreement
 
-- **源代码**: [BSD 3-Clause License](LICENSE-CODE)
-- **资源文件**: [CC BY-NC-SA 4.0](LICENSE-ASSETS)
+This project adopts a dual license agreement:
 
-## 问题反馈与建议
+- **Source code**: [BSD 3-Clause License](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/blob/main/LICENSE-CODE)
+- **Resource files**: [CC BY-NC-SA 4.0](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/blob/main/LICENSE-ASSETS)
 
-如果您在使用过程中遇到问题或有改进建议，欢迎通过以下方式联系我们：
+## Feedback and suggestions
 
-- 🐛 [Issues](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/issues) - 提交 Bug 报告
-- 💡 [Issues](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/issues) - 功能建议、讨论交流
+If you encounter problems or have suggestions for improvements during use, please contact us through the following methods:
 
-## 开发团队
+- 🐛 [Issues](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/issues) - Submit a bug report
+- 💡 [Issues](https://github.com/KaleidoscopeMods/KaleidoscopeCookery/issues) - Feature suggestions, discussions and exchanges
 
-**森罗物语官方制作组（Kaleidoscope Official Production Team）**
+## Development Team
+
+**Kaleidoscope Official Production Team**
 
 ---
 
-*感谢所有为本项目做出贡献的开发者和玩家！*
+*Thanks to all the developers and players who have contributed to this project! *
