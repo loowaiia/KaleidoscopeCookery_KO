@@ -112,14 +112,23 @@ repositories {
             includeGroup "dev.architectury"
         }
     }
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
+    // JEI
     compileOnly fg.deobf("mezz.jei:jei-1.20.1-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge-api:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:${jei_version}")
+
+    // EMI
+    compileOnly fg.deobf("dev.emi:emi-forge:1.1.22+1.20.1:api")
+    implementation fg.deobf("dev.emi:emi-forge:1.1.22+1.20.1")
 
     implementation fg.deobf("maven.modrinth:jade:11.13.1+forge")
 
