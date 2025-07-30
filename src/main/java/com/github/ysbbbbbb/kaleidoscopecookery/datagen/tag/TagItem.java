@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 import static com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod.*;
+import static net.minecraft.tags.ItemTags.VILLAGER_PLANTABLE_SEEDS;
 import static net.minecraft.world.item.Items.*;
 
 public class TagItem extends ItemTagsProvider {
@@ -62,6 +63,10 @@ public class TagItem extends ItemTagsProvider {
         tag(ItemTags.SHOVELS).add(ModItems.KITCHEN_SHOVEL.get());
         tag(ItemTags.SWORDS).addTag(KITCHEN_KNIFE);
         tag(EXTINGUISH_STOVE).addTag(ItemTags.SHOVELS);
+        tag(VILLAGER_PLANTABLE_SEEDS).add(ModItems.TOMATO_SEED.get(),
+                ModItems.CHILI_SEED.get(), ModItems.RICE_SEED.get(),
+                ModItems.WILD_RICE_SEED.get(), ModItems.LETTUCE_SEED.get()
+        );
 
         // 社区兼容
         tag(TagCommon.CROPS_CHILI_PEPPER).add(ModItems.RED_CHILI.get(), ModItems.GREEN_CHILI.get());

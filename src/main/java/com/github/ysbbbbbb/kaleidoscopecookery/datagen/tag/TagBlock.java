@@ -58,5 +58,8 @@ public class TagBlock extends BlockTagsProvider {
                 ModBlocks.CHAIR_JUNGLE.get(), ModBlocks.CHAIR_MANGROVE.get(),
                 ModBlocks.CHAIR_WARPED.get());
         this.tag(TagMod.HEAT_SOURCE_BLOCKS_WITHOUT_LIT).add(Blocks.FIRE, Blocks.SOUL_FIRE, Blocks.LAVA, Blocks.MAGMA_BLOCK);
+        this.tag(BlockTags.CROPS).add(ModBlocks.TOMATO_CROP.get(),
+                ModBlocks.RICE_CROP.get(), ModBlocks.CHILI_CROP.get(),
+                ModBlocks.LETTUCE_CROP.get());
     }
 }
