@@ -1,6 +1,29 @@
 {
   "parent": "kaleidoscope_cookery:iron_knife",
   "criteria": {
+    "kill_hoglin": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:hoglin"
+            }
+          }
+        ],
+        "killing_blow": {
+          "direct_entity": {
+            "equipment": {
+              "mainhand": {
+                "tag": "kaleidoscope_cookery:kitchen_knife"
+              }
+            }
+          }
+        }
+      },
+      "trigger": "minecraft:player_killed_entity"
+    },
     "kill_pig": {
       "conditions": {
         "entity": [
@@ -47,14 +70,14 @@
       },
       "trigger": "minecraft:player_killed_entity"
     },
-    "kill_zombified_piglin": {
+    "kill_piglin_brute": {
       "conditions": {
         "entity": [
           {
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "minecraft:zombified_piglin"
+              "type": "minecraft:piglin_brute"
             }
           }
         ],
@@ -91,7 +114,8 @@
     [
       "kill_pig",
       "kill_piglin",
-      "kill_zombified_piglin"
+      "kill_piglin_brute",
+      "kill_hoglin"
     ]
   ],
   "sends_telemetry_event": true

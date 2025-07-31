@@ -56,8 +56,16 @@ public class BaseAdvancement {
                                 ).build()
                         ))
                 ))
-                .addCriterion("kill_zombified_piglin", KilledTrigger.TriggerInstance.playerKilledEntity(
-                        EntityPredicate.Builder.entity().of(EntityType.ZOMBIFIED_PIGLIN),
+                .addCriterion("kill_piglin_brute", KilledTrigger.TriggerInstance.playerKilledEntity(
+                        EntityPredicate.Builder.entity().of(EntityType.PIGLIN_BRUTE),
+                        DamageSourcePredicate.Builder.damageType().direct(EntityPredicate.Builder.entity().equipment(
+                                EntityEquipmentPredicate.Builder.equipment().mainhand(
+                                        ItemPredicate.Builder.item().of(TagMod.KITCHEN_KNIFE).build()
+                                ).build()
+                        ))
+                ))
+                .addCriterion("kill_hoglin", KilledTrigger.TriggerInstance.playerKilledEntity(
+                        EntityPredicate.Builder.entity().of(EntityType.HOGLIN),
                         DamageSourcePredicate.Builder.damageType().direct(EntityPredicate.Builder.entity().equipment(
                                 EntityEquipmentPredicate.Builder.equipment().mainhand(
                                         ItemPredicate.Builder.item().of(TagMod.KITCHEN_KNIFE).build()
