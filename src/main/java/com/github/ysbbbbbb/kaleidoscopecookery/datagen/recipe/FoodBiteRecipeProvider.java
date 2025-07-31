@@ -254,6 +254,7 @@ public class FoodBiteRecipeProvider extends ModRecipeProvider {
         addSameItemRecipe(inputItem, count, output, Ingredient.of(carrier), consumer);
     }
 
+    @SuppressWarnings("all")
     public void addSameItemRecipe(Item inputItem, int count, ItemStack output, Ingredient carrier, Consumer<FinishedRecipe> consumer) {
         ItemLike[] inputs = this.getItemsWithCount(inputItem, count);
         String idInput = this.getRecipeIdWithCount(inputItem, count);

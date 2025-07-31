@@ -38,6 +38,7 @@ public class SimplePotRecipeProvider extends ModRecipeProvider {
         this.addSingleItemRecipe(inputItem, outputItem, idInput, Ingredient.EMPTY, consumer);
     }
 
+    @SuppressWarnings("all")
     public void addSingleItemRecipe(TagKey<Item> inputItem, Item outputItem, String idInput, Ingredient carrier, Consumer<FinishedRecipe> consumer) {
         for (int i = 1; i <= 9; i++) {
             TagKey<Item>[] inputs = this.getItemsWithCount(inputItem, i);

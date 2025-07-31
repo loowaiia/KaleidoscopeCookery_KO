@@ -2,13 +2,15 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init.registry;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.datagen.lootable.GiftLootTables;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoupBases;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModVillager;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.BowlFoodBlockItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.network.NetworkHandler;
+import net.minecraft.world.entity.ai.behavior.GiveGiftToHero;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -22,6 +24,7 @@ public class CommonRegistry {
         event.enqueueWork(CommonRegistry::addComposter);
         event.enqueueWork(NetworkHandler::init);
         event.enqueueWork(ModSoupBases::registerAll);
+        event.enqueueWork(CommonRegistry::addVillagerGift);
     }
 
     @SubscribeEvent
@@ -41,6 +44,10 @@ public class CommonRegistry {
                 }
             });
         }
+    }
+
+    private static void addVillagerGift() {
+        GiveGiftToHero.GIFTS.put(ModVillager.CHEF.get(), GiftLootTables.CHEF_GIFT);
     }
 
     private static void addComposter() {
