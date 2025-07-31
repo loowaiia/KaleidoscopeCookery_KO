@@ -131,6 +131,37 @@ public class ShawarmaSpitBlock extends HorizontalDirectionalBlock implements Sim
         }
     }
 
+    @Override
+    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide && player.isCreative()) {
+            if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
+                BlockPos below = pos.below();
+                BlockState belowState = level.getBlockState(below);
+                if (belowState.is(state.getBlock()) && belowState.getValue(HALF) == DoubleBlockHalf.LOWER) {
+                    dropCookItems(level, below);
+                    BlockState airBlockState = belowState.getFluidState().is(Fluids.WATER) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
+                    level.setBlock(below, airBlockState, Block.UPDATE_SUPPRESS_DROPS | Block.UPDATE_ALL);
+                    level.levelEvent(player, LevelEvent.PARTICLES_DESTROY_BLOCK, below, Block.getId(belowState));
+                }
+            } else {
+                dropCookItems(level, pos);
+            }
+        }
+        super.playerWillDestroy(level, pos, state, player);
+    }
+
+    private void dropCookItems(Level level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof ShawarmaSpitBlockEntity shawarmaSpit) {
+            if (!shawarmaSpit.cookingItem.isEmpty()) {
+                popResource(level, pos, shawarmaSpit.cookingItem.copy());
+                shawarmaSpit.cookingItem = ItemStack.EMPTY;
+            } else if (!shawarmaSpit.cookedItem.isEmpty()) {
+                popResource(level, pos, shawarmaSpit.cookedItem.copy());
+                shawarmaSpit.cookedItem = ItemStack.EMPTY;
+            }
+        }
+    }
+
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockPos pos = context.getClickedPos();

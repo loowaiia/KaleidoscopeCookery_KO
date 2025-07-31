@@ -84,6 +84,14 @@ public class FruitBasketBlock extends HorizontalDirectionalBlock implements Enti
     }
 
     @Override
+    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide && player.isCreative()) {
+            dropResources(state, level, pos, level.getBlockEntity(pos), player, player.getMainHandItem());
+        }
+        super.playerWillDestroy(level, pos, state, player);
+    }
+
+    @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder lootParamsBuilder) {
         List<ItemStack> drops = super.getDrops(state, lootParamsBuilder);
         BlockEntity parameter = lootParamsBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);

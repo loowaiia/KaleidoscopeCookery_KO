@@ -35,6 +35,7 @@ public class ChoppingBoardBlock extends HorizontalDirectionalBlock implements En
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final VoxelShape NORTH_SOUTH = Block.box(1, 0, 2, 15, 2, 14);
     public static final VoxelShape EAST_WEST = Block.box(2, 0, 1, 14, 2, 15);
+    private static final double DURABILITY_COST_PROBABILITY = 0.25;
 
     public ChoppingBoardBlock() {
         super(BlockBehaviour.Properties.of()
@@ -66,6 +67,10 @@ public class ChoppingBoardBlock extends HorizontalDirectionalBlock implements En
                 return InteractionResult.PASS;
             }
             if (choppingBoard.onCutItem(level, player, itemInHand)) {
+                // 切菜成功时，有 25% 的概率消耗耐久度
+                if (level.random.nextDouble() < DURABILITY_COST_PROBABILITY) {
+                    itemInHand.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(player.getUsedItemHand()));
+                }
                 ModTrigger.EVENT.trigger(player, ModEventTriggerType.USE_CHOPPING_BOARD);
                 return InteractionResult.SUCCESS;
             }
