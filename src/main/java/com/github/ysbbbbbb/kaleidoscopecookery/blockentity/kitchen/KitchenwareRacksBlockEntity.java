@@ -10,6 +10,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.Tags;
 
 public class KitchenwareRacksBlockEntity extends BaseBlockEntity implements IKitchenwareRacks {
@@ -64,6 +65,11 @@ public class KitchenwareRacksBlockEntity extends BaseBlockEntity implements IKit
         super.load(tag);
         this.itemLeft = ItemStack.of(tag.getCompound(LEFT_ITEM));
         this.itemRight = ItemStack.of(tag.getCompound(RIGHT_ITEM));
+    }
+
+    @Override
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.worldPosition);
     }
 
     @Override
