@@ -145,6 +145,7 @@
   "entity.kaleidoscope_cookery.scarecrow": "稻草人",
   "tooltip.kaleidoscope_cookery.stove": "厨房用具的热源方块，使用打火石点燃",
   "tooltip.kaleidoscope_cookery.item_container.empty": "空无一物",
+  "tip.kaleidoscope_cookery.kitchen.remove_ingredient.need_container": "需要%s来取出食材",
   "tip.kaleidoscope_cookery.pot.need_oil": "缺少油脂",
   "tip.kaleidoscope_cookery.pot.need_lit_stove": "缺少必要的热源",
   "tip.kaleidoscope_cookery.pot.add_ingredient": "加入配菜中...",

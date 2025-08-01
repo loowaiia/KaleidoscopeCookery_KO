@@ -19,8 +19,10 @@ import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -28,6 +30,8 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -302,13 +306,18 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
         if (this.status != PUT_INGREDIENT) {
             return false;
         }
-        if (!itemStack.isEdible() && !itemStack.is(TagItem.POT_INGREDIENT)) {
+        if (!itemStack.isEdible() && !itemStack.is(TagMod.POT_INGREDIENT)) {
             return false;
         }
         // 检查是否有足够的空间放入食材
         for (int i = 0; i < this.inputs.size(); i++) {
             if (!this.inputs.get(i).isEmpty()) {
                 continue;
+            }
+            // 如果带有容器，此时返还容器
+            Item containerItem = ItemUtils.getContainerItem(itemStack);
+            if (containerItem != Items.AIR) {
+                ItemUtils.getItemToLivingEntity(user, containerItem.getDefaultInstance());
             }
             this.inputs.set(i, itemStack.split(1));
             level.playSound(null, user.getX(), user.getY() + 0.5, user.getZ(),
@@ -333,8 +342,12 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             if (stack.isEmpty()) {
                 continue;
             }
-            ItemUtils.getItemToLivingEntity(user, stack.copy());
+            // 检查容器是否符合取出条件
+            if (!containerIsMatch(user, stack)) {
+                return false;
+            }
             this.inputs.set(i, ItemStack.EMPTY);
+            ItemUtils.getItemToLivingEntity(user, stack.copy());
             // 如果是流体汤底，且温度过高，玩家会受到伤害
             ISoupBase soupBase = this.getSoupBase();
             if (soupBase instanceof FluidSoupBase fluidSoupBase && fluidSoupBase.getFluid().getFluidType().getTemperature() > 500) {
@@ -343,6 +356,22 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             }
             this.refresh();
             return true;
+        }
+        return false;
+    }
+
+    private boolean containerIsMatch(LivingEntity user, ItemStack stack) {
+        Item containerItem = ItemUtils.getContainerItem(stack);
+        if (containerItem == Items.AIR) {
+            return true;
+        }
+        if (user.getMainHandItem().is(containerItem)) {
+            user.getMainHandItem().shrink(1);
+            return true;
+        }
+        if (user instanceof ServerPlayer player) {
+            player.sendSystemMessage(Component.translatable("tip.kaleidoscope_cookery.kitchen.remove_ingredient.need_container",
+                    containerItem.getDefaultInstance().getHoverName()));
         }
         return false;
     }

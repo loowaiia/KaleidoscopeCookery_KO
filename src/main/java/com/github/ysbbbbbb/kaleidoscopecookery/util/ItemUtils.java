@@ -1,12 +1,17 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.util;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.item.IHasContainer;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BowlFoodItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.tuple.Pair;
@@ -40,5 +45,25 @@ public class ItemUtils {
             }
         }
         return Pair.of(0, ItemStack.EMPTY);
+    }
+
+    public static Item getContainerItem(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return Items.AIR;
+        }
+        Item item = stack.getItem();
+        if (item instanceof IHasContainer hasContainer) {
+            return hasContainer.getContainerItem();
+        } else if (item instanceof BowlFoodItem) {
+            return Items.BOWL;
+        } else if (stack.is(TagMod.BOWL_CONTAINER)) {
+            return Items.BOWL;
+        } else if (stack.is(TagMod.GLASS_BOTTLE_CONTAINER)) {
+            return Items.GLASS_BOTTLE;
+        } else if (stack.is(TagMod.BUCKET_CONTAINER)) {
+            return Items.BUCKET;
+        }
+        // TODO: 也许需要添加 tag 来支持其他模组带有容器的食物？
+        return Items.AIR;
     }
 }

@@ -25,6 +25,12 @@ public class ModModelEvent {
 
         resourceManager.listResources(MODELS_CARPET, id -> id.getPath().endsWith(JSON))
                 .keySet().stream().map(ModModelEvent::handleModelId).forEach(event::register);
+
+        // 额外添加的模型注册
+        // 蜂蜜瓶，用来替换锅内渲染
+        event.register(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "item/honey"));
+        // 鸡蛋，用来替换锅内渲染
+        event.register(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "item/egg"));
     }
 
     private static ResourceLocation handleModelId(ResourceLocation input) {

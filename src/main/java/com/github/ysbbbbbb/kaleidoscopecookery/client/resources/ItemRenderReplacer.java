@@ -2,11 +2,13 @@ package com.github.ysbbbbbb.kaleidoscopecookery.client.resources;
 
 import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -20,15 +22,19 @@ import java.util.function.Function;
 public record ItemRenderReplacer(Map<ResourceLocation, ResourceLocation> pot,
                                  Map<ResourceLocation, ResourceLocation> stockpotCooking,
                                  Map<ResourceLocation, ResourceLocation> stockpotFinished) {
+    public static final Codec<ResourceLocation> RL_CODEC = Codec.STRING.comapFlatMap(ItemRenderReplacer::parseModelLocation, ResourceLocation::toString).stable();
     public static final Codec<ItemRenderReplacer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.unboundedMap(ResourceLocation.CODEC, ResourceLocation.CODEC).fieldOf("pot").forGetter(ItemRenderReplacer::pot),
-            Codec.unboundedMap(ResourceLocation.CODEC, ResourceLocation.CODEC).fieldOf("stockpot_cooking").forGetter(ItemRenderReplacer::stockpotCooking),
-            Codec.unboundedMap(ResourceLocation.CODEC, ResourceLocation.CODEC).fieldOf("stockpot_finished").forGetter(ItemRenderReplacer::stockpotFinished)
+            Codec.unboundedMap(ResourceLocation.CODEC, RL_CODEC).fieldOf("pot").forGetter(ItemRenderReplacer::pot),
+            Codec.unboundedMap(ResourceLocation.CODEC, RL_CODEC).fieldOf("stockpot_cooking").forGetter(ItemRenderReplacer::stockpotCooking),
+            Codec.unboundedMap(ResourceLocation.CODEC, RL_CODEC).fieldOf("stockpot_finished").forGetter(ItemRenderReplacer::stockpotFinished)
     ).apply(instance, ItemRenderReplacer::new));
 
     private static final Function<ResourceLocation, BakedModel> CACHE = Util.memoize(id -> {
-        ModelResourceLocation modelResourceLocation = new ModelResourceLocation(id, "inventory");
-        return Minecraft.getInstance().getItemRenderer().getItemModelShaper().getModelManager().getModel(modelResourceLocation);
+        ModelManager modelManager = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getModelManager();
+        if (id instanceof ModelResourceLocation modelRl) {
+            return modelManager.getModel(modelRl);
+        }
+        return modelManager.getModel(id);
     });
 
     public ItemRenderReplacer() {
@@ -47,6 +53,14 @@ public record ItemRenderReplacer(Map<ResourceLocation, ResourceLocation> pot,
             return itemRenderer.getModel(stack, level, null, 0);
         }
         return CACHE.apply(location);
+    }
+
+    private static DataResult<ResourceLocation> parseModelLocation(String input) {
+        String[] split = input.split("#");
+        if (split.length > 1) {
+            return DataResult.success(new ModelResourceLocation(new ResourceLocation(split[0]), split[1]));
+        }
+        return DataResult.success(new ResourceLocation(input));
     }
 
     public void addAll(ItemRenderReplacer other) {

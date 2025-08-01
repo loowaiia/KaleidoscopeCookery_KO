@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.item;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.item.IHasContainer;
 import com.google.common.collect.Lists;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class BowlFoodOnlyItem extends Item {
+public class BowlFoodOnlyItem extends Item implements IHasContainer {
     private final List<MobEffectInstance> effectInstances = Lists.newArrayList();
 
     public BowlFoodOnlyItem(FoodProperties properties) {
@@ -51,5 +52,10 @@ public class BowlFoodOnlyItem extends Item {
         if (!this.effectInstances.isEmpty()) {
             PotionUtils.addPotionTooltip(this.effectInstances, tooltip, 1.0F);
         }
+    }
+
+    @Override
+    public Item getContainerItem() {
+        return Items.BOWL;
     }
 }

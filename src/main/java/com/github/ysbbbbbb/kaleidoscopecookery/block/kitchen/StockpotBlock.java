@@ -7,6 +7,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoundType;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModTrigger;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -120,7 +121,7 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
             return InteractionResult.SUCCESS;
         }
         // 取出原料
-        if (mainHandItem.isEmpty() && stockpot.removeIngredient(level, player)) {
+        if ((mainHandItem.isEmpty() || mainHandItem.is(TagMod.INGREDIENT_CONTAINER)) && stockpot.removeIngredient(level, player)) {
             return InteractionResult.SUCCESS;
         }
         // 取出成品

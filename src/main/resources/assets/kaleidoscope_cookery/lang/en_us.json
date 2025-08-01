@@ -145,6 +145,7 @@
   "entity.kaleidoscope_cookery.scarecrow": "Scarecrow",
   "tooltip.kaleidoscope_cookery.stove": "The heat source block of the kitchen utensils, lit with flint and steel",
   "tooltip.kaleidoscope_cookery.item_container.empty": "Empty",
+  "tip.kaleidoscope_cookery.kitchen.remove_ingredient.need_container": "Need %s to take out ingredient!",
   "tip.kaleidoscope_cookery.pot.need_oil": "Lack of the oil",
   "tip.kaleidoscope_cookery.pot.need_lit_stove": "Lack of the necessary heat source",
   "tip.kaleidoscope_cookery.pot.add_ingredient": "Add to the ingredients...",

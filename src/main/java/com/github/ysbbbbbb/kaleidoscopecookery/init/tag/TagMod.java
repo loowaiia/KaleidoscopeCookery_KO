@@ -50,6 +50,28 @@ public interface TagMod {
      */
     TagKey<Item> PRESERVATION_FOOD = itemTag("preservation_food");
     /**
+     * 可以加入汤锅炒锅的原料
+     */
+    TagKey<Item> POT_INGREDIENT = itemTag("pot_ingredient");
+    /**
+     * 取出原料所识别的容器
+     */
+    TagKey<Item> INGREDIENT_CONTAINER = itemTag("ingredient_container");
+    /**
+     * 返回碗容器的物品，程序内嵌了本模组和原版所有的碗装食物的支持
+     * <p>
+     * 所以这个 tag 只需要添加其他不符合上述设定的碗容器食物即可
+     */
+    TagKey<Item> BOWL_CONTAINER = itemTag("bowl_container");
+    /**
+     * 返回桶容器的物品
+     */
+    TagKey<Item> BUCKET_CONTAINER = itemTag("bucket_container");
+    /**
+     * 返回玻璃瓶容器的物品
+     */
+    TagKey<Item> GLASS_BOTTLE_CONTAINER = itemTag("glass_bottle_container");
+    /**
      * 寒带疾行效果可以提速的方块
      */
     TagKey<Block> TUNDRA_STRIDER_SPEED_BLOCKS = blockTag("tundra_strider_speed_blocks");

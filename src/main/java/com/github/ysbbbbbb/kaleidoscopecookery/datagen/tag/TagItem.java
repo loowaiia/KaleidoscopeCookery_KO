@@ -5,12 +5,10 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagCommon;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -25,8 +23,6 @@ import static net.minecraft.tags.ItemTags.VILLAGER_PLANTABLE_SEEDS;
 import static net.minecraft.world.item.Items.*;
 
 public class TagItem extends ItemTagsProvider {
-    public static final TagKey<Item> POT_INGREDIENT = TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, "pot_ingredient"));
-
     public TagItem(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pLookupProvider,
                    CompletableFuture<TagLookup<Block>> pBlockTags, @Nullable ExistingFileHelper existingFileHelper) {
         super(pOutput, pLookupProvider, pBlockTags, KaleidoscopeCookery.MOD_ID, existingFileHelper);
@@ -55,6 +51,9 @@ public class TagItem extends ItemTagsProvider {
                 ModItems.TOMATO_SEED.get(), ModItems.CHILI_SEED.get(),
                 ModItems.WILD_RICE_SEED.get(), ModItems.LETTUCE_SEED.get()
         );
+
+        this.tag(INGREDIENT_CONTAINER).add(BUCKET, BOWL, GLASS_BOTTLE);
+        this.tag(GLASS_BOTTLE_CONTAINER).add(HONEY_BOTTLE);
 
         this.addModItems();
         this.addPotIngredient();
@@ -877,7 +876,6 @@ public class TagItem extends ItemTagsProvider {
                         NETHERITE_INGOT,
                         NETHERITE_SCRAP,
                         STICK,
-                        BOWL,
                         MUSHROOM_STEW,
                         STRING,
                         FEATHER,
@@ -913,7 +911,6 @@ public class TagItem extends ItemTagsProvider {
                         BAMBOO_HANGING_SIGN,
                         CRIMSON_HANGING_SIGN,
                         WARPED_HANGING_SIGN,
-                        BUCKET,
                         WATER_BUCKET,
                         LAVA_BUCKET,
                         POWDER_SNOW_BUCKET,
@@ -1000,7 +997,6 @@ public class TagItem extends ItemTagsProvider {
                         GOLD_NUGGET,
                         NETHER_WART,
                         POTION,
-                        GLASS_BOTTLE,
                         SPIDER_EYE,
                         FERMENTED_SPIDER_EYE,
                         BLAZE_POWDER,
