@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init.registry;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.compat.farmersdelight.FarmersDelightCompat;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.lootable.GiftLootTables;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoupBases;
@@ -25,6 +26,7 @@ public class CommonRegistry {
         event.enqueueWork(NetworkHandler::init);
         event.enqueueWork(ModSoupBases::registerAll);
         event.enqueueWork(CommonRegistry::addVillagerGift);
+        event.enqueueWork(CommonRegistry::modCompat);
     }
 
     @SubscribeEvent
@@ -44,6 +46,10 @@ public class CommonRegistry {
                 }
             });
         }
+    }
+
+    private static void modCompat() {
+        FarmersDelightCompat.init();
     }
 
     private static void addVillagerGift() {

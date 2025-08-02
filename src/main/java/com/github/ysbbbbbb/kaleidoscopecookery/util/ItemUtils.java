@@ -52,6 +52,10 @@ public class ItemUtils {
             return Items.AIR;
         }
         Item item = stack.getItem();
+        ItemStack remainingItem = item.getCraftingRemainingItem(stack);
+        if (remainingItem != null && !remainingItem.isEmpty()) {
+            return remainingItem.getItem();
+        }
         if (item instanceof IHasContainer hasContainer) {
             return hasContainer.getContainerItem();
         } else if (item instanceof BowlFoodItem) {

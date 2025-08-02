@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.advancements.critereon.ModEventTriggerType;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IStockpot;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.event.StockpotMatchRecipeEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.recipe.soupbase.ISoupBase;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.StockpotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
@@ -11,7 +12,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.StockpotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.StockpotRecipeSerializer;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.FluidSoupBase;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.SoupBaseManager;
-import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.BlockDrop;
@@ -20,6 +20,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,15 +32,16 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -235,12 +238,16 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
 
     private void setRecipe(Level levelIn) {
         StockpotContainer container = new StockpotContainer(this.inputs, this.soupBaseId);
+
+        // 触发事件，允许其他 mod 修改配方
+        StockpotMatchRecipeEvent.Pre preEvent = new StockpotMatchRecipeEvent.Pre(levelIn, this, container);
+        MinecraftForge.EVENT_BUS.post(preEvent);
+        if (preEvent.getOutput() != null) {
+            this.applyRecipe(levelIn, container, preEvent.getOutput());
+        }
+
         this.quickCheck.getRecipeFor(container, levelIn).ifPresentOrElse(recipe -> {
-            this.recipeId = recipe.getId();
-            this.recipe = recipe;
-            this.result = recipe.assemble(container, levelIn.registryAccess());
-            this.currentTick = recipe.time();
-            this.takeoutCount = Math.min(this.result.getCount(), MAX_TAKEOUT_COUNT);
+            this.applyRecipe(levelIn, container, recipe);
         }, () -> {
             this.recipeId = StockpotRecipeSerializer.EMPTY_ID;
             this.recipe = StockpotRecipeSerializer.getEmptyRecipe();
@@ -248,6 +255,21 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             this.currentTick = StockpotRecipeSerializer.DEFAULT_TIME;
             this.takeoutCount = 1;
         });
+
+        // 触发事件，允许其他 mod 在配方匹配后进行操作
+        StockpotMatchRecipeEvent.Post postEvent = new StockpotMatchRecipeEvent.Post(levelIn, this, container, this.recipe);
+        MinecraftForge.EVENT_BUS.post(postEvent);
+        if (postEvent.getOutput() != null) {
+            this.applyRecipe(levelIn, container, postEvent.getOutput());
+        }
+    }
+
+    private void applyRecipe(Level level, StockpotContainer container, StockpotRecipe recipe) {
+        this.recipeId = recipe.getId();
+        this.recipe = recipe;
+        this.result = recipe.assemble(container, level.registryAccess());
+        this.currentTick = recipe.time();
+        this.takeoutCount = Math.min(this.result.getCount(), MAX_TAKEOUT_COUNT);
     }
 
     @Override
@@ -369,10 +391,8 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
             user.getMainHandItem().shrink(1);
             return true;
         }
-        if (user instanceof ServerPlayer player) {
-            player.sendSystemMessage(Component.translatable("tip.kaleidoscope_cookery.kitchen.remove_ingredient.need_container",
-                    containerItem.getDefaultInstance().getHoverName()));
-        }
+        sendActionBarMessage(user, "tip.kaleidoscope_cookery.kitchen.remove_ingredient.need_container",
+                containerItem.getDefaultInstance().getHoverName());
         return false;
     }
 
@@ -385,12 +405,18 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
         if (status != FINISHED || this.result.isEmpty() || this.takeoutCount <= 0) {
             return false;
         }
-        // 目前限定死了只能用碗来取出成品
-        if (!stack.is(Items.BOWL)) {
+
+        // 兼容容器是否正确
+        Ingredient carrier = this.recipe.carrier();
+        if (!carrier.isEmpty() && !carrier.test(stack)) {
+            Component carrierName = carrier.getItems()[0].getHoverName();
+            this.sendActionBarMessage(user, "tip.kaleidoscope_cookery.pot.need_carrier", carrierName);
             return false;
         }
-        // 放入碗中
-        stack.shrink(1);
+        if (!carrier.isEmpty()) {
+            stack.shrink(1);
+        }
+
         ItemStack resultCopy = this.result.copyWithCount(1);
         ItemUtils.getItemToLivingEntity(user, resultCopy);
         this.takeoutCount--;
@@ -405,6 +431,13 @@ public class StockpotBlockEntity extends BaseBlockEntity implements IStockpot {
         }
         this.refresh();
         return true;
+    }
+
+    private void sendActionBarMessage(LivingEntity user, String key, Object... args) {
+        if (user instanceof ServerPlayer serverPlayer) {
+            MutableComponent message = Component.translatable(key, args);
+            serverPlayer.connection.send(new ClientboundSetActionBarTextPacket(message));
+        }
     }
 
     @Override

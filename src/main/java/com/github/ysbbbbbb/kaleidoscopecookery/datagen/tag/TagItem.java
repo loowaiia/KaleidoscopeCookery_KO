@@ -35,10 +35,13 @@ public class TagItem extends ItemTagsProvider {
         tag(LIT_STOVE).add(FLINT_AND_STEEL, FIRE_CHARGE);
         tag(STRAW_HAT).add(ModItems.STRAW_HAT.get(),
                 ModItems.STRAW_HAT_FLOWER.get());
+
         tag(KITCHEN_KNIFE).add(ModItems.IRON_KITCHEN_KNIFE.get(),
-                ModItems.GOLD_KITCHEN_KNIFE.get(),
-                ModItems.DIAMOND_KITCHEN_KNIFE.get(),
-                ModItems.NETHERITE_KITCHEN_KNIFE.get());
+                        ModItems.GOLD_KITCHEN_KNIFE.get(),
+                        ModItems.DIAMOND_KITCHEN_KNIFE.get(),
+                        ModItems.NETHERITE_KITCHEN_KNIFE.get())
+                .addOptionalTag(new ResourceLocation("farmersdelight:tools/knives"));
+
         tag(FARMER_ARMOR).add(ModItems.FARMER_CHEST_PLATE.get(),
                         ModItems.FARMER_LEGGINGS.get(),
                         ModItems.FARMER_BOOTS.get())
@@ -54,6 +57,9 @@ public class TagItem extends ItemTagsProvider {
 
         this.tag(INGREDIENT_CONTAINER).add(BUCKET, BOWL, GLASS_BOTTLE);
         this.tag(GLASS_BOTTLE_CONTAINER).add(HONEY_BOTTLE);
+        this.tag(BUCKET_CONTAINER).add(WATER_BUCKET, LAVA_BUCKET, MILK_BUCKET,
+                SALMON_BUCKET, COD_BUCKET, TROPICAL_FISH_BUCKET, PUFFERFISH_BUCKET,
+                AXOLOTL_BUCKET, TADPOLE_BUCKET, POWDER_SNOW_BUCKET);
 
         this.addModItems();
         this.addPotIngredient();
