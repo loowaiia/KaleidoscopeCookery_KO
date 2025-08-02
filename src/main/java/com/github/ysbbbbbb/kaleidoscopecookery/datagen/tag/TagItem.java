@@ -103,6 +103,16 @@ public class TagItem extends ItemTagsProvider {
         tag(TagCommon.RAW_FISHES_TROPICAL).add(ModItems.SASHIMI.get());
         tag(TagCommon.RAW_FISHES_COD).add(COD);
         tag(TagCommon.RAW_FISHES_SALMON).add(SALMON);
+
+        // 均衡饮食兼容
+        tag(TagCommon.GRAINS).add(ModItems.RICE_SEED.get(), ModItems.RICE_PANICLE.get());
+        tag(TagCommon.PROTEINS).add(ModItems.CATERPILLAR.get());
+        tag(TagCommon.VEGETABLES).add(ModItems.TOMATO.get(), ModItems.LETTUCE.get(), ModItems.RED_CHILI.get(), ModItems.GREEN_CHILI.get());
+
+        // 兼容静谧四季
+        tag(TagCommon.SPRING_CROPS).add(ModItems.LETTUCE_SEED.get());
+        tag(TagCommon.SUMMER_CROPS).add(ModItems.TOMATO_SEED.get(), ModItems.CHILI_SEED.get(), ModItems.RICE_SEED.get(), ModItems.WILD_RICE_SEED.get());
+        tag(TagCommon.AUTUMN_CROPS).add(ModItems.TOMATO_SEED.get(), ModItems.CHILI_SEED.get(), ModItems.LETTUCE_SEED.get(), ModItems.RICE_SEED.get(), ModItems.WILD_RICE_SEED.get());
     }
 
     private void addModItems() {

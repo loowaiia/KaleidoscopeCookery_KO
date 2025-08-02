@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagCommon;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -61,5 +62,18 @@ public class TagBlock extends BlockTagsProvider {
         this.tag(BlockTags.CROPS).add(ModBlocks.TOMATO_CROP.get(),
                 ModBlocks.RICE_CROP.get(), ModBlocks.CHILI_CROP.get(),
                 ModBlocks.LETTUCE_CROP.get());
+
+        // 兼容静谧四季模组
+        this.tag(TagCommon.SPRING_CROPS_BLOCK).add(
+                ModBlocks.LETTUCE_CROP.get()
+        );
+        this.tag(TagCommon.SUMMER_CROPS_BLOCK).add(
+                ModBlocks.TOMATO_CROP.get(), ModBlocks.RICE_CROP.get(),
+                ModBlocks.CHILI_CROP.get()
+        );
+        this.tag(TagCommon.AUTUMN_CROPS_BLOCK).add(
+                ModBlocks.TOMATO_CROP.get(), ModBlocks.RICE_CROP.get(),
+                ModBlocks.LETTUCE_CROP.get(), ModBlocks.CHILI_CROP.get()
+        );
     }
 }
