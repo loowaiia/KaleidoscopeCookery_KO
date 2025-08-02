@@ -59,6 +59,11 @@ public interface TagCommon {
     TagKey<Block> AUTUMN_CROPS_BLOCK = seasonsBlockTag("autumn_crops");
     TagKey<Block> WINTER_CROPS_BLOCK = seasonsBlockTag("winter_crops");
 
+    TagKey<Block> DRY_AVERAGE = eclipticSeasonsTag("crops/dry_average");
+    TagKey<Block> AVERAGE_MOIST = eclipticSeasonsTag("crops/average_moist");
+    TagKey<Block> MOIST_HUMID = eclipticSeasonsTag("crops/moist_humid");
+    TagKey<Block> HUMID_HUMID = eclipticSeasonsTag("crops/humid_humid");
+
     static TagKey<Item> itemTag(String name) {
         return TagKey.create(Registries.ITEM, new ResourceLocation("forge", name));
     }
@@ -83,5 +88,9 @@ public interface TagCommon {
 
     static TagKey<Block> blockTag(String name) {
         return TagKey.create(Registries.BLOCK, new ResourceLocation("forge", name));
+    }
+
+    static TagKey<Block> eclipticSeasonsTag(String name) {
+        return TagKey.create(Registries.BLOCK, new ResourceLocation("eclipticseasons", name));
     }
 }

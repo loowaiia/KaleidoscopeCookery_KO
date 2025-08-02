@@ -75,5 +75,23 @@ public class TagBlock extends BlockTagsProvider {
                 ModBlocks.TOMATO_CROP.get(), ModBlocks.RICE_CROP.get(),
                 ModBlocks.LETTUCE_CROP.get(), ModBlocks.CHILI_CROP.get()
         );
+
+        // 节气模组：湿度
+        this.tag(TagCommon.DRY_AVERAGE).add(
+                ModBlocks.TOMATO_CROP.get(),
+                ModBlocks.CHILI_CROP.get()
+        );
+        this.tag(TagCommon.AVERAGE_MOIST).add(
+                ModBlocks.TOMATO_CROP.get(),
+                ModBlocks.LETTUCE_CROP.get(),
+                ModBlocks.CHILI_CROP.get()
+        );
+        this.tag(TagCommon.MOIST_HUMID).add(
+                ModBlocks.LETTUCE_CROP.get(),
+                ModBlocks.RICE_CROP.get()
+        );
+        this.tag(TagCommon.HUMID_HUMID).add(
+                ModBlocks.RICE_CROP.get()
+        );
     }
 }
