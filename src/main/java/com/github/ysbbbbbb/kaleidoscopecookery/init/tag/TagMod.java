@@ -95,6 +95,11 @@ public interface TagMod {
      */
     TagKey<EntityType<?>> PIG_OIL_SOURCE = entityTag("pig_oil_source");
 
+    /**
+     * 可以拉磨的生物，必须继承自 Mob
+     */
+    TagKey<EntityType<?>> MILLSTONE_BINDABLE = entityTag("millstone_bindable");
+
     static TagKey<Item> itemTag(String name) {
         return TagKey.create(Registries.ITEM, new ResourceLocation(KaleidoscopeCookery.MOD_ID, name));
     }
