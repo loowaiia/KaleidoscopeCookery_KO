@@ -43,12 +43,14 @@ public interface TagCommon {
     TagKey<Item> RAW_FISHES_SALMON = itemTag("raw_fishes/salmon");
     TagKey<Item> RAW_FISHES_TROPICAL = itemTag("raw_fishes/tropical_fish");
 
+    // 均衡饮食模组
     TagKey<Item> FRUITS = dietTag("fruits");
     TagKey<Item> GRAINS = dietTag("grains");
     TagKey<Item> PROTEINS = dietTag("proteins");
     TagKey<Item> SUGARS = dietTag("sugars");
     TagKey<Item> VEGETABLES = dietTag("vegetables");
 
+    // 静谧四季模组
     TagKey<Item> SPRING_CROPS = seasonsItemTag("spring_crops");
     TagKey<Item> SUMMER_CROPS = seasonsItemTag("summer_crops");
     TagKey<Item> AUTUMN_CROPS = seasonsItemTag("autumn_crops");
@@ -59,10 +61,14 @@ public interface TagCommon {
     TagKey<Block> AUTUMN_CROPS_BLOCK = seasonsBlockTag("autumn_crops");
     TagKey<Block> WINTER_CROPS_BLOCK = seasonsBlockTag("winter_crops");
 
+    // 节气模组
     TagKey<Block> DRY_AVERAGE = eclipticSeasonsTag("crops/dry_average");
     TagKey<Block> AVERAGE_MOIST = eclipticSeasonsTag("crops/average_moist");
     TagKey<Block> MOIST_HUMID = eclipticSeasonsTag("crops/moist_humid");
     TagKey<Block> HUMID_HUMID = eclipticSeasonsTag("crops/humid_humid");
+
+    // 农夫乐事
+    TagKey<Item> FD_KNIVES = TagKey.create(Registries.ITEM, new ResourceLocation("farmersdelight:tools/knives"));
 
     static TagKey<Item> itemTag(String name) {
         return TagKey.create(Registries.ITEM, new ResourceLocation("forge", name));

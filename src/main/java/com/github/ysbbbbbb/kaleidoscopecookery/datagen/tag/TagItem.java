@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
+import static com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagCommon.FD_KNIVES;
 import static com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod.*;
 import static net.minecraft.tags.ItemTags.VILLAGER_PLANTABLE_SEEDS;
 import static net.minecraft.world.item.Items.*;
@@ -41,6 +42,12 @@ public class TagItem extends ItemTagsProvider {
                         ModItems.DIAMOND_KITCHEN_KNIFE.get(),
                         ModItems.NETHERITE_KITCHEN_KNIFE.get())
                 .addOptionalTag(new ResourceLocation("farmersdelight:tools/knives"));
+
+        // 农夫乐事
+        tag(FD_KNIVES).add(ModItems.IRON_KITCHEN_KNIFE.get(),
+                ModItems.GOLD_KITCHEN_KNIFE.get(),
+                ModItems.DIAMOND_KITCHEN_KNIFE.get(),
+                ModItems.NETHERITE_KITCHEN_KNIFE.get());
 
         tag(FARMER_ARMOR).add(ModItems.FARMER_CHEST_PLATE.get(),
                         ModItems.FARMER_LEGGINGS.get(),
