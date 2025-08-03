@@ -59,10 +59,16 @@ public class BlockStateGenerator extends BlockStateProvider {
                 if (blockState.getValue(StockpotBlock.HAS_BASE)) {
                     return new ModelFile.UncheckedModelFile(modLoc("block/stockpot_base_has_lid"));
                 }
+                if (blockState.getValue(StockpotBlock.HAS_CHAINS)) {
+                    return new ModelFile.UncheckedModelFile(modLoc("block/stockpot_chains_has_lid"));
+                }
                 return new ModelFile.UncheckedModelFile(modLoc("block/stockpot_has_lid"));
             } else {
                 if (blockState.getValue(StockpotBlock.HAS_BASE)) {
                     return new ModelFile.UncheckedModelFile(modLoc("block/stockpot_base"));
+                }
+                if (blockState.getValue(StockpotBlock.HAS_CHAINS)) {
+                    return new ModelFile.UncheckedModelFile(modLoc("block/stockpot_chains"));
                 }
                 return new ModelFile.UncheckedModelFile(modLoc("block/stockpot"));
             }

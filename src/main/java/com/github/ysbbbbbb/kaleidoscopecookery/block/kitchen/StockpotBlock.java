@@ -48,6 +48,7 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty HAS_LID = BooleanProperty.create("has_lid");
     public static final BooleanProperty HAS_BASE = BooleanProperty.create("has_base");
+    public static final BooleanProperty HAS_CHAINS = BooleanProperty.create("has_chains");
 
     private static final VoxelShape AABB = Shapes.or(
             Block.box(2, 0, 2, 14, 5, 14),
@@ -65,7 +66,8 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
                 .setValue(FACING, Direction.SOUTH)
                 .setValue(WATERLOGGED, false)
                 .setValue(HAS_LID, false)
-                .setValue(HAS_BASE, false));
+                .setValue(HAS_BASE, false)
+                .setValue(HAS_CHAINS, false));
     }
 
     @Nullable
@@ -86,10 +88,19 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
         if (state.getValue(WATERLOGGED)) {
             levelAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
         }
-        // 如果下方是不完整方块，则添加基座
-        if (direction == Direction.DOWN) {
-            return state.setValue(HAS_BASE, !neighborState.isFaceSturdy(levelAccessor, neighborPos, Direction.UP));
+
+        // 上方无法支撑，取消锁链
+        // 下方无法支撑，添加基座
+        if (direction == Direction.DOWN && !state.getValue(HAS_CHAINS)) {
+            return state.setValue(HAS_CHAINS, canSupportCenter(levelAccessor, pos.above(), Direction.DOWN))
+                    .setValue(HAS_BASE, !neighborState.isFaceSturdy(levelAccessor, neighborPos, Direction.UP));
         }
+        if (direction == Direction.UP && !state.getValue(HAS_BASE)) {
+            BlockState belowState = levelAccessor.getBlockState(pos.below());
+            return state.setValue(HAS_CHAINS, canSupportCenter(levelAccessor, neighborPos, Direction.DOWN))
+                    .setValue(HAS_BASE, !belowState.isFaceSturdy(levelAccessor, pos.below(), Direction.UP));
+        }
+
         return super.updateShape(state, direction, neighborState, levelAccessor, pos, neighborPos);
     }
 
@@ -151,13 +162,23 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
     @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        Level level = context.getLevel();
+        FluidState fluidState = level.getFluidState(context.getClickedPos());
+        Direction clickFace = context.getClickedFace();
         BlockState blockState = this.defaultBlockState()
                 .setValue(FACING, context.getHorizontalDirection().getOpposite())
                 .setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
+
+        // 如果点击的是上方，那么依据是否是可支持方块添加锁链
+        BlockPos abovePos = context.getClickedPos().above();
+        if (clickFace == Direction.DOWN && canSupportCenter(level, abovePos, Direction.DOWN)) {
+            return blockState.setValue(HAS_CHAINS, true);
+        }
+
         // 如果下方是不完整方块，则添加基座
-        BlockState belowState = context.getLevel().getBlockState(context.getClickedPos().below());
-        if (!belowState.isFaceSturdy(context.getLevel(), context.getClickedPos().below(), Direction.UP)) {
+        BlockPos belowPos = context.getClickedPos().below();
+        BlockState belowState = level.getBlockState(belowPos);
+        if (!belowState.isFaceSturdy(level, belowPos, Direction.UP)) {
             return blockState.setValue(HAS_BASE, true);
         }
         return blockState;
@@ -170,7 +191,7 @@ public class StockpotBlock extends HorizontalDirectionalBlock implements EntityB
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED, HAS_LID, HAS_BASE);
+        builder.add(FACING, WATERLOGGED, HAS_LID, HAS_BASE, HAS_CHAINS);
     }
 
     @Override
