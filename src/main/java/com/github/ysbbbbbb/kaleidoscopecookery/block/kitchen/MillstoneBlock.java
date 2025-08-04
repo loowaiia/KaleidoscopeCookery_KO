@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IMillstone;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.MillstoneBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -76,7 +77,7 @@ public class MillstoneBlock extends HorizontalDirectionalBlock implements Entity
                 .instrument(NoteBlockInstrument.BASEDRUM)
                 .requiresCorrectToolForDrops()
                 .strength(1.5F, 6.0F)
-                .sound(SoundType.WOOD)
+                .sound(SoundType.STONE)
                 .forceSolidOn()
                 .noOcclusion());
         this.registerDefaultState(this.stateDefinition.any()
@@ -84,20 +85,30 @@ public class MillstoneBlock extends HorizontalDirectionalBlock implements Entity
                 .setValue(FACING, Direction.NORTH));
     }
 
-    private static void handleRemove(Level world, BlockPos pos, BlockState state) {
+    private static void handleRemove(Level world, BlockPos pos, BlockState state, @Nullable Player player) {
         if (world.isClientSide) {
             return;
         }
         NinePart part = state.getValue(PART);
         BlockPos centerPos = pos.subtract(new Vec3i(part.getPosX(), 0, part.getPosY()));
         BlockEntity te = world.getBlockEntity(centerPos);
-        if (!(te instanceof MillstoneBlockEntity)) {
+        if (!(te instanceof MillstoneBlockEntity millstone)) {
             return;
         }
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
-                world.setBlockAndUpdate(centerPos.offset(i, 0, j), Blocks.AIR.defaultBlockState());
+                BlockPos offsetPos = centerPos.offset(i, 0, j);
+                world.setBlock(offsetPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS | Block.UPDATE_ALL);
             }
+        }
+        if (player != null && !player.isCreative()) {
+            Block.popResource(world, pos, ModItems.MILLSTONE.get().getDefaultInstance());
+        }
+        if (!millstone.getOutput().isEmpty() && millstone.getCarrier().isEmpty()) {
+            Block.popResource(world, pos, millstone.getOutput());
+        }
+        if (!millstone.getInput().isEmpty()) {
+            Block.popResource(world, pos, millstone.getInput());
         }
     }
 
@@ -154,13 +165,13 @@ public class MillstoneBlock extends HorizontalDirectionalBlock implements Entity
 
     @Override
     public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
-        handleRemove(world, pos, state);
+        handleRemove(world, pos, state, player);
         super.playerWillDestroy(world, pos, state, player);
     }
 
     @Override
     public void onBlockExploded(BlockState state, Level world, BlockPos pos, Explosion explosion) {
-        handleRemove(world, pos, state);
+        handleRemove(world, pos, state, null);
         super.onBlockExploded(state, world, pos, explosion);
     }
 

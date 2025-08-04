@@ -31,6 +31,15 @@ public class SoundDefinitionsGenerator extends SoundDefinitionsProvider {
                 .with(sound("entity/fart/fart_1"))
                 .with(sound("entity/fart/fart_2"));
         this.add(ModSounds.ENTITY_FART.get(), fartSound);
+
+        SoundDefinition millstoneSound = definition().subtitle(subtitle("block.millstone"))
+                .with(sound("block/millstone/millstone_0"))
+                .with(sound("block/millstone/millstone_1"))
+                .with(sound("block/millstone/millstone_2"))
+                .with(sound("block/millstone/millstone_3"))
+                .with(sound("block/millstone/millstone_4"))
+                .with(sound("block/millstone/millstone_5"));
+        this.add(ModSounds.BLOCK_MILLSTONE.get(), millstoneSound);
     }
 
     protected static SoundDefinition.Sound sound(final String name) {

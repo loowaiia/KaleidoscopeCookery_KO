@@ -180,6 +180,7 @@
   "config.jade.plugin_kaleidoscope_cookery.millstone": "石磨",
   "subtitles.kaleidoscope_cookery.block.stockpot": "汤锅：咕嘟",
   "subtitles.kaleidoscope_cookery.block.paddy": "稻田：虫鸣",
+  "subtitles.kaleidoscope_cookery.block.millstone": "石磨：咯吱",
   "subtitles.kaleidoscope_cookery.entity.fart": "放屁",
   "advancements.kaleidoscope_cookery.root.title": "森罗厨房",
   "advancements.kaleidoscope_cookery.root.description": "给世界添一丝奇幻色彩！",
@@ -246,6 +247,5 @@
   "advancements.kaleidoscope_cookery.scarecrow.title": "麦田守望者",
   "advancements.kaleidoscope_cookery.scarecrow.description": "使用稻草人来保护周围耕地",
   "advancements.kaleidoscope_cookery.scarecrow_head.title": "接头艺术",
-  "advancements.kaleidoscope_cookery.scarecrow_head.description": "使用头颅来替换稻草人的南瓜头",
-  "block.kaleidoscope_cookery.lettuce": "生菜"
+  "advancements.kaleidoscope_cookery.scarecrow_head.description": "使用头颅来替换稻草人的南瓜头"
 }

@@ -7,12 +7,18 @@ import com.github.ysbbbbbb.kaleidoscopecookery.datamap.MillstoneBindableData;
 import com.github.ysbbbbbb.kaleidoscopecookery.datamap.resources.MillstoneBindableDataReloadListener;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSounds;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
+import com.github.ysbbbbbb.kaleidoscopecookery.inventory.itemhandler.MillstoneOutputHandler;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -20,21 +26,28 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.OwnableEntity;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -64,6 +77,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
 
     private @Nullable Mob bindEntity;
     private Vec3 offset = Vec3.ZERO;
+    private LazyOptional<MillstoneOutputHandler> outputHandler;
 
     public MillstoneBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlocks.MILLSTONE_BE.get(), pos, state);
@@ -101,7 +115,11 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                 this.refresh();
                 return;
             }
-        } else if (!bindEntity.isAlive() || bindEntity.distanceToSqr(center) >= maxDistanceSqr) {
+        } else if (!bindEntity.isAlive()
+                   || bindEntity.distanceToSqr(center) >= maxDistanceSqr
+                   || bindEntity.fallDistance > 0.5f
+                   || bindEntity.isInWall()
+                   || this.saddleEntityIsControlling(bindEntity)) {
             this.entityId = Util.NIL_UUID;
             this.bindEntity = null;
             this.cacheRot = rot;
@@ -116,6 +134,55 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                 .yRot(rot * Mth.DEG_TO_RAD)
                 .add(center);
         this.bindEntity.moveTo(pos.x, pos.y, pos.z, -rot - 90, 0);
+
+        // 如果实体带有库存，那么可以尝试往磨盘里放物品
+        if (this.bindEntity.tickCount % 10 == 0 && this.output.isEmpty() && this.input.isEmpty() && this.progress <= 0) {
+            LazyOptional<IItemHandler> capability = this.bindEntity.getCapability(ForgeCapabilities.ITEM_HANDLER);
+            capability.ifPresent(handler -> {
+                for (int i = 0; i < handler.getSlots(); i++) {
+                    ItemStack stackInSlot = handler.getStackInSlot(i);
+                    if (stackInSlot.isEmpty()) {
+                        continue;
+                    }
+                    ItemStack stack = handler.extractItem(i, MAX_INPUT_COUNT, true);
+                    if (this.onPutItem(level, stack)) {
+                        handler.extractItem(i, MAX_INPUT_COUNT, false);
+                        return;
+                    }
+                }
+            });
+        }
+
+        // 释放粒子效果
+        if (serverLevel.getGameTime() % 5 == 2) {
+            Item item = !this.output.isEmpty() ? this.output.getItem() : (!this.input.isEmpty() ? this.input.getItem() : Items.AIR);
+            if (item != Items.AIR) {
+                Vec3 particlePos = new Vec3(0, 1, 1)
+                        .yRot(rot * Mth.DEG_TO_RAD)
+                        .add(center);
+                if (item instanceof BlockItem blockItem) {
+                    BlockState block = blockItem.getBlock().defaultBlockState();
+                    BlockParticleOption option = new BlockParticleOption(ParticleTypes.BLOCK, block);
+                    serverLevel.sendParticles(option,
+                            particlePos.x, particlePos.y, particlePos.z,
+                            5, 0.1, 0.1, 0.1,
+                            0.05);
+                } else {
+                    ItemParticleOption option = new ItemParticleOption(ParticleTypes.ITEM, item.getDefaultInstance());
+                    serverLevel.sendParticles(option,
+                            particlePos.x, particlePos.y, particlePos.z,
+                            5, 0.1, 0.1, 0.1,
+                            0.05);
+                }
+            }
+        }
+
+        // 播放音频
+        if (serverLevel.getGameTime() % 25 == 0) {
+            float pitch = level.random.nextFloat() * 0.2f + 0.9f;
+            serverLevel.playSound(null, this.worldPosition,
+                    ModSounds.BLOCK_MILLSTONE.get(), SoundSource.BLOCKS, 0.5f, pitch);
+        }
 
         // 输出栏为空才能进行研磨
         if (this.progress > 0 && this.output.isEmpty()) {
@@ -161,6 +228,9 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
             this.input = putOnItem.split(MAX_INPUT_COUNT);
             this.progress = Math.max(Math.round(this.rotSpeedTick), 1);
             this.refresh();
+            level.playSound(null, this.worldPosition,
+                    SoundEvents.STONE_HIT, SoundSource.BLOCKS, 0.8f,
+                    level.random.nextFloat() * 0.2f + 0.9f);
             return true;
         }).orElse(false);
     }
@@ -196,12 +266,28 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         return false;
     }
 
+    public boolean saddleEntityIsControlling(Mob mob) {
+        if (!(mob instanceof Saddleable saddleable)) {
+            return false;
+        }
+        // 骑乘的生物不能被绑定
+        return saddleable.isSaddled() && mob.getControllingPassenger() != null;
+    }
+
     public boolean canBindEntity(Mob mob) {
         if (!mob.getType().is(TagMod.MILLSTONE_BINDABLE)) {
             return false;
         }
+        if (mob.getVehicle() != null) {
+            // 骑乘的生物不能被绑定
+            return false;
+        }
         // 禁止童工！
         if (mob.isBaby()) {
+            return false;
+        }
+        // 已经被骑乘的生物不能被绑定
+        if (this.saddleEntityIsControlling(mob)) {
             return false;
         }
         // 如果是可驯服生物，必须已经被驯服才行
@@ -290,6 +376,38 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         return new AABB(worldPosition.offset(-3, 0, -3), worldPosition.offset(3, 2, 3));
     }
 
+    @Override
+    @NotNull
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER && side == Direction.DOWN && !this.remove) {
+            if (this.outputHandler == null) {
+                this.outputHandler = LazyOptional.of(() -> new MillstoneOutputHandler(this));
+            }
+            return this.outputHandler.cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    public void setBlockState(BlockState blockState) {
+        super.setBlockState(blockState);
+        if (this.outputHandler != null) {
+            LazyOptional<?> oldHandler = this.outputHandler;
+            this.outputHandler = null;
+            oldHandler.invalidate();
+        }
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        if (outputHandler != null) {
+            outputHandler.invalidate();
+            outputHandler = null;
+        }
+    }
+
+
     public boolean hasEntity() {
         return !Util.NIL_UUID.equals(this.entityId);
     }
@@ -308,6 +426,10 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
 
     public ItemStack getOutput() {
         return this.output;
+    }
+
+    public Ingredient getCarrier() {
+        return this.carrier;
     }
 
     public float getProgressPercent() {

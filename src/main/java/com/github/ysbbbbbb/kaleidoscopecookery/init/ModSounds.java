@@ -12,6 +12,7 @@ public class ModSounds {
 
     public static final RegistryObject<SoundEvent> BLOCK_STOCKPOT = registerSound("block.stockpot");
     public static final RegistryObject<SoundEvent> BLOCK_PADDY = registerSound("block.paddy");
+    public static final RegistryObject<SoundEvent> BLOCK_MILLSTONE = registerSound("block.millstone");
     public static final RegistryObject<SoundEvent> ENTITY_FART = registerSound("entity.fart");
 
     private static RegistryObject<SoundEvent> registerSound(String name) {

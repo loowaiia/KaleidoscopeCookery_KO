@@ -1,4 +1,15 @@
 {
+  "block.millstone": {
+    "sounds": [
+      "kaleidoscope_cookery:block/millstone/millstone_0",
+      "kaleidoscope_cookery:block/millstone/millstone_1",
+      "kaleidoscope_cookery:block/millstone/millstone_2",
+      "kaleidoscope_cookery:block/millstone/millstone_3",
+      "kaleidoscope_cookery:block/millstone/millstone_4",
+      "kaleidoscope_cookery:block/millstone/millstone_5"
+    ],
+    "subtitle": "subtitles.kaleidoscope_cookery.block.millstone"
+  },
   "block.paddy": {
     "sounds": [
       "kaleidoscope_cookery:block/paddy/paddy_0",
