@@ -5,7 +5,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
@@ -218,5 +217,17 @@ public class ShapedRecipeProvider extends ModRecipeProvider {
                 .define('C', Items.CAMPFIRE)
                 .unlockedBy("has_campfire", has(Items.CAMPFIRE))
                 .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.MILLSTONE.get())
+                .pattern(" F ")
+                .pattern("SG ")
+                .pattern("TTT")
+                .define('F', Tags.Items.FENCES_WOODEN)
+                .define('S', Items.STICK)
+                .define('G', Items.GRINDSTONE)
+                .define('T', Items.SMOOTH_STONE)
+                .unlockedBy("has_smooth_stone", has(Items.SMOOTH_STONE))
+                .save(consumer);
+
     }
 }

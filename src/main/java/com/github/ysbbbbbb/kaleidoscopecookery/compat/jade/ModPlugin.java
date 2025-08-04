@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.compat.jade;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.ChoppingBoardBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.EnamelBasinBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.MillstoneBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.ShawarmaSpitBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.FruitBasketBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.TableBlockEntity;
@@ -22,6 +23,7 @@ public class ModPlugin implements IWailaPlugin {
     public static final ResourceLocation POT = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "pot");
     public static final ResourceLocation STOCKPOT = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "stockpot");
     public static final ResourceLocation CHOPPING_BOARD = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "chopping_board");
+    public static final ResourceLocation MILLSTONE = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "millstone");
     public static final ResourceLocation ENAMEL_BASIN = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "enamel_basin");
     public static final ResourceLocation TABLE = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "table");
     public static final ResourceLocation FRUIT_BASKET = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "fruit_basket");
@@ -47,5 +49,6 @@ public class ModPlugin implements IWailaPlugin {
         registration.registerItemStorageClient(TableComponentProvider.INSTANCE);
         registration.registerItemStorageClient(PotComponentProvider.INSTANCE);
         registration.registerItemStorageClient(StockpotComponentProvider.INSTANCE);
+        registration.registerBlockComponent(MillstoneComponentProvider.INSTANCE, MillstoneBlock.class);
     }
 }

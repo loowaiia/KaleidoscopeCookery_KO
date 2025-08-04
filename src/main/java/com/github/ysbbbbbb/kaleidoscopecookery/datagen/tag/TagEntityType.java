@@ -25,7 +25,8 @@ public class TagEntityType extends EntityTypeTagsProvider {
                 EntityType.HORSE, EntityType.ZOMBIE_HORSE, EntityType.SKELETON_HORSE,
                 EntityType.LLAMA, EntityType.TRADER_LLAMA,
                 EntityType.COW, EntityType.MOOSHROOM,
-                EntityType.SHEEP, EntityType.GOAT
+                EntityType.SHEEP, EntityType.GOAT,
+                EntityType.VILLAGER
         );
     }
 }

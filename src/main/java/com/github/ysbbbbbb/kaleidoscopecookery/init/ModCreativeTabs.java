@@ -18,13 +18,13 @@ public class ModCreativeTabs {
             .displayItems((par, output) -> {
                 output.accept(ModItems.STOVE.get());
                 output.accept(ModItems.SHAWARMA_SPIT.get());
-                output.accept(ModItems.MILLSTONE.get());
                 output.accept(ModItems.STRAW_BLOCK.get());
                 output.accept(ModItems.OIL_BLOCK.get());
                 output.accept(ModItems.POT.get());
                 output.accept(ModItems.STOCKPOT.get());
                 output.accept(ModItems.STOCKPOT_LID.get());
                 output.accept(ModItems.CHOPPING_BOARD.get());
+                output.accept(ModItems.MILLSTONE.get());
                 output.accept(ModItems.KITCHENWARE_RACKS.get());
                 output.accept(ModItems.FRUIT_BASKET.get());
                 output.accept(ModItems.SCARECROW.get());

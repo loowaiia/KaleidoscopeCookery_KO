@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.compat.emi;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.emi.category.EmiChoppingBoardRecipe;
+import com.github.ysbbbbbb.kaleidoscopecookery.compat.emi.category.EmiMillstoneRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.emi.category.EmiPotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.emi.category.EmiStockpotRecipe;
 import dev.emi.emi.api.EmiEntrypoint;
@@ -14,6 +15,7 @@ public class ModEmiPlugin implements EmiPlugin {
         EmiPotRecipe.register(registry);
         EmiStockpotRecipe.register(registry);
         EmiChoppingBoardRecipe.register(registry);
+        EmiMillstoneRecipe.register(registry);
     }
 
     @Override

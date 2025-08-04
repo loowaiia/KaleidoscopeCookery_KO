@@ -1,0 +1,13 @@
+{
+  "type": "kaleidoscope_cookery:millstone",
+  "carrier": {
+    "item": "minecraft:bowl"
+  },
+  "ingredient": {
+    "item": "minecraft:cobblestone"
+  },
+  "result": {
+    "count": 3,
+    "item": "minecraft:gravel"
+  }
+}

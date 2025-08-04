@@ -10,6 +10,7 @@
     "minecraft:cow",
     "minecraft:mooshroom",
     "minecraft:sheep",
-    "minecraft:goat"
+    "minecraft:goat",
+    "minecraft:villager"
   ]
 }

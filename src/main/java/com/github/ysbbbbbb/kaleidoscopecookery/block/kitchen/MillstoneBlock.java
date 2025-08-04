@@ -1,10 +1,13 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IMillstone;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.MillstoneBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -24,6 +27,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -115,10 +119,33 @@ public class MillstoneBlock extends HorizontalDirectionalBlock implements Entity
     }
 
     @Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (hand != InteractionHand.MAIN_HAND) {
+            return InteractionResult.PASS;
+        }
+        NinePart part = state.getValue(PART);
+        BlockPos centerPos = pos.subtract(new Vec3i(part.getPosX(), 0, part.getPosY()));
+        BlockEntity te = level.getBlockEntity(centerPos);
+        if (!(te instanceof IMillstone millstone)) {
+            return InteractionResult.PASS;
+        }
+        ItemStack mainHandItem = player.getMainHandItem();
+        if (millstone.onTakeItem(player, mainHandItem)) {
+            return InteractionResult.SUCCESS;
+        }
+        if (millstone.onPutItem(level, mainHandItem)) {
+            return InteractionResult.SUCCESS;
+        }
+        return super.use(state, level, pos, player, hand, hitResult);
+    }
+
+    @Override
     public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
-        // 每 10 tick 检查一次
-        if (pEntity instanceof Mob mob && !pLevel.isClientSide && pLevel.getGameTime() % 10 == 5) {
-            BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+        // 每 5 tick 检查一次
+        if (pEntity instanceof Mob mob && !pLevel.isClientSide && pLevel.getGameTime() % 5 == 4) {
+            NinePart part = pState.getValue(PART);
+            BlockPos centerPos = pPos.subtract(new Vec3i(part.getPosX(), 0, part.getPosY()));
+            BlockEntity blockEntity = pLevel.getBlockEntity(centerPos);
             if (blockEntity instanceof MillstoneBlockEntity millstone && !millstone.hasEntity() && millstone.canBindEntity(mob)) {
                 millstone.bindEntity(mob);
             }
