@@ -53,8 +53,6 @@ public class TagItem extends ItemTagsProvider {
                         ModItems.FARMER_LEGGINGS.get(),
                         ModItems.FARMER_BOOTS.get())
                 .addTag(STRAW_HAT);
-        tag(PRESERVATION_FOOD).add(Items.ROTTEN_FLESH, Items.CHICKEN,
-                Items.PUFFERFISH, Items.SPIDER_EYE, Items.POISONOUS_POTATO);
         this.tag(TagMod.STRAW_BALE).add(HAY_BLOCK, ModItems.STRAW_BLOCK.get());
 
         this.tag(COOKERY_MOD_SEEDS).add(

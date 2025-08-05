@@ -13,5 +13,7 @@
     "kaleidoscope_cookery:cooked_rice": "kaleidoscope_cookery:rice#inventory",
     "minecraft:honey_bottle": "kaleidoscope_cookery:item/honey",
     "minecraft:egg": "kaleidoscope_cookery:item/egg"
+  },
+  "millstone": {
   }
 }

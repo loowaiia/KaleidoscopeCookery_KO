@@ -4,6 +4,8 @@ import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.MillstoneBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.MillstoneBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.MillstoneModel;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.resources.ItemRenderReplacer;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.resources.ItemRenderReplacerReloadListener;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -12,6 +14,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -82,6 +85,7 @@ public class MillstoneBlockEntityRender implements BlockEntityRenderer<Millstone
                              int packedOverlay, ItemStack renderItem, ItemRenderer itemRenderer) {
         RandomSource source = RandomSource.create(millstone.hashCode());
         int maxCount = Math.min(renderItem.getCount(), MillstoneBlockEntity.MAX_INPUT_COUNT);
+        BakedModel model = ItemRenderReplacer.getModel(millstone.getLevel(), renderItem, ItemRenderReplacerReloadListener.INSTANCE.millstone());
         for (int i = 0; i < maxCount; i++) {
             poseStack.pushPose();
             poseStack.translate(0, 0.875, 0);
@@ -89,8 +93,8 @@ public class MillstoneBlockEntityRender implements BlockEntityRenderer<Millstone
             poseStack.mulPose(Axis.YP.rotationDegrees(source.nextInt(20)));
             poseStack.mulPose(Axis.XN.rotationDegrees(80 + source.nextInt(20)));
             poseStack.scale(0.65F, 0.65F, 0.65F);
-            itemRenderer.renderStatic(renderItem, ItemDisplayContext.FIXED, packedLight, packedOverlay,
-                    poseStack, buffer, millstone.getLevel(), 0);
+            itemRenderer.render(renderItem, ItemDisplayContext.FIXED,
+                    false, poseStack, buffer, packedLight, packedOverlay, model);
             poseStack.popPose();
         }
     }

@@ -46,10 +46,6 @@ public interface TagMod {
      */
     TagKey<Item> FARMER_ARMOR = itemTag("farmer_armor");
     /**
-     * 保鲜效果能够作用的食物
-     */
-    TagKey<Item> PRESERVATION_FOOD = itemTag("preservation_food");
-    /**
      * 可以加入汤锅炒锅的原料
      */
     TagKey<Item> POT_INGREDIENT = itemTag("pot_ingredient");
