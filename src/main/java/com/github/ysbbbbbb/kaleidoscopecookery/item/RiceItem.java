@@ -1,23 +1,23 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.item;
 
-import net.minecraft.ChatFormatting;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class KitchenKnifeItem extends SwordItem {
-    public KitchenKnifeItem(Tier tier) {
-        super(tier, 0, -2.0F, new Properties());
+public class RiceItem extends ItemNameBlockItem {
+    public RiceItem() {
+        super(ModBlocks.RICE_CROP.get(), new Item.Properties());
     }
 
+    // 留空不显示
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("tooltip.kaleidoscope_cookery.kitchen_knife").withStyle(ChatFormatting.GRAY));
     }
 }
