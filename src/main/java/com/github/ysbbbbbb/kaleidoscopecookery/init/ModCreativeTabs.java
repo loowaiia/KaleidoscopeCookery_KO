@@ -29,7 +29,10 @@ public class ModCreativeTabs {
                 output.accept(ModItems.FRUIT_BASKET.get());
                 output.accept(ModItems.SCARECROW.get());
                 output.accept(ModItems.ENAMEL_BASIN.get());
+                output.accept(ModItems.OIL_POT.get());
                 output.accept(ModItems.OIL.get());
+                output.accept(ModItems.RAW_DOUGH.get());
+                output.accept(ModItems.RAW_NOODLES.get());
                 output.accept(ModItems.CHILI_RISTRA.get());
                 output.accept(ModItems.RICE_SEED.get());
                 output.accept(ModItems.WILD_RICE_SEED.get());
@@ -99,6 +102,9 @@ public class ModCreativeTabs {
                 output.accept(ModItems.COOKED_COW_OFFAL.get());
                 output.accept(ModItems.RAW_PORK_BELLY.get());
                 output.accept(ModItems.COOKED_PORK_BELLY.get());
+                output.accept(ModItems.RAW_DONKEY_MEAT.get());
+                output.accept(ModItems.COOKED_DONKEY_MEAT.get());
+                output.accept(ModItems.DONKEY_BURGER.get());
                 output.accept(ModItems.FRIED_EGG.get());
                 output.accept(ModItems.COOKED_RICE.get());
                 output.accept(ModItems.EGG_FRIED_RICE.get());

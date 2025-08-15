@@ -5,7 +5,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagCommon;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.Tags;
 
@@ -166,6 +165,12 @@ public class PotRecipeProvider extends ModRecipeProvider {
                         TagCommon.CROPS_LETTUCE, TagCommon.COOKED_RICE)
                 .addInput(Items.CARROT).setBowlCarrier()
                 .setResult(ModItems.DELICIOUS_EGG_FRIED_RICE.get())
+                .save(consumer);
+
+        PotRecipeBuilder.builder()
+                .addInput(TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_CHILI_PEPPER)
+                .addInput(ModItems.RAW_DOUGH, ModItems.RAW_DOUGH, ModItems.RAW_DONKEY_MEAT, ModItems.RAW_DONKEY_MEAT)
+                .setResult(ModItems.DONKEY_BURGER.get())
                 .save(consumer);
     }
 }

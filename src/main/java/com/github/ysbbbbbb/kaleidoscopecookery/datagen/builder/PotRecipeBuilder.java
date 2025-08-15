@@ -17,6 +17,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -60,7 +61,7 @@ public class PotRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
-    @SuppressWarnings("varargs")
+    @SuppressWarnings({"varargs", "all"})
     public PotRecipeBuilder addInput(Object... ingredients) {
         for (Object ingredient : ingredients) {
             if (ingredient instanceof ItemLike itemLike) {
@@ -71,6 +72,8 @@ public class PotRecipeBuilder implements RecipeBuilder {
                 this.ingredients.add(Ingredient.of(tagKey));
             } else if (ingredient instanceof Ingredient ingredientObj) {
                 this.ingredients.add(ingredientObj);
+            } else if (ingredient instanceof RegistryObject<?> registryObject) {
+                this.ingredients.add(Ingredient.of(((RegistryObject<Item>) registryObject).get()));
             }
         }
         return this;

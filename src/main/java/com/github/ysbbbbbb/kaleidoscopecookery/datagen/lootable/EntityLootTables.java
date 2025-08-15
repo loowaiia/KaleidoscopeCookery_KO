@@ -41,14 +41,18 @@ public class EntityLootTables extends EntityLootSubProvider {
         var count = SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F));
         var looting = LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F));
         var oil = LootItem.lootTableItem(ModItems.OIL.get()).apply(count).apply(looting);
+        var donkeyMeat = LootItem.lootTableItem(ModItems.RAW_DONKEY_MEAT.get()).apply(count).apply(looting);
 
         LootTable.Builder lessOil = LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(oil).when(toolMatches));
         LootTable.Builder moreOil = LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(2)).add(oil).when(toolMatches));
+        LootTable.Builder moreDonkeyMeat = LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(2)).add(donkeyMeat).when(toolMatches));
 
         output.accept(modLoc("pig"), lessOil);
         output.accept(modLoc("piglin"), moreOil);
         output.accept(modLoc("piglin_brute"), moreOil);
         output.accept(modLoc("hoglin"), moreOil);
+        // 厨刀杀驴掉驴肉
+        output.accept(modLoc("donkey"), moreDonkeyMeat);
     }
 
     @Override

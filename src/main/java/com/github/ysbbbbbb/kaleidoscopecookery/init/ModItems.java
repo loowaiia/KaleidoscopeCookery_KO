@@ -3,15 +3,10 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.armor.FarmerArmorMaterial;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public final class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, KaleidoscopeCookery.MOD_ID);
@@ -29,6 +24,8 @@ public final class ModItems {
     public static RegistryObject<Item> STRAW_BLOCK = ITEMS.register("straw_block", () -> new BlockItem(ModBlocks.STRAW_BLOCK.get(), new Item.Properties()));
     public static RegistryObject<Item> SHAWARMA_SPIT = ITEMS.register("shawarma_spit", () -> new BlockItem(ModBlocks.SHAWARMA_SPIT.get(), new Item.Properties()));
     public static RegistryObject<Item> MILLSTONE = ITEMS.register("millstone", () -> new BlockItem(ModBlocks.MILLSTONE.get(), new Item.Properties()));
+
+    public static RegistryObject<Item> OIL_POT = ITEMS.register("oil_pot", OilPotItem::new);
 
     public static RegistryObject<Item> IRON_KITCHEN_KNIFE = ITEMS.register("iron_kitchen_knife", () -> new KitchenKnifeItem(Tiers.IRON));
     public static RegistryObject<Item> GOLD_KITCHEN_KNIFE = ITEMS.register("gold_kitchen_knife", () -> new KitchenKnifeItem(Tiers.GOLD));
@@ -93,6 +90,10 @@ public final class ModItems {
     public static RegistryObject<Item> RICE_PANICLE = ITEMS.register("rice_panicle", () -> new Item(new Item.Properties()));
     public static RegistryObject<Item> CATERPILLAR = ITEMS.register("caterpillar", () -> new ItemWithTooltips(new Item.Properties().food(ModFoods.CATERPILLAR), "caterpillar"));
     public static RegistryObject<Item> FRIED_EGG = ITEMS.register("fried_egg", () -> new Item(new Item.Properties().food(ModFoods.FRIED_EGG)));
+    public static RegistryObject<Item> DONKEY_BURGER = ITEMS.register("donkey_burger", () -> new Item(new Item.Properties().food(ModFoods.DONKEY_BURGER)));
+
+    public static RegistryObject<Item> RAW_DOUGH = ITEMS.register("raw_dough", RawDoughItem::new);
+    public static RegistryObject<Item> RAW_NOODLES = ITEMS.register("raw_noodles", () -> new Item(new Item.Properties()));
 
     public static RegistryObject<Item> COOKED_RICE = ITEMS.register("cooked_rice", () -> new BowlFoodOnlyItem(ModFoods.COOKED_RICE));
     public static RegistryObject<Item> SCRAMBLE_EGG_WITH_TOMATOES = ITEMS.register("scramble_egg_with_tomatoes", () -> new BowlFoodOnlyItem(ModFoods.SCRAMBLE_EGG_WITH_TOMATOES));
@@ -129,8 +130,11 @@ public final class ModItems {
     public static RegistryObject<Item> RAW_LAMB_CHOPS = ITEMS.register("raw_lamb_chops", () -> new Item(new Item.Properties().food(ModFoods.RAW_LAMB_CHOPS)));
     public static RegistryObject<Item> RAW_COW_OFFAL = ITEMS.register("raw_cow_offal", () -> new Item(new Item.Properties().food(ModFoods.RAW_COW_OFFAL)));
     public static RegistryObject<Item> RAW_PORK_BELLY = ITEMS.register("raw_pork_belly", () -> new Item(new Item.Properties().food(ModFoods.RAW_PORK_BELLY)));
+    public static RegistryObject<Item> RAW_DONKEY_MEAT = ITEMS.register("raw_donkey_meat", () -> new Item(new Item.Properties().food(ModFoods.RAW_DONKEY_MEAT)));
+
     public static RegistryObject<Item> COOKED_LAMB_CHOPS = ITEMS.register("cooked_lamb_chops", () -> new Item(new Item.Properties().food(ModFoods.COOKED_LAMB_CHOPS)));
     public static RegistryObject<Item> COOKED_COW_OFFAL = ITEMS.register("cooked_cow_offal", () -> new Item(new Item.Properties().food(ModFoods.COOKED_COW_OFFAL)));
     public static RegistryObject<Item> COOKED_PORK_BELLY = ITEMS.register("cooked_pork_belly", () -> new Item(new Item.Properties().food(ModFoods.COOKED_PORK_BELLY)));
+    public static RegistryObject<Item> COOKED_DONKEY_MEAT = ITEMS.register("cooked_donkey_meat", () -> new Item(new Item.Properties().food(ModFoods.COOKED_DONKEY_MEAT)));
 }
 

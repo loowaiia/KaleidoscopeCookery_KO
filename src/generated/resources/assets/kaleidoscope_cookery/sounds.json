@@ -36,5 +36,11 @@
       "kaleidoscope_cookery:entity/fart/fart_2"
     ],
     "subtitle": "subtitles.kaleidoscope_cookery.entity.fart"
+  },
+  "item.dough_transform": {
+    "sounds": [
+      "kaleidoscope_cookery:item/dough_transform"
+    ],
+    "subtitle": "subtitles.kaleidoscope_cookery.item.dough_transform"
   }
 }

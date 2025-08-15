@@ -88,6 +88,14 @@ public class BlockStateGenerator extends BlockStateProvider {
             }
         });
 
+        horizontalBlock(ModBlocks.OIL_POT.get(), blockState -> {
+            if (blockState.getValue(OilPotBlock.OIL_COUNT) <= 0) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/oil_pot"));
+            } else {
+                return new ModelFile.UncheckedModelFile(modLoc("block/oil_pot_with_oil"));
+            }
+        });
+
         FoodBiteRegistry.FOOD_DATA_MAP.forEach((key, value) -> {
             Block block = ForgeRegistries.BLOCKS.getValue(key);
             if (block != null) {

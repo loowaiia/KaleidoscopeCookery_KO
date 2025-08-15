@@ -7,6 +7,8 @@ import com.github.ysbbbbbb.kaleidoscopecookery.client.resources.ItemRenderReplac
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenShovelItem;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.OilPotItem;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.RawDoughItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.StockpotLidItem;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -27,6 +29,8 @@ public class ClientSetupEvent {
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> ItemProperties.register(ModItems.KITCHEN_SHOVEL.get(), KitchenShovelItem.HAS_OIL_PROPERTY, KitchenShovelItem::getTexture));
         event.enqueueWork(() -> ItemProperties.register(ModItems.STOCKPOT_LID.get(), StockpotLidItem.USING_PROPERTY, StockpotLidItem::getTexture));
+        event.enqueueWork(() -> ItemProperties.register(ModItems.OIL_POT.get(), OilPotItem.HAS_OIL_PROPERTY, OilPotItem::getTexture));
+        event.enqueueWork(() -> ItemProperties.register(ModItems.RAW_DOUGH.get(), RawDoughItem.PULL_PROPERTY, RawDoughItem::getTexture));
     }
 
     @SubscribeEvent

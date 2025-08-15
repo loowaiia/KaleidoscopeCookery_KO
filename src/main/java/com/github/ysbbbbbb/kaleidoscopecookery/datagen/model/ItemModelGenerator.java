@@ -4,6 +4,8 @@ import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenShovelItem;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.OilPotItem;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.RawDoughItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.StockpotLidItem;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.data.PackOutput;
@@ -94,9 +96,15 @@ public class ItemModelGenerator extends ItemModelProvider {
         basicItem(ModItems.ENAMEL_BASIN.get());
         basicItem(ModItems.KITCHENWARE_RACKS.get());
         basicItem(ModItems.MILLSTONE.get());
+        basicItem(ModItems.RAW_DONKEY_MEAT.get());
+        basicItem(ModItems.COOKED_DONKEY_MEAT.get());
+        basicItem(ModItems.RAW_NOODLES.get());
+        basicItem(ModItems.DONKEY_BURGER.get());
 
         basicItem(modLoc("honey"));
         basicItem(modLoc("egg"));
+        basicItem(modLoc("raw_dough_in_millstone"));
+        basicItem(modLoc("oil_in_millstone"));
 
         ResourceLocation chileRistra = ForgeRegistries.ITEMS.getKey(ModItems.CHILI_RISTRA.get());
         if (chileRistra != null) {
@@ -120,6 +128,24 @@ public class ItemModelGenerator extends ItemModelProvider {
             getBuilder(stockpotLid.toString())
                     .override().model(normal).predicate(StockpotLidItem.USING_PROPERTY, 0).end()
                     .override().model(using).predicate(StockpotLidItem.USING_PROPERTY, 1).end();
+        }
+
+        ResourceLocation oilPot = ForgeRegistries.ITEMS.getKey(ModItems.OIL_POT.get());
+        if (oilPot != null) {
+            ItemModelBuilder potNoOil = basicItem(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "pot_no_oil"));
+            ItemModelBuilder potHasOil = basicItem(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "pot_has_oil"));
+            getBuilder(oilPot.toString())
+                    .override().model(potNoOil).predicate(OilPotItem.HAS_OIL_PROPERTY, 0).end()
+                    .override().model(potHasOil).predicate(OilPotItem.HAS_OIL_PROPERTY, 1).end();
+        }
+
+        ResourceLocation rawDough = ForgeRegistries.ITEMS.getKey(ModItems.RAW_DOUGH.get());
+        if (rawDough != null) {
+            ItemModelBuilder builder = getBuilder(rawDough.toString());
+            for (int i = 0; i <= 3; i++) {
+                ItemModelBuilder basicItem = basicItem(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "raw_dough_" + i));
+                builder.override().model(basicItem).predicate(RawDoughItem.PULL_PROPERTY, i).end();
+            }
         }
 
         FoodBiteRegistry.FOOD_DATA_MAP.forEach((key, value) -> {

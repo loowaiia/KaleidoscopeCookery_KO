@@ -14,6 +14,7 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> BLOCK_PADDY = registerSound("block.paddy");
     public static final RegistryObject<SoundEvent> BLOCK_MILLSTONE = registerSound("block.millstone");
     public static final RegistryObject<SoundEvent> ENTITY_FART = registerSound("entity.fart");
+    public static final RegistryObject<SoundEvent> ITEM_DOUGH_TRANSFORM = registerSound("item.dough_transform");
 
     private static RegistryObject<SoundEvent> registerSound(String name) {
         return SOUND_EVENTS.register(name, () -> SoundEvent.createFixedRangeEvent(new ResourceLocation(KaleidoscopeCookery.MOD_ID, name), 16.0F));

@@ -27,6 +27,7 @@ public class GlobalLootModifier extends GlobalLootModifierProvider {
         addEntityLootModifier("piglin", EntityType.PIGLIN);
         addEntityLootModifier("piglin_brute", EntityType.PIGLIN_BRUTE);
         addEntityLootModifier("hoglin", EntityType.HOGLIN);
+        addEntityLootModifier("donkey", EntityType.DONKEY);
 
         addBlockLootModifier("straw_hat_seed_drop", Blocks.GRASS);
     }
