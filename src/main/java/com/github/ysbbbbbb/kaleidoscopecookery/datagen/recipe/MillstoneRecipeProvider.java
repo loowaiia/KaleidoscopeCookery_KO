@@ -1,9 +1,12 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.datagen.recipe;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder.MillstoneRecipeBuilder;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.common.Tags;
 
 import java.util.function.Consumer;
 
@@ -418,5 +421,17 @@ public class MillstoneRecipeProvider extends ModRecipeProvider {
                 .setIngredient(Items.YELLOW_WOOL)
                 .setResult(Items.STRING, 3)
                 .save(consumer, "string_from_yellow_wool");
+
+        MillstoneRecipeBuilder.builder()
+                .setIngredient(Items.WHEAT)
+                .setResult(ModItems.RAW_DOUGH.get())
+                .setCarrier(TagMod.MILLSTONE_DOUGH_CONTAINER)
+                .save(consumer, "raw_dough_from_wheat");
+
+        MillstoneRecipeBuilder.builder()
+                .setIngredient(Tags.Items.SEEDS)
+                .setResult(ModItems.OIL_POT.get())
+                .setCarrier(ModItems.OIL_POT.get())
+                .save(consumer, "oil_pot_from_seeds");
     }
 }

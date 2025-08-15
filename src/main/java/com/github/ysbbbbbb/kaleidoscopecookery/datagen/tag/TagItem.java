@@ -10,8 +10,8 @@ import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
@@ -65,6 +65,7 @@ public class TagItem extends ItemTagsProvider {
         this.tag(BUCKET_CONTAINER).add(WATER_BUCKET, LAVA_BUCKET, MILK_BUCKET,
                 SALMON_BUCKET, COD_BUCKET, TROPICAL_FISH_BUCKET, PUFFERFISH_BUCKET,
                 AXOLOTL_BUCKET, TADPOLE_BUCKET, POWDER_SNOW_BUCKET);
+        this.tag(MILLSTONE_DOUGH_CONTAINER).add(WATER_BUCKET, POTION);
 
         this.addModItems();
         this.addPotIngredient();
@@ -74,6 +75,9 @@ public class TagItem extends ItemTagsProvider {
         tag(ItemTags.SWORDS).addTag(KITCHEN_KNIFE);
         tag(EXTINGUISH_STOVE).addTag(ItemTags.SHOVELS);
         tag(VILLAGER_PLANTABLE_SEEDS).add(ModItems.TOMATO_SEED.get(),
+                ModItems.CHILI_SEED.get(), ModItems.LETTUCE_SEED.get()
+        );
+        tag(Tags.Items.SEEDS).add(ModItems.TOMATO_SEED.get(), ModItems.WILD_RICE_SEED.get(),
                 ModItems.CHILI_SEED.get(), ModItems.LETTUCE_SEED.get()
         );
 

@@ -67,7 +67,6 @@ public class ItemUtils {
         } else if (stack.is(TagMod.BUCKET_CONTAINER)) {
             return Items.BUCKET;
         }
-        // TODO: 也许需要添加 tag 来支持其他模组带有容器的食物？
         return Items.AIR;
     }
 }

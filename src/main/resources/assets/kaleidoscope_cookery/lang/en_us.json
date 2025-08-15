@@ -188,6 +188,7 @@
   "tip.kaleidoscope_cookery.pot.need_carrier": "Need to right click with the %s to take it out!",
   "tip.kaleidoscope_cookery.pot.carrier_count_not_enough": "Need %d %s to take it out!",
   "tip.kaleidoscope_cookery.pot.need_kitchen_shovel": "Need sneak and right click with a kitchen shovel to take it out!",
+  "tip.kaleidoscope_cookery.millstone.oil_pot_is_full": "Oil Pot is full!",
   "jei.kaleidoscope_cookery.pot.stir_fry_count": "Stir-fry at least %s times",
   "emi.category.kaleidoscope_cookery.pot": "Pot",
   "emi.category.kaleidoscope_cookery.stockpot": "Stockpot",

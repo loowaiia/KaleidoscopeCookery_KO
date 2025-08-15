@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IMillstone;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.event.MillstoneTakeItemEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.MillstoneRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.datamap.MillstoneBindableData;
@@ -43,6 +44,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -105,8 +107,8 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         if (bindEntity == null) {
             // 必须距离磨盘足够近才可以（5 格）
             if (serverLevel.getEntity(entityId) instanceof Mob mob
-                && mob.isAlive() && mob.distanceToSqr(center) < maxDistanceSqr
-                && this.canBindEntity(mob)) {
+                    && mob.isAlive() && mob.distanceToSqr(center) < maxDistanceSqr
+                    && this.canBindEntity(mob)) {
                 this.bindEntity(mob);
             } else {
                 this.entityId = Util.NIL_UUID;
@@ -116,10 +118,10 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                 return;
             }
         } else if (!bindEntity.isAlive()
-                   || bindEntity.distanceToSqr(center) >= maxDistanceSqr
-                   || bindEntity.fallDistance > 0.5f
-                   || bindEntity.isInWall()
-                   || this.saddleEntityIsControlling(bindEntity)) {
+                || bindEntity.distanceToSqr(center) >= maxDistanceSqr
+                || bindEntity.fallDistance > 0.5f
+                || bindEntity.isInWall()
+                || this.saddleEntityIsControlling(bindEntity)) {
             this.entityId = Util.NIL_UUID;
             this.bindEntity = null;
             this.cacheRot = rot;
@@ -239,20 +241,31 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
     public boolean onTakeItem(LivingEntity user, ItemStack heldItem) {
         // 先尝试取出输出槽
         if (!this.output.isEmpty()) {
+            // 事件系统处理特殊情况
+            var event = new MillstoneTakeItemEvent(user, heldItem, this);
+            if (MinecraftForge.EVENT_BUS.post(event)) {
+                return event.isSuccess();
+            }
             // 兼容容器是否正确
             if (!carrier.isEmpty() && !carrier.test(heldItem)) {
                 Component carrierName = carrier.getItems()[0].getHoverName();
                 this.sendActionBarMessage(user, "tip.kaleidoscope_cookery.pot.need_carrier", carrierName);
                 return false;
             }
+            int consumeCount = this.output.getCount();
+            // 返回容器
             if (!carrier.isEmpty()) {
-                heldItem.shrink(1);
+                // 依据容器数量消耗
+                consumeCount = Math.min(consumeCount, heldItem.getCount());
+                Item containerItem = ItemUtils.getContainerItem(heldItem.split(consumeCount));
+                if (containerItem != Items.AIR) {
+                    ItemUtils.getItemToLivingEntity(user, containerItem.getDefaultInstance());
+                }
             }
-            ItemUtils.getItemToLivingEntity(user, this.output.copyAndClear());
-            this.output = ItemStack.EMPTY;
-            this.carrier = Ingredient.EMPTY;
-            this.progress = 0;
-            this.refresh();
+            ItemUtils.getItemToLivingEntity(user, this.output.split(consumeCount));
+            if (this.output.isEmpty()) {
+                this.resetWhenTakeout();
+            }
             return true;
         }
         // 如果没有输出，则尝试取出输入槽
@@ -264,6 +277,13 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
             return true;
         }
         return false;
+    }
+
+    public void resetWhenTakeout() {
+        this.output = ItemStack.EMPTY;
+        this.carrier = Ingredient.EMPTY;
+        this.progress = 0;
+        this.refresh();
     }
 
     public boolean saddleEntityIsControlling(Mob mob) {
@@ -325,7 +345,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         this.refresh();
     }
 
-    private void sendActionBarMessage(LivingEntity user, String key, Object... args) {
+    public void sendActionBarMessage(LivingEntity user, String key, Object... args) {
         if (user instanceof ServerPlayer serverPlayer) {
             MutableComponent message = Component.translatable(key, args);
             serverPlayer.connection.send(new ClientboundSetActionBarTextPacket(message));

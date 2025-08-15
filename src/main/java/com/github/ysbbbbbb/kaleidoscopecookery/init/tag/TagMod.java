@@ -68,6 +68,10 @@ public interface TagMod {
      */
     TagKey<Item> GLASS_BOTTLE_CONTAINER = itemTag("glass_bottle_container");
     /**
+     * 石磨取出面团所使用的容器
+     */
+    TagKey<Item> MILLSTONE_DOUGH_CONTAINER = itemTag("millstone_dough_container");
+    /**
      * 寒带疾行效果可以提速的方块
      */
     TagKey<Block> TUNDRA_STRIDER_SPEED_BLOCKS = blockTag("tundra_strider_speed_blocks");

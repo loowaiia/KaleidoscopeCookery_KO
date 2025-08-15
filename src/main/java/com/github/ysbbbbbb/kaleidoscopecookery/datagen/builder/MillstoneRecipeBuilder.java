@@ -60,6 +60,11 @@ public class MillstoneRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
+    public MillstoneRecipeBuilder setCarrier(TagKey<Item> itemLike) {
+        this.carrier = Ingredient.of(itemLike);
+        return this;
+    }
+
     @Override
     public RecipeBuilder unlockedBy(String criterionName, CriterionTriggerInstance criterionTrigger) {
         return this;
