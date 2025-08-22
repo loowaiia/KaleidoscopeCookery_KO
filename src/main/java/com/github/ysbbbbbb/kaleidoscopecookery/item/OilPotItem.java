@@ -50,6 +50,13 @@ public class OilPotItem extends BlockItem {
         return getOilCount(stack) > 0;
     }
 
+    public static void shrinkOilCount(ItemStack stack) {
+        int currentCount = getOilCount(stack);
+        if (currentCount > 0) {
+            setOilCount(stack, currentCount - 1);
+        }
+    }
+
     @OnlyIn(Dist.CLIENT)
     public static float getTexture(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed) {
         if (hasOil(stack)) {

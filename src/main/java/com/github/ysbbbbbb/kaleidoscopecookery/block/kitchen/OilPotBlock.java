@@ -5,6 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.item.OilPotItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DispensibleContainerItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.HitResult;
@@ -45,6 +47,7 @@ public class OilPotBlock extends HorizontalDirectionalBlock implements SimpleWat
                 .mapColor(MapColor.METAL)
                 .instrument(NoteBlockInstrument.BELL)
                 .instabreak()
+                .pushReaction(PushReaction.DESTROY)
                 .sound(SoundType.LANTERN));
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(WATERLOGGED, false)

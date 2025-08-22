@@ -77,9 +77,8 @@ public class TagItem extends ItemTagsProvider {
         tag(VILLAGER_PLANTABLE_SEEDS).add(ModItems.TOMATO_SEED.get(),
                 ModItems.CHILI_SEED.get(), ModItems.LETTUCE_SEED.get()
         );
-        tag(Tags.Items.SEEDS).add(ModItems.TOMATO_SEED.get(), ModItems.WILD_RICE_SEED.get(),
-                ModItems.CHILI_SEED.get(), ModItems.LETTUCE_SEED.get()
-        );
+        tag(Tags.Items.SEEDS).add(ModItems.TOMATO_SEED.get(), ModItems.CHILI_SEED.get(),
+                ModItems.LETTUCE_SEED.get());
 
         // 社区兼容
         tag(TagCommon.CROPS_CHILI_PEPPER).add(ModItems.RED_CHILI.get(), ModItems.GREEN_CHILI.get());

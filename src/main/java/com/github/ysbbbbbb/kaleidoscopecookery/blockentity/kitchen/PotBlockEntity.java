@@ -4,11 +4,11 @@ import com.github.ysbbbbbb.kaleidoscopecookery.advancements.critereon.ModEventTr
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IPot;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.PotRecipe;
-import com.github.ysbbbbbb.kaleidoscopecookery.datagen.tag.TagItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.*;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagCommon;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenShovelItem;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.OilPotItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -216,13 +216,21 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
     @Override
     public boolean onPlaceOil(Level level, LivingEntity user, ItemStack stack) {
         if (stack.is(TagMod.OIL)) {
+            // 普通情况油脂
             placeOil(level, user, level.random);
             stack.shrink(1);
             ModTrigger.EVENT.trigger(user, ModEventTriggerType.PUT_OIL_IN_POT);
             return true;
         } else if (stack.is(ModItems.KITCHEN_SHOVEL.get()) && KitchenShovelItem.hasOil(stack)) {
+            // 带油锅铲特判
             placeOil(level, user, level.random);
             KitchenShovelItem.setHasOil(stack, false);
+            ModTrigger.EVENT.trigger(user, ModEventTriggerType.PUT_OIL_IN_POT);
+            return true;
+        } else if (stack.is(ModItems.OIL_POT.get()) && OilPotItem.hasOil(stack)) {
+            // 油壶特判
+            placeOil(level, user, level.random);
+            OilPotItem.shrinkOilCount(stack);
             ModTrigger.EVENT.trigger(user, ModEventTriggerType.PUT_OIL_IN_POT);
             return true;
         }

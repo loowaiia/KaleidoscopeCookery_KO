@@ -1,10 +1,9 @@
 {
   "type": "kaleidoscope_cookery:millstone",
   "ingredient": {
-    "item": "minecraft:red_sandstone"
+    "item": "minecraft:andesite"
   },
   "result": {
-    "count": 3,
-    "item": "minecraft:red_sand"
+    "item": "minecraft:polished_andesite"
   }
 }

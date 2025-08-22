@@ -143,8 +143,8 @@ public class ItemModelGenerator extends ItemModelProvider {
         if (rawDough != null) {
             ItemModelBuilder builder = getBuilder(rawDough.toString());
             for (int i = 0; i <= 3; i++) {
-                ItemModelBuilder basicItem = basicItem(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "raw_dough_" + i));
-                builder.override().model(basicItem).predicate(RawDoughItem.PULL_PROPERTY, i).end();
+                ModelFile.UncheckedModelFile modelFile = new ModelFile.UncheckedModelFile(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "item/raw_dough_" + i));
+                builder.override().model(modelFile).predicate(RawDoughItem.PULL_PROPERTY, i).end();
             }
         }
 

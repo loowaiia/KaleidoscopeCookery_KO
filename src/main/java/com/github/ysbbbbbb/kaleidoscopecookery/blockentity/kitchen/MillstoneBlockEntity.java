@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IMillstone;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.event.MillstoneFinishEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.event.MillstoneTakeItemEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.MillstoneRecipe;
@@ -107,8 +108,8 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
         if (bindEntity == null) {
             // 必须距离磨盘足够近才可以（5 格）
             if (serverLevel.getEntity(entityId) instanceof Mob mob
-                    && mob.isAlive() && mob.distanceToSqr(center) < maxDistanceSqr
-                    && this.canBindEntity(mob)) {
+                && mob.isAlive() && mob.distanceToSqr(center) < maxDistanceSqr
+                && this.canBindEntity(mob)) {
                 this.bindEntity(mob);
             } else {
                 this.entityId = Util.NIL_UUID;
@@ -118,10 +119,10 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                 return;
             }
         } else if (!bindEntity.isAlive()
-                || bindEntity.distanceToSqr(center) >= maxDistanceSqr
-                || bindEntity.fallDistance > 0.5f
-                || bindEntity.isInWall()
-                || this.saddleEntityIsControlling(bindEntity)) {
+                   || bindEntity.distanceToSqr(center) >= maxDistanceSqr
+                   || bindEntity.fallDistance > 0.5f
+                   || bindEntity.isInWall()
+                   || this.saddleEntityIsControlling(bindEntity)) {
             this.entityId = Util.NIL_UUID;
             this.bindEntity = null;
             this.cacheRot = rot;
@@ -212,6 +213,9 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                 this.carrier = Ingredient.EMPTY;
                 this.refresh();
             });
+
+            // 触发完成事件，用于特殊情况判断（比如油壶自动化）
+            MinecraftForge.EVENT_BUS.post(new MillstoneFinishEvent(this, this.bindEntity));
         }
     }
 

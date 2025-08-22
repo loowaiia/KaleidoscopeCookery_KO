@@ -334,13 +334,13 @@ public class MillstoneRecipeProvider extends ModRecipeProvider {
 
         MillstoneRecipeBuilder.builder()
                 .setIngredient(Items.RED_SAND)
-                .setResult(Items.RED_SANDSTONE, 1)
-                .save(consumer, "red_sandstone_from_red_sand");
+                .setResult(Items.SMOOTH_RED_SANDSTONE, 1)
+                .save(consumer, "smooth_red_sandstone_from_red_sand");
 
         MillstoneRecipeBuilder.builder()
                 .setIngredient(Items.RED_SANDSTONE)
-                .setResult(Items.RED_SAND, 3)
-                .save(consumer, "red_sand_from_red_sandstone");
+                .setResult(Items.SMOOTH_RED_SANDSTONE, 1)
+                .save(consumer, "smooth_red_sandstone_from_red_sandstone");
 
         MillstoneRecipeBuilder.builder()
                 .setIngredient(Items.RED_TULIP)
@@ -364,13 +364,13 @@ public class MillstoneRecipeProvider extends ModRecipeProvider {
 
         MillstoneRecipeBuilder.builder()
                 .setIngredient(Items.SAND)
-                .setResult(Items.SANDSTONE, 1)
-                .save(consumer, "sandstone_from_sand");
+                .setResult(Items.SMOOTH_SANDSTONE, 1)
+                .save(consumer, "smooth_sandstone_from_sand");
 
         MillstoneRecipeBuilder.builder()
                 .setIngredient(Items.SANDSTONE)
-                .setResult(Items.SAND, 3)
-                .save(consumer, "sand_from_sandstone");
+                .setResult(Items.SMOOTH_SANDSTONE, 1)
+                .save(consumer, "smooth_sandstone_from_sandstone");
 
         MillstoneRecipeBuilder.builder()
                 .setIngredient(Items.FERN)
@@ -379,8 +379,13 @@ public class MillstoneRecipeProvider extends ModRecipeProvider {
 
         MillstoneRecipeBuilder.builder()
                 .setIngredient(Items.SMOOTH_BASALT)
-                .setResult(Items.BASALT, 1)
-                .save(consumer, "basalt_from_smooth_basalt");
+                .setResult(Items.POLISHED_BASALT, 1)
+                .save(consumer, "polished_basalt_from_smooth_basalt");
+
+        MillstoneRecipeBuilder.builder()
+                .setIngredient(Items.ANDESITE)
+                .setResult(Items.POLISHED_ANDESITE, 1)
+                .save(consumer, "polished_andesite_from_andesite");
 
         MillstoneRecipeBuilder.builder()
                 .setIngredient(Items.SMOOTH_QUARTZ)

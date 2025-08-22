@@ -1,6 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init.registry;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.dispenser.OilPotDispenseBehavior;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.farmersdelight.FarmersDelightCompat;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.harvest.HarvestCompat;
@@ -13,6 +14,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.network.NetworkHandler;
 import net.minecraft.world.entity.ai.behavior.GiveGiftToHero;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -28,6 +30,7 @@ public class CommonRegistry {
         event.enqueueWork(ModSoupBases::registerAll);
         event.enqueueWork(CommonRegistry::addVillagerGift);
         event.enqueueWork(CommonRegistry::modCompat);
+        event.enqueueWork(CommonRegistry::addDispenserBehavior);
     }
 
     @SubscribeEvent
@@ -70,5 +73,9 @@ public class CommonRegistry {
         ComposterBlock.COMPOSTABLES.put(ModItems.LETTUCE.get(), 0.65F);
         ComposterBlock.COMPOSTABLES.put(ModItems.RICE_PANICLE.get(), 0.65F);
         ComposterBlock.COMPOSTABLES.put(ModItems.CATERPILLAR.get(), 1.0F);
+    }
+
+    private static void addDispenserBehavior() {
+        DispenserBlock.registerBehavior(ModItems.OIL_POT.get(), new OilPotDispenseBehavior());
     }
 }
