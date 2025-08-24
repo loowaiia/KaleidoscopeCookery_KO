@@ -26,11 +26,6 @@ public class ShapelessRecipeProvider extends ModRecipeProvider {
                 .unlockedBy("has_ingot_iron", has(Items.IRON_INGOT))
                 .save(consumer);
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ModItems.RICE_SEED.get(), 3)
-                .requires(ModItems.RICE_PANICLE.get())
-                .unlockedBy("has_rice_panicle", has(ModItems.RICE_PANICLE.get()))
-                .save(consumer);
-
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ModItems.CHILI_SEED.get(), 1)
                 .requires(ModItems.GREEN_CHILI.get())
                 .unlockedBy("has_chili", has(ModItems.GREEN_CHILI.get()))

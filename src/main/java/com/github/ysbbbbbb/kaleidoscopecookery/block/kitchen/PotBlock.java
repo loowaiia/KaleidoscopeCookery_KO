@@ -133,7 +133,7 @@ public class PotBlock extends HorizontalDirectionalBlock implements EntityBlock,
             }
         }
         // 如果拿着锅铲，那么开始执行锅铲逻辑
-        if (itemInHand.is(ModItems.KITCHEN_SHOVEL.get())) {
+        if (itemInHand.is(TagMod.KITCHEN_SHOVEL)) {
             if (level.random.nextDouble() < DURABILITY_COST_PROBABILITY) {
                 itemInHand.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(player.getUsedItemHand()));
             }

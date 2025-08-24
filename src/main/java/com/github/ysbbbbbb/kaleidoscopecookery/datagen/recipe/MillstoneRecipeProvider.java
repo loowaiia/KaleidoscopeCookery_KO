@@ -438,5 +438,10 @@ public class MillstoneRecipeProvider extends ModRecipeProvider {
                 .setResult(ModItems.OIL_POT.get())
                 .setCarrier(ModItems.OIL_POT.get())
                 .save(consumer, "oil_pot_from_seeds");
+
+        MillstoneRecipeBuilder.builder()
+                .setIngredient(ModItems.RICE_PANICLE.get())
+                .setResult(ModItems.RICE_SEED.get(), 3)
+                .save(consumer, "rice_from_rice_panicle");
     }
 }

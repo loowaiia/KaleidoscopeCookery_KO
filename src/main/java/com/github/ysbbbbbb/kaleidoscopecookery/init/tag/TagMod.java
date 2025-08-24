@@ -42,6 +42,10 @@ public interface TagMod {
      */
     TagKey<Item> KITCHEN_KNIFE = itemTag("kitchen_knife");
     /**
+     * 可以视作本模组锅铲炒菜的工具
+     */
+    TagKey<Item> KITCHEN_SHOVEL = itemTag("kitchen_shovel");
+    /**
      * 农夫套装
      */
     TagKey<Item> FARMER_ARMOR = itemTag("farmer_armor");

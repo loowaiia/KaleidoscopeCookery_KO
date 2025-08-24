@@ -330,7 +330,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
     }
 
     private boolean takeOutWithoutCarrier(Level level, LivingEntity user, ItemStack stack, ItemStack finallyResult) {
-        if (stack.is(ModItems.KITCHEN_SHOVEL.get())) {
+        if (stack.is(TagMod.KITCHEN_SHOVEL)) {
             // 如果是玩家，则需要判断是否潜行才能取出
             if (user instanceof Player player && !player.isSecondaryUseActive()) {
                 return false;
@@ -362,7 +362,7 @@ public class PotBlockEntity extends BaseBlockEntity implements IPot {
             }
         }
         // 没有锅铲时才会触发提示和伤害
-        if (!mainHandItem.is(ModItems.KITCHEN_SHOVEL.get())) {
+        if (!mainHandItem.is(TagMod.KITCHEN_SHOVEL)) {
             if (this.hasHeatSource(level)) {
                 user.hurt(level.damageSources().inFire(), 1);
                 ModTrigger.EVENT.trigger(user, ModEventTriggerType.HURT_WHEN_TAKEOUT_FROM_POT);

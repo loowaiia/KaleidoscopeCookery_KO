@@ -43,6 +43,8 @@ public class TagItem extends ItemTagsProvider {
                         ModItems.NETHERITE_KITCHEN_KNIFE.get())
                 .addOptionalTag(new ResourceLocation("farmersdelight:tools/knives"));
 
+        tag(KITCHEN_SHOVEL).add(ModItems.KITCHEN_SHOVEL.get());
+
         // 农夫乐事
         tag(FD_KNIVES).add(ModItems.IRON_KITCHEN_KNIFE.get(),
                 ModItems.GOLD_KITCHEN_KNIFE.get(),
