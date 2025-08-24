@@ -62,6 +62,7 @@ public class TagBlock extends BlockTagsProvider {
         this.tag(BlockTags.CROPS).add(ModBlocks.TOMATO_CROP.get(),
                 ModBlocks.RICE_CROP.get(), ModBlocks.CHILI_CROP.get(),
                 ModBlocks.LETTUCE_CROP.get());
+        this.tag(BlockTags.BEE_GROWABLES).add(ModBlocks.RICE_CROP.get());
 
         // 兼容静谧四季模组
         this.tag(TagCommon.SPRING_CROPS_BLOCK).add(
