@@ -79,6 +79,59 @@ public interface ModFoods {
             .effect(() -> new MobEffectInstance(WARMTH.get(), 800), 1.0F)
             .alwaysEat().build();
 
+    // 包子
+    FoodProperties BAOZI = (new FoodProperties.Builder())
+            .nutrition(8).saturationMod(1)
+            .effect(() -> new MobEffectInstance(ABSORPTION, 9600), 1.0F)
+            .alwaysEat().build();
+
+    // 饺子
+    FoodProperties DUMPLING = (new FoodProperties.Builder())
+            .nutrition(8).saturationMod(1)
+            .effect(() -> new MobEffectInstance(WARMTH.get(), 6000), 1.0F)
+            .alwaysEat().build();
+
+    // 烤包子
+    FoodProperties SAMSA = (new FoodProperties.Builder())
+            .nutrition(8).saturationMod(1)
+            .effect(() -> new MobEffectInstance(DIG_SPEED, 9600, 2), 1.0F)
+            .alwaysEat().build();
+
+    // 馒头
+    FoodProperties MANTOU = (new FoodProperties.Builder())
+            .nutrition(6).saturationMod(0.9F)
+            .fast().alwaysEat().build();
+
+    // 馅饼
+    FoodProperties MEAT_PIE = (new FoodProperties.Builder())
+            .nutrition(8).saturationMod(1)
+            .effect(() -> new MobEffectInstance(WARMTH.get(), 6000), 1.0F)
+            .alwaysEat().build();
+
+    // 牛肉面
+    FoodProperties BEEF_NOODLE = (new FoodProperties.Builder())
+            .nutrition(16).saturationMod(0.375F)
+            .effect(() -> new MobEffectInstance(VIGOR.get(), 6000), 1.0F)
+            .alwaysEat().build();
+
+    // 烩面
+    FoodProperties HUI_NOODLE = (new FoodProperties.Builder())
+            .nutrition(16).saturationMod(0.375F)
+            .effect(() -> new MobEffectInstance(VIGOR.get(), 6000), 1.0F)
+            .alwaysEat().build();
+
+    // 乌冬面
+    FoodProperties UDON_NOODLE = (new FoodProperties.Builder())
+            .nutrition(16).saturationMod(0.375F)
+            .effect(() -> new MobEffectInstance(VIGOR.get(), 6000), 1.0F)
+            .alwaysEat().build();
+
+    // 驴肉汤
+    FoodProperties DONKEY_SOUP = (new FoodProperties.Builder())
+            .nutrition(8).saturationMod(0.75F)
+            .effect(() -> new MobEffectInstance(VIGOR.get(), 6000), 1.0F)
+            .alwaysEat().build();
+
     // 煎蛋
     FoodProperties FRIED_EGG = (new FoodProperties.Builder())
             .nutrition(4).saturationMod(0.5F)
@@ -370,6 +423,17 @@ public interface ModFoods {
             .nutrition(12).saturationMod(0.4F)
             .effect(() -> new MobEffectInstance(TUNDRA_STRIDER.get(), 900), 1.0F)
             .effect(() -> new MobEffectInstance(VIGOR.get(), 900), 1.0F)
+            .alwaysEat().build();
+
+    // 水煎包
+    FoodProperties SHENGJIAN_MANTOU_ITEM = (new FoodProperties.Builder())
+            .nutrition(8).saturationMod(1)
+            .effect(() -> new MobEffectInstance(WARMTH.get(), 6000), 1.0F)
+            .alwaysEat().build();
+
+    FoodProperties SHENGJIAN_MANTOU_BLOCK = (new FoodProperties.Builder())
+            .nutrition(2).saturationMod(1)
+            .effect(() -> new MobEffectInstance(WARMTH.get(), 6000), 1.0F)
             .alwaysEat().build();
 
     // 番茄炒蛋

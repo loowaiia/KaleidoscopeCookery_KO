@@ -99,7 +99,19 @@ public class ItemModelGenerator extends ItemModelProvider {
         basicItem(ModItems.RAW_DONKEY_MEAT.get());
         basicItem(ModItems.COOKED_DONKEY_MEAT.get());
         basicItem(ModItems.RAW_NOODLES.get());
+        basicItem(ModItems.STUFFED_DOUGH_FOOD.get());
         basicItem(ModItems.DONKEY_BURGER.get());
+        basicItem(ModItems.DONKEY_SOUP.get());
+
+        basicItem(ModItems.BAOZI.get());
+        basicItem(ModItems.DUMPLING.get());
+        basicItem(ModItems.SAMSA.get());
+        basicItem(ModItems.MANTOU.get());
+        basicItem(ModItems.MEAT_PIE.get());
+
+        basicItem(ModItems.BEEF_NOODLE.get());
+        basicItem(ModItems.HUI_NOODLE.get());
+        basicItem(ModItems.UDON_NOODLE.get());
 
         basicItem(modLoc("honey"));
         basicItem(modLoc("egg"));

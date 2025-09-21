@@ -169,7 +169,7 @@ public class PotRecipeProvider extends ModRecipeProvider {
 
         PotRecipeBuilder.builder()
                 .addInput(TagCommon.CROPS_CHILI_PEPPER, TagCommon.CROPS_CHILI_PEPPER)
-                .addInput(ModItems.RAW_DOUGH, ModItems.RAW_DOUGH, ModItems.RAW_DONKEY_MEAT, ModItems.RAW_DONKEY_MEAT)
+                .addInput(TagCommon.DOUGH, TagCommon.DOUGH, ModItems.RAW_DONKEY_MEAT, ModItems.RAW_DONKEY_MEAT)
                 .setResult(ModItems.DONKEY_BURGER.get())
                 .save(consumer);
     }

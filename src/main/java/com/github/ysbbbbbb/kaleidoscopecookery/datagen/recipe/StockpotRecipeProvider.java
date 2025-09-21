@@ -3,13 +3,17 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen.recipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.datagen.builder.StockpotRecipeBuilder;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoupBases;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagCommon;
+import com.google.common.collect.Lists;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class StockpotRecipeProvider extends ModRecipeProvider {
@@ -138,5 +142,65 @@ public class StockpotRecipeProvider extends ModRecipeProvider {
                         Tags.Items.MUSHROOMS, Tags.Items.MUSHROOMS, Tags.Items.MUSHROOMS)
                 .setResult(ModItems.CHICKEN_AND_MUSHROOM_STEW.get())
                 .save(consumer);
+
+        StockpotRecipeBuilder.builder()
+                .addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.RAW_BEEF)
+                .addInput(ModItems.RAW_NOODLES)
+                .setResult(ModItems.BEEF_NOODLE.get())
+                .save(consumer);
+
+        StockpotRecipeBuilder.builder()
+                .addInput(TagCommon.RAW_MUTTON, TagCommon.EGGS)
+                .addInput(Items.KELP, Items.KELP, ModItems.RAW_NOODLES)
+                .setResult(ModItems.HUI_NOODLE.get())
+                .save(consumer, "hui_noodle_eggs");
+
+        StockpotRecipeBuilder.builder()
+                .addInput(TagCommon.RAW_MUTTON, TagCommon.COOKED_EGGS)
+                .addInput(Items.KELP, Items.KELP, ModItems.RAW_NOODLES)
+                .setResult(ModItems.HUI_NOODLE.get())
+                .save(consumer, "hui_noodle_cooked_eggs");
+
+        StockpotRecipeBuilder.builder()
+                .addInput(TagCommon.RAW_MEATS, TagCommon.RAW_MEATS)
+                .addInput(TagCommon.EGGS, TagCommon.CROPS_LETTUCE, TagCommon.CROPS_LETTUCE, ModItems.RAW_NOODLES)
+                .setResult(ModItems.UDON_NOODLE.get())
+                .save(consumer, "udon_noodle_eggs");
+
+        StockpotRecipeBuilder.builder()
+                .addInput(TagCommon.RAW_MEATS, TagCommon.RAW_MEATS)
+                .addInput(TagCommon.COOKED_EGGS, TagCommon.CROPS_LETTUCE, TagCommon.CROPS_LETTUCE, ModItems.RAW_NOODLES)
+                .setResult(ModItems.UDON_NOODLE.get())
+                .save(consumer, "udon_noodle_cooked_eggs");
+
+        StockpotRecipeBuilder.builder()
+                .addInput(ModItems.RAW_DONKEY_MEAT.get(), ModItems.RAW_DONKEY_MEAT.get(), ModItems.RAW_DONKEY_MEAT.get())
+                .setResult(ModItems.DONKEY_SOUP.get())
+                .save(consumer);
+
+        {
+            List<Item> inputs = Lists.newArrayList();
+            for (int i = 0; i < 9; i++) {
+                int count = i + 1;
+                inputs.add(ModItems.STUFFED_DOUGH_FOOD.get());
+                StockpotRecipeBuilder.builder()
+                        .addInput(inputs.toArray())
+                        .setResult(ModItems.DUMPLING.get(), count)
+                        .save(consumer, "dumpling_count_" + count);
+            }
+        }
+
+        {
+            List<Item> inputs = Lists.newArrayList();
+            for (int i = 0; i < 9; i++) {
+                int count = i + 1;
+                inputs.add(ModItems.STUFFED_DOUGH_FOOD.get());
+                StockpotRecipeBuilder.builder()
+                        .addInput(inputs.toArray())
+                        .setSoupBase(ModSoupBases.LAVA)
+                        .setResult(FoodBiteRegistry.getItem(FoodBiteRegistry.SHENGJIAN_MANTOU), count)
+                        .save(consumer, "shengjian_mantou_count_" + count);
+            }
+        }
     }
 }

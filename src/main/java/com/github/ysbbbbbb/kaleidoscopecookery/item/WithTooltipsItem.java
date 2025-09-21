@@ -10,10 +10,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ItemWithTooltips extends Item {
+public class WithTooltipsItem extends Item {
     private final String key;
 
-    public ItemWithTooltips(Properties properties, String name) {
+    public WithTooltipsItem(Properties properties, String name) {
         super(properties);
         this.key = "tooltip.kaleidoscope_cookery." + name;
     }
