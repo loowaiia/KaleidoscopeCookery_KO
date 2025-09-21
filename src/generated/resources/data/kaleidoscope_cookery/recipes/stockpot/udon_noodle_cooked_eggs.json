@@ -22,6 +22,9 @@
     },
     {
       "tag": "forge:crops/lettuce"
+    },
+    {
+      "item": "kaleidoscope_cookery:raw_noodles"
     }
   ],
   "result": {
