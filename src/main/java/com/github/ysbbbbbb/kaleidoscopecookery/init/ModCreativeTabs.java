@@ -32,6 +32,7 @@ public class ModCreativeTabs {
                 output.accept(ModItems.ENAMEL_BASIN.get());
                 output.accept(ModItems.OIL_POT.get());
                 output.accept(ModItems.OIL.get());
+                output.accept(ModItems.RECIPE_ITEM.get());
                 // 原材料
                 output.accept(ModItems.RAW_DOUGH.get());
                 output.accept(ModItems.RAW_NOODLES.get());

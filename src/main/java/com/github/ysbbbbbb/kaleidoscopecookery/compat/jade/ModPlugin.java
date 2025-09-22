@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.compat.jade;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.*;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.misc.RecipeBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.FruitBasketBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.TableBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenwareRacksBlockEntity;
@@ -26,6 +27,7 @@ public class ModPlugin implements IWailaPlugin {
     public static final ResourceLocation FRUIT_BASKET = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "fruit_basket");
     public static final ResourceLocation KITCHENWARE_RACK = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "kitchenware_rack");
     public static final ResourceLocation OIL_POT = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "oil_pot");
+    public static final ResourceLocation RECIPE_BLOCK = new ResourceLocation(KaleidoscopeCookery.MOD_ID, "recipe_block");
 
     @Override
     public void register(IWailaCommonRegistration registration) {
@@ -49,5 +51,6 @@ public class ModPlugin implements IWailaPlugin {
         registration.registerItemStorageClient(PotComponentProvider.INSTANCE);
         registration.registerItemStorageClient(StockpotComponentProvider.INSTANCE);
         registration.registerBlockComponent(MillstoneComponentProvider.INSTANCE, MillstoneBlock.class);
+        registration.registerBlockComponent(RecipeBlockComponentProvider.INSTANCE, RecipeBlock.class);
     }
 }

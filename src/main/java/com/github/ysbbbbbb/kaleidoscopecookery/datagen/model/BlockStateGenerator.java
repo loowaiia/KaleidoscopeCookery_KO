@@ -151,6 +151,8 @@ public class BlockStateGenerator extends BlockStateProvider {
 
         axisBlock((RotatedPillarBlock) ModBlocks.STRAW_BLOCK.get());
 
+        horizontalFaceBlock(ModBlocks.RECIPE_BLOCK.get(), new ModelFile.UncheckedModelFile(modLoc("block/recipe_block")));
+
         riceCrop();
 
         variantBlock(ModBlocks.ENAMEL_BASIN.get(), blockState -> {

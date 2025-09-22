@@ -3,10 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.datagen.model;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
-import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenShovelItem;
-import com.github.ysbbbbbb.kaleidoscopecookery.item.OilPotItem;
-import com.github.ysbbbbbb.kaleidoscopecookery.item.RawDoughItem;
-import com.github.ysbbbbbb.kaleidoscopecookery.item.StockpotLidItem;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.*;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -149,6 +146,15 @@ public class ItemModelGenerator extends ItemModelProvider {
             getBuilder(oilPot.toString())
                     .override().model(potNoOil).predicate(OilPotItem.HAS_OIL_PROPERTY, 0).end()
                     .override().model(potHasOil).predicate(OilPotItem.HAS_OIL_PROPERTY, 1).end();
+        }
+
+        ResourceLocation recipeItem = ForgeRegistries.ITEMS.getKey(ModItems.RECIPE_ITEM.get());
+        if (recipeItem != null) {
+            ItemModelBuilder noRecipe = basicItem(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "recipe_item_no_recipe"));
+            ItemModelBuilder hasRecipe = basicItem(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "recipe_item_has_recipe"));
+            getBuilder(recipeItem.toString())
+                    .override().model(noRecipe).predicate(RecipeItem.HAS_RECIPE_PROPERTY, 0).end()
+                    .override().model(hasRecipe).predicate(RecipeItem.HAS_RECIPE_PROPERTY, 1).end();
         }
 
         ResourceLocation rawDough = ForgeRegistries.ITEMS.getKey(ModItems.RAW_DOUGH.get());
