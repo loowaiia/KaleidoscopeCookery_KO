@@ -12,7 +12,7 @@ public class RecipeBlockEntity extends BaseBlockEntity {
     private ItemStackHandler items = new ItemStackHandler(1);
 
     public RecipeBlockEntity(BlockPos pos, BlockState blockState) {
-        super(ModBlocks.RECIPE_BLOCK_TE.get(), pos, blockState);
+        super(ModBlocks.RECIPE_BLOCK_BE.get(), pos, blockState);
     }
 
     @Override
