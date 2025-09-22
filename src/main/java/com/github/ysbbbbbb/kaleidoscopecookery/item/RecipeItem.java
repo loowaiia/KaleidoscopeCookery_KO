@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.item;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IPot;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IStockpot;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.PotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.PotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
@@ -31,15 +32,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -105,6 +109,26 @@ public class RecipeItem extends BlockItem {
     }
 
     @Override
+    public Component getName(ItemStack pStack) {
+        if (hasRecipe(pStack)) {
+            RecipeRecord recipe = getRecipe(pStack);
+            if (recipe != null) {
+                Component result = recipe.output().getHoverName();
+                Component type;
+                if (recipe.type().equals(POT)) {
+                    type = Component.translatable("block.kaleidoscope_cookery.pot");
+                } else if (recipe.type().equals(STOCKPOT)) {
+                    type = Component.translatable("block.kaleidoscope_cookery.stockpot");
+                } else {
+                    type = Component.empty();
+                }
+                return Component.translatable("block.kaleidoscope_cookery.recipe_block.has_record", result, type);
+            }
+        }
+        return super.getName(pStack);
+    }
+
+    @Override
     public InteractionResult useOn(UseOnContext context) {
         ItemStack itemInHand = context.getItemInHand();
         BlockPos clickedPos = context.getClickedPos();
@@ -130,7 +154,8 @@ public class RecipeItem extends BlockItem {
             return InteractionResult.PASS;
         }
 
-        if (blockEntity instanceof PotBlockEntity pot && pot.getStatus() == IPot.PUT_INGREDIENT && record.type().equals(POT)) {
+        if (blockEntity instanceof PotBlockEntity pot && pot.getStatus() == IPot.PUT_INGREDIENT
+            && pot.getBlockState().getValue(PotBlock.HAS_OIL) && record.type().equals(POT)) {
             List<ItemStack> inputs = pot.getInputs().stream().filter(s -> !s.isEmpty()).toList();
             if (!inputs.isEmpty()) {
                 return InteractionResult.PASS;
@@ -272,5 +297,26 @@ public class RecipeItem extends BlockItem {
     }
 
     public record RecipeRecord(List<ItemStack> input, ItemStack output, ResourceLocation type) {
+        public static RecipeRecord pot(ItemLike output, ItemLike... input) {
+            List<ItemStack> inputList = Arrays.stream(input).map(ItemStack::new).toList();
+            return new RecipeRecord(inputList, new ItemStack(output), POT);
+        }
+
+        @SafeVarargs
+        public static RecipeRecord pot(RegistryObject<Item> output, RegistryObject<Item>... input) {
+            List<ItemStack> inputList = Arrays.stream(input).map(s -> new ItemStack(s.get())).toList();
+            return new RecipeRecord(inputList, new ItemStack(output.get()), POT);
+        }
+
+        public static RecipeRecord stockpot(ItemLike output, ItemLike... input) {
+            List<ItemStack> inputList = Arrays.stream(input).map(ItemStack::new).toList();
+            return new RecipeRecord(inputList, new ItemStack(output), STOCKPOT);
+        }
+
+        @SafeVarargs
+        public static RecipeRecord stockpot(RegistryObject<Item> output, RegistryObject<Item>... input) {
+            List<ItemStack> inputList = Arrays.stream(input).map(s -> new ItemStack(s.get())).toList();
+            return new RecipeRecord(inputList, new ItemStack(output.get()), STOCKPOT);
+        }
     }
 }

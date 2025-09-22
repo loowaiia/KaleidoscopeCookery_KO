@@ -1,22 +1,19 @@
 {
 	"format_version": "1.21.6",
 	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
 	"textures": {
 		"1": "kaleidoscope_cookery:block/recipe_block",
 		"particle": "kaleidoscope_cookery:block/recipe_block"
 	},
 	"elements": [
 		{
-			"from": [3, 0.1, 1.45],
-			"to": [13, 0.1, 14.45],
-			"rotation": {"angle": 0, "axis": "x", "origin": [8, 0.1, 7.95]},
+			"from": [2, 0.1, 0.95],
+			"to": [14, 0.1, 14.95],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0.1, 7.45]},
 			"faces": {
-				"north": {"uv": [1, 15.25, 6, 15.5], "rotation": 180, "texture": "#1"},
-				"east": {"uv": [1, 9, 1.5, 15.5], "rotation": 270, "texture": "#1"},
-				"south": {"uv": [1, 9, 6, 9.25], "texture": "#1"},
-				"west": {"uv": [1, 9, 1.25, 15.5], "rotation": 90, "texture": "#1"},
-				"up": {"uv": [1, 9, 6, 15.5], "rotation": 180, "texture": "#1"},
-				"down": {"uv": [1, 0.5, 6, 7], "texture": "#1"}
+				"up": {"uv": [0, 9, 6, 16], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [0, 0, 6, 7], "texture": "#1"}
 			}
 		}
 	],

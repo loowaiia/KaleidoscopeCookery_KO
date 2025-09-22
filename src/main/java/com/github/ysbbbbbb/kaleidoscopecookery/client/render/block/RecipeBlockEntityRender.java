@@ -55,14 +55,9 @@ public class RecipeBlockEntityRender implements BlockEntityRenderer<RecipeBlockE
 
         if (attachFace == AttachFace.WALL) {
             poseStack.translate(1, 1.25, 0);
+        } else {
+            poseStack.translate(1, 0.75, 2);
         }
-        if (attachFace == AttachFace.CEILING) {
-            poseStack.translate(1, 1.25, 2);
-        }
-        if (attachFace == AttachFace.FLOOR) {
-            poseStack.translate(1, 1.25, 2);
-        }
-
 
         itemRenderer.renderStatic(output, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, recipeBlock.getLevel(), 0);
         poseStack.popPose();

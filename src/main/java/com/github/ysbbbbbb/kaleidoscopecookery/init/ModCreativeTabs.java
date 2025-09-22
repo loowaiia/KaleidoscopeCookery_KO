@@ -122,6 +122,7 @@ public class ModCreativeTabs {
                 output.accept(ModItems.SAMSA.get());
                 output.accept(ModItems.MANTOU.get());
                 output.accept(ModItems.MEAT_PIE.get());
+                output.accept(ModItems.FRIED_EGG.get());
                 // 小碗菜和盖饭
                 output.accept(ModItems.COOKED_RICE.get());
                 output.accept(ModItems.EGG_FRIED_RICE.get());

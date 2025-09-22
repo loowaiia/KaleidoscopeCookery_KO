@@ -229,5 +229,12 @@ public class ShapedRecipeProvider extends ModRecipeProvider {
                 .unlockedBy("has_smooth_stone", has(Items.SMOOTH_STONE))
                 .save(consumer);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.RECIPE_ITEM.get())
+                .pattern("PP")
+                .pattern("PP")
+                .define('P', Items.PAPER)
+                .unlockedBy("has_paper", has(Items.PAPER))
+                .save(consumer);
+
     }
 }

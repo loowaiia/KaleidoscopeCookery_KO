@@ -94,7 +94,7 @@ public interface ModFoods {
     // 烤包子
     FoodProperties SAMSA = (new FoodProperties.Builder())
             .nutrition(8).saturationMod(1)
-            .effect(() -> new MobEffectInstance(DIG_SPEED, 9600, 2), 1.0F)
+            .effect(() -> new MobEffectInstance(DIG_SPEED, 9600, 1), 1.0F)
             .alwaysEat().build();
 
     // 馒头

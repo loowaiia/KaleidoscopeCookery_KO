@@ -24,12 +24,12 @@ public class ClientRecipeItemTooltip implements ClientTooltipComponent {
 
     @Override
     public int getHeight() {
-        return 32;
+        return 28;
     }
 
     @Override
     public int getWidth(Font font) {
-        int ingredientsSize = recipeRecord.input().size() * 16 + font.width(ingredientsText);
+        int ingredientsSize = recipeRecord.input().size() * 12 + font.width(ingredientsText) + 2;
         int outputSize = font.width(outputText) + 20;
         return Math.max(ingredientsSize, outputSize);
     }
@@ -42,13 +42,13 @@ public class ClientRecipeItemTooltip implements ClientTooltipComponent {
         guiGraphics.drawString(font, ingredientsText, pX, pY + 4, ChatFormatting.GRAY.getColor());
         int i = 0;
         for (ItemStack stack : recipeRecord.input()) {
-            int xOffset = pX + ingredientsWidth + i * 16;
+            int xOffset = pX + ingredientsWidth + i * 12;
             guiGraphics.renderFakeItem(stack, xOffset, pY);
             i++;
         }
 
         int xOffset = pX + outputWidth;
-        int yOffset = pY + 16;
+        int yOffset = pY + 12;
         guiGraphics.drawString(font, outputText, pX, yOffset + 4, ChatFormatting.GRAY.getColor());
         ItemStack stack = recipeRecord.output();
         guiGraphics.renderFakeItem(stack, xOffset, yOffset);

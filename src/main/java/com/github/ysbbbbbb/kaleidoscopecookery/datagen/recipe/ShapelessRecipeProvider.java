@@ -48,5 +48,10 @@ public class ShapelessRecipeProvider extends ModRecipeProvider {
                 .requires(TagCommon.DOUGH)
                 .unlockedBy("has_dough", has(TagCommon.DOUGH))
                 .save(consumer);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.RECIPE_ITEM.get(), 1)
+                .requires(ModItems.RECIPE_ITEM.get())
+                .unlockedBy("has_recipe_item", has(ModItems.RECIPE_ITEM.get()))
+                .save(consumer, "reset_recipe_item");
     }
 }

@@ -75,6 +75,7 @@
   "block.kaleidoscope_cookery.oil_pot": "Oil Pot",
   "block.kaleidoscope_cookery.shengjian_mantou": "Shengjian Mantou",
   "block.kaleidoscope_cookery.recipe_block": "Recipe",
+  "block.kaleidoscope_cookery.recipe_block.has_record": "Recipe: %s, Use for %s",
   "effect.kaleidoscope_cookery.flatulence": "Flatulence",
   "effect.kaleidoscope_cookery.tundra_strider": "Tundra Strider",
   "effect.kaleidoscope_cookery.warmth": "Warmth",
