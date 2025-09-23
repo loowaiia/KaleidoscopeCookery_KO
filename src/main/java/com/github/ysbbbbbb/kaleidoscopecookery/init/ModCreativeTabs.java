@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.FoodBiteRegistry;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.OilPotItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -31,6 +32,7 @@ public class ModCreativeTabs {
                 output.accept(ModItems.SCARECROW.get());
                 output.accept(ModItems.ENAMEL_BASIN.get());
                 output.accept(ModItems.OIL_POT.get());
+                output.accept(OilPotItem.getFullOilPot());
                 output.accept(ModItems.OIL.get());
                 output.accept(ModItems.RECIPE_ITEM.get());
                 output.accept(ModItems.TRANSMUTATION_LUNCH_BAG.get());

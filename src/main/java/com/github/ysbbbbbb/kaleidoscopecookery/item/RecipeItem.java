@@ -3,6 +3,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.item;
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IPot;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IStockpot;
+import com.github.ysbbbbbb.kaleidoscopecookery.api.event.RecipeItemEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.PotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.PotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
@@ -37,6 +38,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 import net.minecraftforge.registries.RegistryObject;
@@ -194,6 +196,12 @@ public class RecipeItem extends BlockItem {
             if (s.isEmpty()) {
                 continue;
             }
+
+            // 触发特殊计数
+            var event = new RecipeItemEvent.CheckItem(s, supply);
+            MinecraftForge.EVENT_BUS.post(event);
+
+            // 正常计数
             Item item = s.getItem();
             supply.put(item, supply.getInt(item) + s.getCount());
         }
@@ -233,6 +241,16 @@ public class RecipeItem extends BlockItem {
                 if (inSlot.isEmpty()) {
                     continue;
                 }
+
+                // 触发特殊扣除
+                var event = new RecipeItemEvent.DeductItem(inSlot, item, new int[]{needCount});
+                MinecraftForge.EVENT_BUS.post(event);
+                needCount = event.getNeedCount();
+                if (needCount <= 0) {
+                    break;
+                }
+
+                // 正常扣除
                 if (inSlot.is(item)) {
                     int extracted = Math.min(needCount, inSlot.getCount());
                     inventory.extractItem(i, extracted, false);
