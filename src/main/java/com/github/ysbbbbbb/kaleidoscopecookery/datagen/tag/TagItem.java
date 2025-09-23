@@ -169,12 +169,10 @@ public class TagItem extends ItemTagsProvider {
                         TagCommon.SEEDS_RICE,
                         TagCommon.EGGS
                 ).add(
-                        ModItems.OIL_POT.get(),
                         ModItems.RAW_DOUGH.get(),
                         ModItems.RAW_NOODLES.get(),
                         ModItems.STUFFED_DOUGH_FOOD.get()
-                )
-                .add(
+                ).add(
                         STONE,
                         GRANITE,
                         POLISHED_GRANITE,

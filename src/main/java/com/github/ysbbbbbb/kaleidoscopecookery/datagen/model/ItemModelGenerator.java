@@ -157,6 +157,15 @@ public class ItemModelGenerator extends ItemModelProvider {
                     .override().model(hasRecipe).predicate(RecipeItem.HAS_RECIPE_PROPERTY, 1).end();
         }
 
+        ResourceLocation bagItem = ForgeRegistries.ITEMS.getKey(ModItems.TRANSMUTATION_LUNCH_BAG.get());
+        if (bagItem != null) {
+            ItemModelBuilder noItems = basicItem(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "transmutation_lunch_bag_no_items"));
+            ItemModelBuilder hasItems = basicItem(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "transmutation_lunch_bag_has_items"));
+            getBuilder(bagItem.toString())
+                    .override().model(noItems).predicate(TransmutationLunchBagItem.HAS_ITEMS_PROPERTY, 0).end()
+                    .override().model(hasItems).predicate(TransmutationLunchBagItem.HAS_ITEMS_PROPERTY, 1).end();
+        }
+
         ResourceLocation rawDough = ForgeRegistries.ITEMS.getKey(ModItems.RAW_DOUGH.get());
         if (rawDough != null) {
             ItemModelBuilder builder = getBuilder(rawDough.toString());
