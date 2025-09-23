@@ -25,6 +25,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -194,6 +195,7 @@ public class TransmutationLunchBagItem extends Item {
         }
         if (!food.isEmpty()) {
             // 吃掉食物
+            Item containerItem = ItemUtils.getContainerItem(food);
             ItemStack returnStack = entity.eat(level, food);
             // 处理效果
             for (Pair<MobEffectInstance, Float> effect : effects) {
@@ -204,7 +206,12 @@ public class TransmutationLunchBagItem extends Item {
             }
             // 返还容器
             if (!returnStack.isEmpty()) {
-                ItemUtils.getItemToLivingEntity(entity, returnStack);
+                // 排除创造模式玩家
+                if (!(entity instanceof Player player) || !player.getAbilities().instabuild) {
+                    ItemUtils.getItemToLivingEntity(entity, returnStack);
+                }
+            } else if (containerItem != Items.AIR) {
+                ItemUtils.getItemToLivingEntity(entity, containerItem.getDefaultInstance());
             }
             // 更新饭袋数据
             setItems(bag, items);
