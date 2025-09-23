@@ -27,6 +27,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -131,7 +132,7 @@ public class TransmutationLunchBagItem extends Item {
         // 果篮不为空，尝试取出物品
         for (int i = 0; i < fruitBasketItems.getSlots(); i++) {
             ItemStack stack = fruitBasketItems.getStackInSlot(i);
-            if (!stack.isEmpty() && stack.getItem().isEdible()) {
+            if (!stack.isEmpty() && canAdd(stack)) {
                 ItemStack remaining = ItemHandlerHelper.insertItemStacked(bagItems, stack, false);
                 fruitBasketItems.extractItem(i, stack.getCount() - remaining.getCount(), false);
             }
@@ -184,26 +185,38 @@ public class TransmutationLunchBagItem extends Item {
         ItemStackHandler items = getItems(bag);
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack stackInSlot = items.getStackInSlot(i);
-            if (!stackInSlot.isEmpty() && stackInSlot.getItem().getFoodProperties() != null) {
+            if (stackInSlot.isEmpty()) {
+                continue;
+            }
+
+            // 先检查是不是食物
+            if (stackInSlot.getItem().getFoodProperties() != null) {
                 // 第一个食物的效果不加入其中，避免重复
                 if (!food.isEmpty()) {
                     effects.addAll(stackInSlot.getItem().getFoodProperties().getEffects());
                 } else {
                     food = items.extractItem(i, 1, false);
                 }
+                continue;
+            }
+
+            // 其次检查是不是药水
+            if (stackInSlot.is(Items.POTION)) {
+                // 第一个药水的效果不加入其中，避免重复
+                if (!food.isEmpty()) {
+                    PotionUtils.getMobEffects(stackInSlot).stream()
+                            .forEach(e -> effects.add(Pair.of(e, 1F)));
+                } else {
+                    food = items.extractItem(i, 1, false);
+                }
             }
         }
+
         if (!food.isEmpty()) {
-            // 吃掉食物
+            // 消耗物品
+            ItemStack returnStack = food.finishUsingItem(level, entity);
             Item containerItem = ItemUtils.getContainerItem(food);
-            ItemStack returnStack = entity.eat(level, food);
-            // 处理效果
-            for (Pair<MobEffectInstance, Float> effect : effects) {
-                if (level.isClientSide || effect.getSecond() <= 0.0F || level.random.nextFloat() >= effect.getSecond()) {
-                    continue;
-                }
-                entity.addEffect(new MobEffectInstance(effect.getFirst()));
-            }
+
             // 返还容器
             if (!returnStack.isEmpty()) {
                 // 排除创造模式玩家
@@ -213,12 +226,21 @@ public class TransmutationLunchBagItem extends Item {
             } else if (containerItem != Items.AIR) {
                 ItemUtils.getItemToLivingEntity(entity, containerItem.getDefaultInstance());
             }
+
+            // 处理效果
+            for (Pair<MobEffectInstance, Float> effect : effects) {
+                if (level.isClientSide || effect.getSecond() <= 0.0F || level.random.nextFloat() >= effect.getSecond()) {
+                    continue;
+                }
+                entity.addEffect(new MobEffectInstance(effect.getFirst()));
+            }
+
             // 更新饭袋数据
             setItems(bag, items);
             return bag;
         }
 
-        return this.isEdible() ? entity.eat(level, bag) : bag;
+        return bag;
     }
 
     @Override
@@ -241,7 +263,7 @@ public class TransmutationLunchBagItem extends Item {
             // 当点击的地方为空，那么取出物品
             this.playRemoveOneSound(player);
             removeOne(bag).ifPresent(stack -> add(bag, slot.safeInsert(stack)));
-        } else if (clickItem.getItem().canFitInsideContainerItems() && clickItem.getItem().isEdible()) {
+        } else if (clickItem.getItem().canFitInsideContainerItems() && canAdd(clickItem)) {
             // 否则，放入食物
             int addCount = add(bag, clickItem);
             if (addCount > 0) {
@@ -253,7 +275,8 @@ public class TransmutationLunchBagItem extends Item {
     }
 
     @Override
-    public boolean overrideOtherStackedOnMe(ItemStack bag, ItemStack other, Slot slot, ClickAction action, Player player, SlotAccess access) {
+    public boolean overrideOtherStackedOnMe(ItemStack bag, ItemStack other, Slot slot, ClickAction action, Player
+            player, SlotAccess access) {
         if (bag.getCount() != 1) {
             return false;
         }
@@ -275,6 +298,16 @@ public class TransmutationLunchBagItem extends Item {
         return true;
     }
 
+    public static boolean canAdd(ItemStack food) {
+        if (food.isEmpty()) {
+            return false;
+        }
+        if (!food.getItem().canFitInsideContainerItems()) {
+            return false;
+        }
+        return food.getItem().isEdible() || food.is(Items.POTION);
+    }
+
     private static Optional<ItemStack> removeOne(ItemStack bag) {
         if (!hasItems(bag)) {
             return Optional.empty();
@@ -291,7 +324,7 @@ public class TransmutationLunchBagItem extends Item {
     }
 
     private static int add(ItemStack bag, ItemStack food) {
-        if (food.isEmpty() || !food.getItem().canFitInsideContainerItems() || !food.getItem().isEdible()) {
+        if (food.isEmpty() || !food.getItem().canFitInsideContainerItems() || !canAdd(food)) {
             return 0;
         }
         int totalCount = food.getCount();
