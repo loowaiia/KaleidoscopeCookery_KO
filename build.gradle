@@ -27,6 +27,8 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            // 控制台彩色打印
+            property 'terminal.jline', 'true'
             mods {
                 "${mod_id}" {
                     source sourceSets.main
@@ -113,6 +115,9 @@ repositories {
         }
     }
     maven {
+        url = "https://maven.shedaniel.me"
+    }
+    maven {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/"
     }
@@ -126,6 +131,14 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-1.20.1-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge-api:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:${jei_version}")
+
+    // REI 前置
+    implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:11.1.106")
+    implementation fg.deobf("dev.architectury:architectury-forge:9.2.14")
+    // REI API for Forge (ForgeGradle)
+    compileOnly fg.deobf("me.shedaniel:RoughlyEnoughItems-api-forge:12.1.785")
+    compileOnly fg.deobf("me.shedaniel:RoughlyEnoughItems-default-plugin-forge:12.1.785")
+//    runtimeOnly fg.deobf("maven.modrinth:rei:12.1.785+forge-forge,1.20.1")
 
     // EMI
     compileOnly fg.deobf("dev.emi:emi-forge:1.1.22+1.20.1:api")
@@ -152,6 +165,9 @@ dependencies {
     runtimeOnly fg.deobf("maven.modrinth:just-enough-effect-descriptions-jeed:1.20-2.2.5-forge")
     runtimeOnly fg.deobf("curse.maven:carry-on-274259:4882500")
     runtimeOnly fg.deobf("curse.maven:ecliptic-seasons-1118306:6838718")
+
+    runtimeOnly fg.deobf("maven.modrinth:nbtedit-reborn:5.0.3+mc1.20.1")
+    runtimeOnly fg.deobf("maven.modrinth:kiwi:11.5.5")
 
     // runtimeOnly fg.deobf("maven.modrinth:serene-seasons:9.1.0.2-forge")
     // runtimeOnly fg.deobf("maven.modrinth:glitchcore:0.0.1.1-forge")

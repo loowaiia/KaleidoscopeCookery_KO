@@ -66,6 +66,8 @@ public class ItemUtils {
             return Items.GLASS_BOTTLE;
         } else if (stack.is(TagMod.BUCKET_CONTAINER)) {
             return Items.BUCKET;
+        } else if (stack.is(Items.POTION)) {
+            return Items.GLASS_BOTTLE;
         }
         return Items.AIR;
     }

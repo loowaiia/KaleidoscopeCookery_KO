@@ -67,7 +67,7 @@ public class TagItem extends ItemTagsProvider {
         this.tag(BUCKET_CONTAINER).add(WATER_BUCKET, LAVA_BUCKET, MILK_BUCKET,
                 SALMON_BUCKET, COD_BUCKET, TROPICAL_FISH_BUCKET, PUFFERFISH_BUCKET,
                 AXOLOTL_BUCKET, TADPOLE_BUCKET, POWDER_SNOW_BUCKET);
-        this.tag(MILLSTONE_DOUGH_CONTAINER).add(WATER_BUCKET, POTION);
+        this.tag(MILLSTONE_DOUGH_CONTAINER).add(WATER_BUCKET);
 
         this.addModItems();
         this.addPotIngredient();
