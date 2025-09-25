@@ -110,6 +110,8 @@ public class ItemModelGenerator extends ItemModelProvider {
         basicItem(ModItems.HUI_NOODLE.get());
         basicItem(ModItems.UDON_NOODLE.get());
 
+        basicItem(ModItems.STEAMER.get());
+
         basicItem(modLoc("honey"));
         basicItem(modLoc("egg"));
         basicItem(modLoc("raw_dough_in_millstone"));

@@ -15,8 +15,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.AttachFace;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
@@ -95,6 +93,30 @@ public class BlockStateGenerator extends BlockStateProvider {
                 return new ModelFile.UncheckedModelFile(modLoc("block/oil_pot"));
             } else {
                 return new ModelFile.UncheckedModelFile(modLoc("block/oil_pot_with_oil"));
+            }
+        });
+
+        horizontalBlock(ModBlocks.STEAMER.get(), blockState -> {
+            boolean hasLid = blockState.getValue(SteamerBlock.HAS_LID);
+            boolean hasBase = blockState.getValue(SteamerBlock.HAS_BASE);
+            boolean half = blockState.getValue(SteamerBlock.HALF);
+
+            if (hasLid && hasBase && half) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/steamer_half_lid_base"));
+            } else if (hasLid && hasBase) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/steamer_full_lid_base"));
+            } else if (hasLid && half) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/steamer_half_lid"));
+            } else if (hasLid) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/steamer_full_lid"));
+            } else if (hasBase && half) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/steamer_half_base"));
+            } else if (hasBase) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/steamer_full_base"));
+            } else if (half) {
+                return new ModelFile.UncheckedModelFile(modLoc("block/steamer_half"));
+            } else {
+                return new ModelFile.UncheckedModelFile(modLoc("block/steamer_full"));
             }
         });
 
