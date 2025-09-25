@@ -1,6 +1,8 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.ISteamer;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.SteamerBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -16,6 +18,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -58,6 +62,20 @@ public class SteamerBlock extends FallingBlock implements EntityBlock, SimpleWat
                 .setValue(WATERLOGGED, false));
     }
 
+    @Nullable
+    @SuppressWarnings("all")
+    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(
+            BlockEntityType<A> serverType, BlockEntityType<E> clientType, BlockEntityTicker<? super E> ticker) {
+        return clientType == serverType ? (BlockEntityTicker<A>) ticker : null;
+    }
+
+    @Override
+    @javax.annotation.Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return createTickerHelper(blockEntityType, ModBlocks.STEAMER_BE.get(),
+                (levelIn, blockPos, blockState, steamer) -> steamer.tick(levelIn));
+    }
+
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         BlockState below = level.getBlockState(pos.below());
@@ -90,6 +108,7 @@ public class SteamerBlock extends FallingBlock implements EntityBlock, SimpleWat
         return state;
     }
 
+    @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack itemInHand = player.getItemInHand(hand);
         // 空手 Shift 右击盖盖子、去掉盖子
@@ -99,6 +118,28 @@ public class SteamerBlock extends FallingBlock implements EntityBlock, SimpleWat
             level.setBlock(pos, state.setValue(HAS_LID, !hasLid), Block.UPDATE_ALL);
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
+
+        // 手持蒸笼，右击可以摞上去
+        if (itemInHand.is(this.asItem()) && state.getValue(HALF)) {
+            level.setBlock(pos, state.setValue(HALF, false), Block.UPDATE_ALL);
+            if (!player.isCreative()) {
+                itemInHand.shrink(1);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+
+        // 其他情况交给 BlockEntity 处理
+        if (level.getBlockEntity(pos) instanceof ISteamer steamer) {
+            // 先尝试放入物品
+            if (steamer.placeFood(level, player, itemInHand)) {
+                return InteractionResult.sidedSuccess(level.isClientSide);
+            }
+            // 再尝试取出物品
+            if (steamer.takeFood(level, player)) {
+                return InteractionResult.sidedSuccess(level.isClientSide);
+            }
+        }
+
         return super.use(state, level, pos, player, hand, hit);
     }
 

@@ -2,6 +2,7 @@
 	"format_version": "1.21.6",
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
+	"render_type": "cutout",
 	"textures": {
 		"2": "kaleidoscope_cookery:block/steamer",
 		"particle": "kaleidoscope_cookery:block/steamer"
