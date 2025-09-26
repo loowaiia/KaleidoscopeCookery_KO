@@ -4,6 +4,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.ISteamer;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.SteamerBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
+import com.github.ysbbbbbb.kaleidoscopecookery.item.SteamerItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -132,12 +133,8 @@ public class SteamerBlock extends FallingBlock implements EntityBlock, SimpleWat
 
         // 手持蒸笼，右击可以摞上去
         if (itemInHand.is(this.asItem())) {
-            if (state.getValue(HALF)) {
-                level.setBlock(pos, state.setValue(HALF, false), Block.UPDATE_ALL);
-                if (!player.isCreative()) {
-                    itemInHand.shrink(1);
-                }
-                return InteractionResult.sidedSuccess(level.isClientSide);
+            if (state.getValue(HALF) && itemInHand.getItem() instanceof SteamerItem steamerItem) {
+                return steamerItem.place(new BlockPlaceContext(player, hand, itemInHand, hit));
             } else {
                 return InteractionResult.PASS;
             }

@@ -13,7 +13,9 @@ import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
@@ -26,9 +28,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.gameevent.GameEvent;
 import org.apache.commons.compress.utils.Lists;
 
 import java.util.List;
@@ -39,6 +41,7 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
     public static final int MAX_LIT_LEVEL = 4;
     public static final String COOKING_TIMES_TAG = "CookingTimes";
     public static final String COOKING_TOTAL_TIMES_TAG = "CookingTotalTimes";
+    public static final String ITEMS_TAG = "Items";
 
     // 合成表
     private final RecipeManager.CachedCheck<Container, SteamerRecipe> quickCheck = RecipeManager.createCheck(ModRecipes.STEAMER_RECIPE);
@@ -73,6 +76,49 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
         } else {
             cooldownTick(level, worldPosition, getBlockState(), this);
         }
+    }
+
+    // 合并物品，仅在放置时调用
+    public void mergeItem(ItemStack stack) {
+        CompoundTag data = stack.getOrCreateTagElement(BlockItem.BLOCK_ENTITY_TAG);
+
+        NonNullList<ItemStack> merge = NonNullList.withSize(8, ItemStack.EMPTY);
+        int[] mergeCookingProgress = new int[8];
+        int[] mergeCookingTime = new int[8];
+
+        // 先尝试把物品里的数据 0-3 取出，放到 4-7
+        if (data.contains(ITEMS_TAG, Tag.TAG_LIST)) {
+            NonNullList<ItemStack> itemsInStack = NonNullList.withSize(4, ItemStack.EMPTY);
+            ContainerHelper.loadAllItems(data, itemsInStack);
+            for (int i = 0; i < 4; i++) {
+                merge.set(i + 4, itemsInStack.get(i));
+            }
+        }
+        if (data.contains(COOKING_TIMES_TAG, Tag.TAG_INT_ARRAY)) {
+            int[] times = data.getIntArray(COOKING_TIMES_TAG);
+            int length = Math.min(mergeCookingProgress.length - 4, times.length);
+            System.arraycopy(times, 0, mergeCookingProgress, 4, length);
+        }
+        if (data.contains(COOKING_TOTAL_TIMES_TAG, Tag.TAG_INT_ARRAY)) {
+            int[] times = data.getIntArray(COOKING_TOTAL_TIMES_TAG);
+            int length = Math.min(mergeCookingTime.length - 4, times.length);
+            System.arraycopy(times, 0, mergeCookingTime, 4, length);
+        }
+
+        // 接着把自己的数据放到 0-3
+        for (int i = 0; i < 4; i++) {
+            merge.set(i, this.items.get(i));
+            mergeCookingProgress[i] = this.cookingProgress[i];
+            mergeCookingTime[i] = this.cookingTime[i];
+        }
+
+        // 写进 data
+        ContainerHelper.saveAllItems(data, merge, false);
+        data.putIntArray(COOKING_TIMES_TAG, mergeCookingProgress);
+        data.putIntArray(COOKING_TOTAL_TIMES_TAG, mergeCookingTime);
+
+        // 写回物品
+        BlockItem.setBlockEntityData(stack, this.getType(), data);
     }
 
     public List<ItemStack> dropAsItem() {
@@ -111,7 +157,12 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
         if (this.hasHeatSource(level)) {
             this.litLevel = MAX_LIT_LEVEL;
         } else if (level.getBlockEntity(pos.below()) instanceof SteamerBlockEntity steamer) {
-            this.litLevel = Math.max(steamer.litLevel - 1, 0);
+            // 下层是蒸笼，且需要是双层的才能传递火力
+            if (steamer.getBlockState().getValue(SteamerBlock.HALF)) {
+                this.litLevel = 0;
+            } else {
+                this.litLevel = Math.max(steamer.litLevel - 1, 0);
+            }
         }
     }
 
@@ -276,7 +327,7 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
             this.cookingProgress[i] = 0;
         }
         // 全为空，还是双层，那么拆掉一层
-        if (isAllEmpty && !half) {
+        if (isAllEmpty) {
             int preferredSlot = user instanceof Player player ? player.getInventory().selected : -1;
             ItemUtils.getItemToLivingEntity(user, ModItems.STEAMER.get().getDefaultInstance(), preferredSlot);
             // 把 4-8 全部清空
@@ -286,10 +337,16 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
                 this.cookingProgress[i] = 0;
             }
             // 释放粒子效果
-            level.gameEvent(GameEvent.BLOCK_DESTROY, worldPosition, GameEvent.Context.of(blockState));
-            level.setBlockAndUpdate(this.getBlockPos(), blockState.setValue(SteamerBlock.HALF, true));
+            level.playSound(null, this.getBlockPos(), blockState.getSoundType().getBreakSound(), SoundSource.BLOCKS);
+            if (half) {
+                level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
+            } else {
+                setChanged();
+                level.setBlockAndUpdate(this.getBlockPos(), blockState.setValue(SteamerBlock.HALF, true));
+            }
+        } else {
+            this.refresh();
         }
-        this.refresh();
         return true;
     }
 
@@ -349,8 +406,8 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
             tag1.putIntArray(COOKING_TOTAL_TIMES_TAG, firstCookingTime);
         }
 
+        ContainerHelper.saveAllItems(tag2, second, false);
         if (!tag2.isEmpty()) {
-            ContainerHelper.saveAllItems(tag2, second, false);
             tag2.putIntArray(COOKING_TIMES_TAG, secondCookingProgress);
             tag2.putIntArray(COOKING_TOTAL_TIMES_TAG, secondCookingTime);
         }

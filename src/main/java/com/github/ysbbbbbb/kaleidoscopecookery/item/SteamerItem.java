@@ -1,14 +1,21 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.item;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.SteamerBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -21,6 +28,31 @@ public class SteamerItem extends BlockItem {
 
     public SteamerItem() {
         super(ModBlocks.STEAMER.get(), new Item.Properties());
+    }
+
+    @Override
+    protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
+        Level level = context.getLevel();
+        Direction face = context.getClickedFace();
+        BlockPos clickedPos = context.getClickedPos();
+        // 点击顶部才能放置
+        if (face != Direction.UP) {
+            return false;
+        }
+        BlockEntity blockEntity = level.getBlockEntity(clickedPos);
+        ItemStack stack = context.getItemInHand();
+        if (blockEntity instanceof SteamerBlockEntity steamer && stack.is(this) && stack.getCount() == 1) {
+            steamer.mergeItem(stack);
+        }
+        return super.placeBlock(context, state);
+    }
+
+    @Override
+    public int getMaxStackSize(ItemStack stack) {
+        if (stack.hasTag()) {
+            return 1;
+        }
+        return super.getMaxStackSize(stack);
     }
 
     @OnlyIn(Dist.CLIENT)
