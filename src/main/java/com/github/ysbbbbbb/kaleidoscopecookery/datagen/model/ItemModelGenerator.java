@@ -110,8 +110,6 @@ public class ItemModelGenerator extends ItemModelProvider {
         basicItem(ModItems.HUI_NOODLE.get());
         basicItem(ModItems.UDON_NOODLE.get());
 
-        basicItem(ModItems.STEAMER.get());
-
         basicItem(modLoc("honey"));
         basicItem(modLoc("egg"));
         basicItem(modLoc("raw_dough_in_millstone"));
@@ -171,10 +169,19 @@ public class ItemModelGenerator extends ItemModelProvider {
         ResourceLocation rawDough = ForgeRegistries.ITEMS.getKey(ModItems.RAW_DOUGH.get());
         if (rawDough != null) {
             ItemModelBuilder builder = getBuilder(rawDough.toString());
-            for (int i = 0; i <= 3; i++) {
+            for (int i = 1; i <= 4; i++) {
                 ModelFile.UncheckedModelFile modelFile = new ModelFile.UncheckedModelFile(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "item/raw_dough_" + i));
-                builder.override().model(modelFile).predicate(RawDoughItem.PULL_PROPERTY, i).end();
+                builder.override().model(modelFile).predicate(RawDoughItem.PULL_PROPERTY, i - 1).end();
             }
+        }
+
+        ResourceLocation steamerItem = ForgeRegistries.ITEMS.getKey(ModItems.STEAMER.get());
+        if (steamerItem != null) {
+            ItemModelBuilder noItems = basicItem(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "steamer_no_items"));
+            ItemModelBuilder hasItems = basicItem(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "steamer_has_items"));
+            getBuilder(steamerItem.toString())
+                    .override().model(noItems).predicate(SteamerItem.HAS_ITEMS, 0).end()
+                    .override().model(hasItems).predicate(SteamerItem.HAS_ITEMS, 1).end();
         }
 
         FoodBiteRegistry.FOOD_DATA_MAP.forEach((key, value) -> {

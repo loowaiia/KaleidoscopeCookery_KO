@@ -30,6 +30,7 @@ public class ClientSetupEvent {
         event.enqueueWork(() -> ItemProperties.register(ModItems.RAW_DOUGH.get(), RawDoughItem.PULL_PROPERTY, RawDoughItem::getTexture));
         event.enqueueWork(() -> ItemProperties.register(ModItems.RECIPE_ITEM.get(), RecipeItem.HAS_RECIPE_PROPERTY, RecipeItem::getTexture));
         event.enqueueWork(() -> ItemProperties.register(ModItems.TRANSMUTATION_LUNCH_BAG.get(), TransmutationLunchBagItem.HAS_ITEMS_PROPERTY, TransmutationLunchBagItem::getTexture));
+        event.enqueueWork(() -> ItemProperties.register(ModItems.STEAMER.get(), SteamerItem.HAS_ITEMS, SteamerItem::getTexture));
     }
 
     @SubscribeEvent

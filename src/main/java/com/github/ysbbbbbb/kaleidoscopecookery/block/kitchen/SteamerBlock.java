@@ -3,8 +3,10 @@ package com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.ISteamer;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.SteamerBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -31,10 +33,14 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class SteamerBlock extends FallingBlock implements EntityBlock, SimpleWaterloggedBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -80,7 +86,12 @@ public class SteamerBlock extends FallingBlock implements EntityBlock, SimpleWat
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         BlockState below = level.getBlockState(pos.below());
         if (isFree(below) && pos.getY() >= level.getMinBuildHeight()) {
+            CompoundTag blockEntityTag = null;
+            if (level.getBlockEntity(pos) instanceof SteamerBlockEntity steamer) {
+                blockEntityTag = steamer.saveWithoutMetadata();
+            }
             FallingBlockEntity fall = FallingBlockEntity.fall(level, pos, state.setValue(HAS_BASE, false));
+            fall.blockData = blockEntityTag;
             this.falling(fall);
         }
     }
@@ -98,7 +109,7 @@ public class SteamerBlock extends FallingBlock implements EntityBlock, SimpleWat
             if (isFree(neighborState)) {
                 state = state.setValue(HAS_BASE, false);
             } else {
-                state = state.setValue(HAS_BASE, shouldHasBase(levelAccessor, neighborPos));
+                state = state.setValue(HAS_BASE, shouldHasBase(levelAccessor, pos));
             }
         }
         // 如果是上方方块是蒸笼，那么把盖子去掉
@@ -120,12 +131,16 @@ public class SteamerBlock extends FallingBlock implements EntityBlock, SimpleWat
         }
 
         // 手持蒸笼，右击可以摞上去
-        if (itemInHand.is(this.asItem()) && state.getValue(HALF)) {
-            level.setBlock(pos, state.setValue(HALF, false), Block.UPDATE_ALL);
-            if (!player.isCreative()) {
-                itemInHand.shrink(1);
+        if (itemInHand.is(this.asItem())) {
+            if (state.getValue(HALF)) {
+                level.setBlock(pos, state.setValue(HALF, false), Block.UPDATE_ALL);
+                if (!player.isCreative()) {
+                    itemInHand.shrink(1);
+                }
+                return InteractionResult.sidedSuccess(level.isClientSide);
+            } else {
+                return InteractionResult.PASS;
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
         // 其他情况交给 BlockEntity 处理
@@ -171,6 +186,13 @@ public class SteamerBlock extends FallingBlock implements EntityBlock, SimpleWat
         // 如果还是蒸笼，那么不添加基座
         if (belowState.is(this)) {
             return false;
+        }
+        // 如果是热源，强制添加基座
+        if (belowState.hasProperty(BlockStateProperties.LIT)) {
+            return true;
+        }
+        if (belowState.is(TagMod.HEAT_SOURCE_BLOCKS_WITHOUT_LIT)) {
+            return true;
         }
         // 如果下方是完整方块或者是不可替换方块，则添加基座
         return !belowState.isFaceSturdy(level, pos.below(), Direction.UP);
@@ -219,5 +241,14 @@ public class SteamerBlock extends FallingBlock implements EntityBlock, SimpleWat
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new SteamerBlockEntity(pos, state);
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder lootParamsBuilder) {
+        BlockEntity parameter = lootParamsBuilder.getParameter(LootContextParams.BLOCK_ENTITY);
+        if (parameter instanceof SteamerBlockEntity steamer) {
+            return steamer.dropAsItem();
+        }
+        return super.getDrops(state, lootParamsBuilder);
     }
 }
