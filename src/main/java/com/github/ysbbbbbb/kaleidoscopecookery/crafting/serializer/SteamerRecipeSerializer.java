@@ -20,7 +20,7 @@ public class SteamerRecipeSerializer implements RecipeSerializer<SteamerRecipe> 
             ingredient = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "ingredient"), false);
         }
         ItemStack result = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true, true);
-        int cookTick = GsonHelper.getAsInt(json, "cook_tick", 200);
+        int cookTick = GsonHelper.getAsInt(json, "cook_tick", 60 * 20);
         return new SteamerRecipe(recipeId, ingredient, result, cookTick);
     }
 

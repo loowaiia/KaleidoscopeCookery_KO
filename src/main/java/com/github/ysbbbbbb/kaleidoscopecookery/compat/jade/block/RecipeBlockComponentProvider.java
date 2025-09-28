@@ -11,6 +11,7 @@ import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.ui.IElementHelper;
+import snownee.jade.impl.ui.ProgressArrowElement;
 
 public enum RecipeBlockComponentProvider implements IBlockComponentProvider {
     INSTANCE;
@@ -29,9 +30,20 @@ public enum RecipeBlockComponentProvider implements IBlockComponentProvider {
         if (recipe == null) {
             return;
         }
-        ItemStack stack = recipe.output();
-        tooltip.add(IElementHelper.get().item(stack));
-        tooltip.add(stack.getHoverName());
+        ItemStack output = recipe.output();
+        tooltip.add(output.getHoverName());
+
+        boolean isFirst = true;
+        for (ItemStack stack : recipe.input()) {
+            if (isFirst) {
+                tooltip.add(IElementHelper.get().item(stack));
+            } else {
+                tooltip.append(IElementHelper.get().item(stack));
+            }
+            isFirst = false;
+        }
+        tooltip.append(new ProgressArrowElement(1));
+        tooltip.append(IElementHelper.get().item(output));
     }
 
     @Override

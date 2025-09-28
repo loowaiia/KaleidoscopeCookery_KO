@@ -121,11 +121,11 @@ public class ModCreativeTabs {
                 output.accept(ModItems.COOKED_DONKEY_MEAT.get());
                 // 基础食物
                 output.accept(ModItems.DONKEY_BURGER.get());
-                output.accept(ModItems.BAOZI.get());
-                output.accept(ModItems.DUMPLING.get());
-                output.accept(ModItems.SAMSA.get());
                 output.accept(ModItems.MANTOU.get());
+                output.accept(ModItems.BAOZI.get());
+                output.accept(ModItems.SAMSA.get());
                 output.accept(ModItems.MEAT_PIE.get());
+                output.accept(ModItems.DUMPLING.get());
                 output.accept(ModItems.FRIED_EGG.get());
                 // 小碗菜和盖饭
                 output.accept(ModItems.COOKED_RICE.get());

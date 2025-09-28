@@ -36,8 +36,6 @@ public class ModModelEvent {
         event.register(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "item/raw_dough_in_millstone"));
         // 油
         event.register(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "item/oil_in_millstone"));
-        // 蒸笼馒头
-        event.register(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "item/mantou_in_steamer"));
 
         // 重置缓存
         ItemRenderReplacer.resetCache();

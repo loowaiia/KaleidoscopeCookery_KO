@@ -24,7 +24,7 @@ public class SteamerBuilder implements RecipeBuilder {
 
     private Ingredient ingredient = Ingredient.EMPTY;
     private ItemStack result = ItemStack.EMPTY;
-    private int cookTick = 200;
+    private int cookTick = 60 * 20;
 
     public static SteamerBuilder builder() {
         return new SteamerBuilder();

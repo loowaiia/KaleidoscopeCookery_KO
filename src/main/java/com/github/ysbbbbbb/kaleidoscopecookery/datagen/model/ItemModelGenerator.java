@@ -169,10 +169,17 @@ public class ItemModelGenerator extends ItemModelProvider {
         ResourceLocation rawDough = ForgeRegistries.ITEMS.getKey(ModItems.RAW_DOUGH.get());
         if (rawDough != null) {
             ItemModelBuilder builder = getBuilder(rawDough.toString());
-            for (int i = 1; i <= 4; i++) {
-                ModelFile.UncheckedModelFile modelFile = new ModelFile.UncheckedModelFile(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "item/raw_dough_" + i));
-                builder.override().model(modelFile).predicate(RawDoughItem.PULL_PROPERTY, i - 1).end();
-            }
+            ModelFile.UncheckedModelFile file0 = new ModelFile.UncheckedModelFile(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "item/raw_dough_0"));
+            ModelFile.UncheckedModelFile file1 = new ModelFile.UncheckedModelFile(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "item/raw_dough_1"));
+            ModelFile.UncheckedModelFile file2 = new ModelFile.UncheckedModelFile(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "item/raw_dough_2"));
+            ModelFile.UncheckedModelFile file3 = new ModelFile.UncheckedModelFile(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "item/raw_dough_3"));
+            ModelFile.UncheckedModelFile file4 = new ModelFile.UncheckedModelFile(new ResourceLocation(KaleidoscopeCookery.MOD_ID, "item/raw_dough_4"));
+
+            builder.override().model(file0).predicate(RawDoughItem.PULL_PROPERTY, 0).end();
+            builder.override().model(file1).predicate(RawDoughItem.PULL_PROPERTY, 0.1f).end();
+            builder.override().model(file2).predicate(RawDoughItem.PULL_PROPERTY, 1).end();
+            builder.override().model(file3).predicate(RawDoughItem.PULL_PROPERTY, 2).end();
+            builder.override().model(file4).predicate(RawDoughItem.PULL_PROPERTY, 3).end();
         }
 
         ResourceLocation steamerItem = ForgeRegistries.ITEMS.getKey(ModItems.STEAMER.get());

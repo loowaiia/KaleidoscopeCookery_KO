@@ -1,9 +1,15 @@
 {
   "overrides": [
     {
-      "model": "kaleidoscope_cookery:item/raw_dough_1",
+      "model": "kaleidoscope_cookery:item/raw_dough_0",
       "predicate": {
         "kaleidoscope_cookery:pull": 0.0
+      }
+    },
+    {
+      "model": "kaleidoscope_cookery:item/raw_dough_1",
+      "predicate": {
+        "kaleidoscope_cookery:pull": 0.1
       }
     },
     {
