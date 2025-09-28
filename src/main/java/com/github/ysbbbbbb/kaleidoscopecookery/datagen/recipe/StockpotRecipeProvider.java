@@ -16,6 +16,8 @@ import net.minecraftforge.common.Tags;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems.STUFFED_DOUGH_FOOD;
+
 public class StockpotRecipeProvider extends ModRecipeProvider {
     public StockpotRecipeProvider(PackOutput output) {
         super(output);
@@ -181,7 +183,7 @@ public class StockpotRecipeProvider extends ModRecipeProvider {
             List<Item> inputs = Lists.newArrayList();
             for (int i = 0; i < 9; i++) {
                 int count = i + 1;
-                inputs.add(ModItems.STUFFED_DOUGH_FOOD.get());
+                inputs.add(STUFFED_DOUGH_FOOD.get());
                 StockpotRecipeBuilder.builder()
                         .addInput(inputs.toArray())
                         .setResult(ModItems.DUMPLING.get(), count)
@@ -189,17 +191,17 @@ public class StockpotRecipeProvider extends ModRecipeProvider {
             }
         }
 
-        {
-            List<Item> inputs = Lists.newArrayList();
-            for (int i = 0; i < 9; i++) {
-                int count = i + 1;
-                inputs.add(ModItems.STUFFED_DOUGH_FOOD.get());
-                StockpotRecipeBuilder.builder()
-                        .addInput(inputs.toArray())
-                        .setSoupBase(ModSoupBases.LAVA)
-                        .setResult(FoodBiteRegistry.getItem(FoodBiteRegistry.SHENGJIAN_MANTOU), count)
-                        .save(consumer, "shengjian_mantou_count_" + count);
-            }
-        }
+        StockpotRecipeBuilder.builder()
+                .addInput(STUFFED_DOUGH_FOOD.get(), STUFFED_DOUGH_FOOD.get(), STUFFED_DOUGH_FOOD.get(), STUFFED_DOUGH_FOOD.get())
+                .setSoupBase(ModSoupBases.LAVA)
+                .setResult(FoodBiteRegistry.getItem(FoodBiteRegistry.SHENGJIAN_MANTOU), 1)
+                .save(consumer, "shengjian_mantou_count_1");
+
+        StockpotRecipeBuilder.builder()
+                .addInput(STUFFED_DOUGH_FOOD.get(), STUFFED_DOUGH_FOOD.get(), STUFFED_DOUGH_FOOD.get(), STUFFED_DOUGH_FOOD.get(),
+                        STUFFED_DOUGH_FOOD.get(), STUFFED_DOUGH_FOOD.get(), STUFFED_DOUGH_FOOD.get(), STUFFED_DOUGH_FOOD.get())
+                .setSoupBase(ModSoupBases.LAVA)
+                .setResult(FoodBiteRegistry.getItem(FoodBiteRegistry.SHENGJIAN_MANTOU), 2)
+                .save(consumer, "shengjian_mantou_count_2");
     }
 }
