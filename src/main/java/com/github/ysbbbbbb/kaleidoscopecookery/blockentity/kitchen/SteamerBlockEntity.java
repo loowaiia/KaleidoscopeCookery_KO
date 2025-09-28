@@ -39,8 +39,8 @@ import java.util.Optional;
 public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
     // 最大火力等级为 4，往上继续叠蒸笼，火力等级逐步降低
     public static final int MAX_LIT_LEVEL = 4;
-    public static final String COOKING_TIMES_TAG = "CookingTimes";
-    public static final String COOKING_TOTAL_TIMES_TAG = "CookingTotalTimes";
+    public static final String COOKING_PROGRESS_TAG = "CookingProgress";
+    public static final String COOKING_TIME_TAG = "CookingTime";
     public static final String ITEMS_TAG = "Items";
 
     // 合成表
@@ -94,13 +94,13 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
                 merge.set(i + 4, itemsInStack.get(i));
             }
         }
-        if (data.contains(COOKING_TIMES_TAG, Tag.TAG_INT_ARRAY)) {
-            int[] times = data.getIntArray(COOKING_TIMES_TAG);
+        if (data.contains(COOKING_PROGRESS_TAG, Tag.TAG_INT_ARRAY)) {
+            int[] times = data.getIntArray(COOKING_PROGRESS_TAG);
             int length = Math.min(mergeCookingProgress.length - 4, times.length);
             System.arraycopy(times, 0, mergeCookingProgress, 4, length);
         }
-        if (data.contains(COOKING_TOTAL_TIMES_TAG, Tag.TAG_INT_ARRAY)) {
-            int[] times = data.getIntArray(COOKING_TOTAL_TIMES_TAG);
+        if (data.contains(COOKING_TIME_TAG, Tag.TAG_INT_ARRAY)) {
+            int[] times = data.getIntArray(COOKING_TIME_TAG);
             int length = Math.min(mergeCookingTime.length - 4, times.length);
             System.arraycopy(times, 0, mergeCookingTime, 4, length);
         }
@@ -114,8 +114,8 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
 
         // 写进 data
         ContainerHelper.saveAllItems(data, merge, false);
-        data.putIntArray(COOKING_TIMES_TAG, mergeCookingProgress);
-        data.putIntArray(COOKING_TOTAL_TIMES_TAG, mergeCookingTime);
+        data.putIntArray(COOKING_PROGRESS_TAG, mergeCookingProgress);
+        data.putIntArray(COOKING_TIME_TAG, mergeCookingTime);
 
         // 写回物品
         BlockItem.setBlockEntityData(stack, this.getType(), data);
@@ -138,7 +138,7 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
         // 只需要保存物品和进度即可
         CompoundTag tag1 = new CompoundTag();
         CompoundTag tag2 = new CompoundTag();
-        this.saveSplit(tag1, tag2);
+        saveSplit(tag1, tag2, this.items, this.cookingProgress, this.cookingTime);
 
         BlockItem.setBlockEntityData(first, this.getType(), tag1);
         drops.add(first);
@@ -359,13 +359,13 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
         super.load(tag);
         this.items.clear();
         ContainerHelper.loadAllItems(tag, this.items);
-        if (tag.contains(COOKING_TIMES_TAG, 11)) {
-            int[] times = tag.getIntArray(COOKING_TIMES_TAG);
+        if (tag.contains(COOKING_PROGRESS_TAG, 11)) {
+            int[] times = tag.getIntArray(COOKING_PROGRESS_TAG);
             int length = Math.min(this.cookingTime.length, times.length);
             System.arraycopy(times, 0, this.cookingProgress, 0, length);
         }
-        if (tag.contains(COOKING_TOTAL_TIMES_TAG, 11)) {
-            int[] times = tag.getIntArray(COOKING_TOTAL_TIMES_TAG);
+        if (tag.contains(COOKING_TIME_TAG, 11)) {
+            int[] times = tag.getIntArray(COOKING_TIME_TAG);
             int length = Math.min(this.cookingTime.length, times.length);
             System.arraycopy(times, 0, this.cookingTime, 0, length);
         }
@@ -375,17 +375,21 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         ContainerHelper.saveAllItems(tag, this.items, true);
-        tag.putIntArray(COOKING_TIMES_TAG, this.cookingProgress);
-        tag.putIntArray(COOKING_TOTAL_TIMES_TAG, this.cookingTime);
+        tag.putIntArray(COOKING_PROGRESS_TAG, this.cookingProgress);
+        tag.putIntArray(COOKING_TIME_TAG, this.cookingTime);
     }
 
-    protected void saveSplit(CompoundTag tag1, CompoundTag tag2) {
+    // 将蒸笼数据一分为二，分别保存到两个 tag 里
+    public static void saveSplit(CompoundTag tag1, CompoundTag tag2,
+                                 NonNullList<ItemStack> items,
+                                 int[] cookingProgress,
+                                 int[] cookingTime) {
         // 保存两部分
         NonNullList<ItemStack> first = NonNullList.withSize(4, ItemStack.EMPTY);
         NonNullList<ItemStack> second = NonNullList.withSize(4, ItemStack.EMPTY);
         for (int i = 0; i < 4; i++) {
-            first.set(i, this.items.get(i));
-            second.set(i, this.items.get(i + 4));
+            first.set(i, items.get(i));
+            second.set(i, items.get(i + 4));
         }
 
         int[] firstCookingProgress = new int[4];
@@ -394,22 +398,22 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
         int[] firstCookingTime = new int[4];
         int[] secondCookingTime = new int[4];
 
-        System.arraycopy(this.cookingProgress, 0, firstCookingProgress, 0, 4);
-        System.arraycopy(this.cookingProgress, 4, secondCookingProgress, 0, 4);
+        System.arraycopy(cookingProgress, 0, firstCookingProgress, 0, 4);
+        System.arraycopy(cookingProgress, 4, secondCookingProgress, 0, 4);
 
-        System.arraycopy(this.cookingTime, 0, firstCookingTime, 0, 4);
-        System.arraycopy(this.cookingTime, 4, secondCookingTime, 0, 4);
+        System.arraycopy(cookingTime, 0, firstCookingTime, 0, 4);
+        System.arraycopy(cookingTime, 4, secondCookingTime, 0, 4);
 
         ContainerHelper.saveAllItems(tag1, first, false);
         if (!tag1.isEmpty()) {
-            tag1.putIntArray(COOKING_TIMES_TAG, firstCookingProgress);
-            tag1.putIntArray(COOKING_TOTAL_TIMES_TAG, firstCookingTime);
+            tag1.putIntArray(COOKING_PROGRESS_TAG, firstCookingProgress);
+            tag1.putIntArray(COOKING_TIME_TAG, firstCookingTime);
         }
 
         ContainerHelper.saveAllItems(tag2, second, false);
         if (!tag2.isEmpty()) {
-            tag2.putIntArray(COOKING_TIMES_TAG, secondCookingProgress);
-            tag2.putIntArray(COOKING_TOTAL_TIMES_TAG, secondCookingTime);
+            tag2.putIntArray(COOKING_PROGRESS_TAG, secondCookingProgress);
+            tag2.putIntArray(COOKING_TIME_TAG, secondCookingTime);
         }
     }
 
