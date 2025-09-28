@@ -9,19 +9,25 @@
   "finished_texture": "kaleidoscope_cookery:stockpot/default_finished",
   "ingredients": [
     {
-      "tag": "forge:raw_meats"
+      "tag": "forge:raw_fishes/cod"
     },
     {
-      "tag": "forge:raw_meats"
+      "tag": "forge:raw_fishes/cod"
     },
     {
       "tag": "forge:eggs"
     },
     {
-      "tag": "forge:crops/lettuce"
+      "tag": "forge:vegetables"
     },
     {
-      "tag": "forge:crops/lettuce"
+      "tag": "forge:vegetables"
+    },
+    {
+      "item": "kaleidoscope_cookery:raw_noodles"
+    },
+    {
+      "item": "kaleidoscope_cookery:raw_noodles"
     },
     {
       "item": "kaleidoscope_cookery:raw_noodles"

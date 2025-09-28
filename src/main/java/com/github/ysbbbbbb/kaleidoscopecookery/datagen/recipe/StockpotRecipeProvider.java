@@ -47,7 +47,7 @@ public class StockpotRecipeProvider extends ModRecipeProvider {
                 .save(consumer, "rice_5");
 
         StockpotRecipeBuilder.builder()
-                .addInput(Items.BONE, Items.BONE, Items.BONE, Items.BONE)
+                .addInput(Items.BONE, Items.BONE, Items.BONE, Items.BONE, Items.BONE, Items.BONE, Items.BONE)
                 .setResult(ModItems.PORK_BONE_SOUP.get())
                 .save(consumer);
 
@@ -78,43 +78,45 @@ public class StockpotRecipeProvider extends ModRecipeProvider {
         StockpotRecipeBuilder.builder()
                 .addInput(Items.ROTTEN_FLESH, Items.ROTTEN_FLESH,
                         Items.ROTTEN_FLESH, Items.ROTTEN_FLESH)
+                .addInput(Items.SCULK, Items.SCULK, Items.SCULK)
                 .setSoupBase(ModSoupBases.LAVA)
                 .addInput(Blocks.SCULK, Blocks.SCULK)
                 .setResult(ModItems.FEARSOME_THICK_SOUP.get())
                 .save(consumer);
 
         StockpotRecipeBuilder.builder()
-                .addInput(Items.CARROT, Items.CARROT)
-                .addInput(TagCommon.RAW_MUTTON, TagCommon.RAW_MUTTON)
+                .addInput(Items.CARROT, Items.CARROT, Items.CARROT, Items.CARROT)
+                .addInput(TagCommon.RAW_MUTTON, TagCommon.RAW_MUTTON, TagCommon.RAW_MUTTON)
                 .setResult(ModItems.LAMB_AND_RADISH_SOUP.get())
                 .save(consumer);
 
         StockpotRecipeBuilder.builder()
-                .addInput(Items.POTATO, Items.POTATO, Items.POTATO)
-                .addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF)
+                .addInput(Items.POTATO, Items.POTATO, Items.POTATO, Items.POTATO)
+                .addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.RAW_BEEF)
                 .setResult(ModItems.BRAISED_BEEF_WITH_POTATOES.get())
                 .save(consumer);
 
         StockpotRecipeBuilder.builder()
-                .addInput(Items.RABBIT, Items.RABBIT)
-                .addInput(Tags.Items.MUSHROOMS, Tags.Items.MUSHROOMS, Tags.Items.MUSHROOMS)
+                .addInput(Items.RABBIT, Items.RABBIT, Items.RABBIT)
+                .addInput(Tags.Items.MUSHROOMS, Tags.Items.MUSHROOMS, Tags.Items.MUSHROOMS, Tags.Items.MUSHROOMS)
                 .setResult(ModItems.WILD_MUSHROOM_RABBIT_SOUP.get())
                 .save(consumer);
 
         StockpotRecipeBuilder.builder()
-                .addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF,
-                        TagCommon.RAW_BEEF, TagCommon.CROPS_TOMATO,
+                .addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.RAW_BEEF,
+                        TagCommon.CROPS_TOMATO, TagCommon.CROPS_TOMATO,
                         TagCommon.CROPS_TOMATO, TagCommon.CROPS_TOMATO)
                 .setResult(ModItems.TOMATO_BEEF_BRISKET_SOUP.get())
                 .save(consumer);
 
         StockpotRecipeBuilder.builder()
-                .addInput(Items.PUFFERFISH, Items.PUFFERFISH, Items.PUFFERFISH, Items.SEAGRASS)
+                .addInput(Items.PUFFERFISH, Items.PUFFERFISH, Items.PUFFERFISH,
+                        Items.SEAGRASS, Items.SEAGRASS)
                 .setResult(ModItems.PUFFERFISH_SOUP.get())
                 .save(consumer);
 
         StockpotRecipeBuilder.builder()
-                .addInput(Items.SEAGRASS)
+                .addInput(Items.SEAGRASS, Items.SEAGRASS)
                 .setSoupBase(ModSoupBases.PUFFERFISH_BUCKET)
                 .setResult(ModItems.PUFFERFISH_SOUP.get(), 1)
                 .save(consumer, "pufferfish_soup_entity");
@@ -139,31 +141,27 @@ public class StockpotRecipeProvider extends ModRecipeProvider {
 
         StockpotRecipeBuilder.builder()
                 .addInput(TagCommon.RAW_CHICKEN, TagCommon.RAW_CHICKEN, TagCommon.RAW_CHICKEN,
-                        Tags.Items.MUSHROOMS, Tags.Items.MUSHROOMS, Tags.Items.MUSHROOMS)
+                        Tags.Items.MUSHROOMS, Tags.Items.MUSHROOMS,
+                        Tags.Items.MUSHROOMS, Tags.Items.MUSHROOMS)
                 .setResult(ModItems.CHICKEN_AND_MUSHROOM_STEW.get())
                 .save(consumer);
 
         StockpotRecipeBuilder.builder()
-                .addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.RAW_BEEF)
-                .addInput(ModItems.RAW_NOODLES)
+                .addInput(TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.RAW_BEEF, TagCommon.RAW_BEEF)
+                .addInput(ModItems.RAW_NOODLES, ModItems.RAW_NOODLES, ModItems.RAW_NOODLES)
                 .setResult(ModItems.BEEF_NOODLE.get())
                 .save(consumer);
 
         StockpotRecipeBuilder.builder()
-                .addInput(TagCommon.RAW_MUTTON, TagCommon.EGGS)
-                .addInput(Items.KELP, Items.KELP, ModItems.RAW_NOODLES)
+                .addInput(TagCommon.RAW_MUTTON, TagCommon.RAW_MUTTON, ModItems.FRIED_EGG)
+                .addInput(Items.KELP, ModItems.RAW_NOODLES, ModItems.RAW_NOODLES, ModItems.RAW_NOODLES)
                 .setResult(ModItems.HUI_NOODLE.get())
                 .save(consumer, "hui_noodle_eggs");
 
         StockpotRecipeBuilder.builder()
-                .addInput(TagCommon.RAW_MUTTON, TagCommon.COOKED_EGGS)
-                .addInput(Items.KELP, Items.KELP, ModItems.RAW_NOODLES)
-                .setResult(ModItems.HUI_NOODLE.get())
-                .save(consumer, "hui_noodle_cooked_eggs");
-
-        StockpotRecipeBuilder.builder()
-                .addInput(TagCommon.RAW_MEATS, TagCommon.RAW_MEATS)
-                .addInput(TagCommon.EGGS, TagCommon.CROPS_LETTUCE, TagCommon.CROPS_LETTUCE, ModItems.RAW_NOODLES)
+                .addInput(TagCommon.RAW_FISHES_COD, TagCommon.RAW_FISHES_COD)
+                .addInput(TagCommon.EGGS, TagCommon.VEGETABLES, TagCommon.VEGETABLES)
+                .addInput(ModItems.RAW_NOODLES, ModItems.RAW_NOODLES, ModItems.RAW_NOODLES)
                 .setResult(ModItems.UDON_NOODLE.get())
                 .save(consumer, "udon_noodle_eggs");
 
@@ -174,7 +172,8 @@ public class StockpotRecipeProvider extends ModRecipeProvider {
                 .save(consumer, "udon_noodle_cooked_eggs");
 
         StockpotRecipeBuilder.builder()
-                .addInput(ModItems.RAW_DONKEY_MEAT.get(), ModItems.RAW_DONKEY_MEAT.get(), ModItems.RAW_DONKEY_MEAT.get())
+                .addInput(ModItems.RAW_DONKEY_MEAT.get(), ModItems.RAW_DONKEY_MEAT.get(), ModItems.RAW_DONKEY_MEAT.get(),
+                        ModItems.RAW_DONKEY_MEAT.get(), ModItems.RAW_DONKEY_MEAT.get())
                 .setResult(ModItems.DONKEY_SOUP.get())
                 .save(consumer);
 

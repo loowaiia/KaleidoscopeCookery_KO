@@ -12,13 +12,19 @@
       "tag": "forge:raw_mutton"
     },
     {
-      "tag": "forge:eggs"
+      "tag": "forge:raw_mutton"
+    },
+    {
+      "item": "kaleidoscope_cookery:fried_egg"
     },
     {
       "item": "minecraft:kelp"
     },
     {
-      "item": "minecraft:kelp"
+      "item": "kaleidoscope_cookery:raw_noodles"
+    },
+    {
+      "item": "kaleidoscope_cookery:raw_noodles"
     },
     {
       "item": "kaleidoscope_cookery:raw_noodles"
