@@ -59,7 +59,7 @@ public class ModTradesEvent {
                 16, 4, 0.1f);
 
         addTrade(event, 2, EMERALD, 3,
-                RecipeItem.RecipeRecord.pot(SWEET_AND_SOUR_PORK.get(), SUGAR, SUGAR, SUGAR, PORKCHOP, PORKCHOP),
+                RecipeItem.RecipeRecord.pot(SWEET_AND_SOUR_PORK.get(), SUGAR, SUGAR, SUGAR, PORKCHOP, PORKCHOP, PORKCHOP),
                 16, 4, 0.1f);
 
         addTrade(event, 2, EMERALD, 3,
