@@ -200,6 +200,8 @@
   "tooltip.kaleidoscope_cookery.recipe_item.missing": "缺少：",
   "tooltip.kaleidoscope_cookery.steamer": "可叠八层，潜行右键封顶后进行蒸制",
   "tooltip.kaleidoscope_cookery.raw_dough": "长按右键拉扯面团",
+  "tooltip.kaleidoscope_cookery.kitchenware_racks": "用于挂载工具",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag": "收纳食物并进行奇妙的转化，可右键进食",
   "tip.kaleidoscope_cookery.kitchen.remove_ingredient.need_container": "需要%s来取出食材",
   "tip.kaleidoscope_cookery.pot.need_oil": "缺少油脂",
   "tip.kaleidoscope_cookery.pot.need_lit_stove": "缺少必要的热源",
@@ -298,5 +300,17 @@
   "advancements.kaleidoscope_cookery.scarecrow.title": "麦田守望者",
   "advancements.kaleidoscope_cookery.scarecrow.description": "使用稻草人来保护周围耕地",
   "advancements.kaleidoscope_cookery.scarecrow_head.title": "接头艺术",
-  "advancements.kaleidoscope_cookery.scarecrow_head.description": "使用头颅来替换稻草人的南瓜头"
+  "advancements.kaleidoscope_cookery.scarecrow_head.description": "使用头颅来替换稻草人的南瓜头",
+  "advancements.kaleidoscope_cookery.transmutation_lunch_bag.title": "酒囊饭袋！",
+  "advancements.kaleidoscope_cookery.transmutation_lunch_bag.description": "使用嬗变饭袋进食",
+  "advancements.kaleidoscope_cookery.millstone.title": "996",
+  "advancements.kaleidoscope_cookery.millstone.description": "骑着驴到磨盘上驱动磨盘",
+  "advancements.kaleidoscope_cookery.oil_pot.title": "金色丰收",
+  "advancements.kaleidoscope_cookery.oil_pot.description": "将油壶放置在石磨下方",
+  "advancements.kaleidoscope_cookery.dough.title": "拉拉拉拉拉拉面",
+  "advancements.kaleidoscope_cookery.dough.description": "第一次拉扯面条",
+  "advancements.kaleidoscope_cookery.steamer.title": "蒸制第一步",
+  "advancements.kaleidoscope_cookery.steamer.description": "将蒸笼放置在热源上蒸制食物",
+  "advancements.kaleidoscope_cookery.baozi.title": "肉包打狗，有去无回！",
+  "advancements.kaleidoscope_cookery.baozi.description": "潜行并抛出一个蒸包击中狼，使其回血"
 }

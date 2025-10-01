@@ -1,12 +1,15 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.entity;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.advancements.critereon.ModEventTriggerType;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModTrigger;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Wolf;
@@ -90,6 +93,10 @@ public class ThrowableBaoziEntity extends ThrowableItemProjectile {
             wolf.heal(wolf.getMaxHealth());
             // 生成爱心粒子
             this.level().broadcastEntityEvent(this, EntityEvent.LOVE_HEARTS);
+            // 触发成就
+            if (this.getOwner() instanceof ServerPlayer player) {
+                ModTrigger.EVENT.trigger(player, ModEventTriggerType.MEAT_BUNS_BEAT_DOGS);
+            }
         }
     }
 

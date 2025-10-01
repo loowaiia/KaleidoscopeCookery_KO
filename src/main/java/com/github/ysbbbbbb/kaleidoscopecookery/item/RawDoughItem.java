@@ -1,13 +1,16 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.item;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.advancements.critereon.ModEventTriggerType;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSounds;
+import com.github.ysbbbbbb.kaleidoscopecookery.init.ModTrigger;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -69,6 +72,9 @@ public class RawDoughItem extends Item {
             ItemUtils.getItemToLivingEntity(entityLiving, noodles);
             if (worldIn.isClientSide()) {
                 entityLiving.playSound(ModSounds.ITEM_DOUGH_TRANSFORM.get(), 1.0F, 1.0F);
+            }
+            if (entityLiving instanceof ServerPlayer serverPlayer) {
+                ModTrigger.EVENT.trigger(serverPlayer, ModEventTriggerType.PULL_THE_DOUGH);
             }
         }
     }

@@ -17,7 +17,7 @@ public final class ModItems {
     public static RegistryObject<Item> STOCKPOT = ITEMS.register("stockpot", () -> new BlockItem(ModBlocks.STOCKPOT.get(), new Item.Properties()));
     public static RegistryObject<Item> STOCKPOT_LID = ITEMS.register("stockpot_lid", StockpotLidItem::new);
     public static RegistryObject<Item> CHOPPING_BOARD = ITEMS.register("chopping_board", () -> new BlockItem(ModBlocks.CHOPPING_BOARD.get(), new Item.Properties()));
-    public static RegistryObject<Item> KITCHENWARE_RACKS = ITEMS.register("kitchenware_racks", () -> new BlockItem(ModBlocks.KITCHENWARE_RACKS.get(), new Item.Properties()));
+    public static RegistryObject<Item> KITCHENWARE_RACKS = ITEMS.register("kitchenware_racks", () -> new WithTooltipsBlockItem(ModBlocks.KITCHENWARE_RACKS.get(), "kitchenware_racks"));
     public static RegistryObject<Item> SHAWARMA_SPIT = ITEMS.register("shawarma_spit", () -> new BlockItem(ModBlocks.SHAWARMA_SPIT.get(), new Item.Properties()));
     public static RegistryObject<Item> MILLSTONE = ITEMS.register("millstone", () -> new BlockItem(ModBlocks.MILLSTONE.get(), new Item.Properties()));
     public static RegistryObject<Item> STEAMER = ITEMS.register("steamer", SteamerItem::new);
