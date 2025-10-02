@@ -23,9 +23,8 @@ public class SatiatedShieldEvent {
                 if (source.is(TagMod.SATIATED_SHIELD_WEAKNESS)) {
                     amount *= 2;
                 }
-                int level = player.getFoodData().getFoodLevel() - amount;
                 // 原版是 4 点 Exhaustion 对应 1 点 Food Level
-                player.causeFoodExhaustion(Math.max(0, level / 4f));
+                player.causeFoodExhaustion(Math.max(0, amount / 4f));
                 event.setCanceled(true);
             }
         }
